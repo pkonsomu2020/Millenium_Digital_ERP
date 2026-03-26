@@ -1,0 +1,29 @@
+{
+  "name": "millenium-das-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Backend API for Millenium Digital Admin System",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test-connection": "node scripts/test-connection.js",
+    "seed": "node scripts/seed-stock-data.js",
+    "import:csv": "node scripts/clear-and-import-csv.js",
+    "import:history": "node scripts/import-purchase-history.js",
+    "import:water-kitchen": "node scripts/import-water-kitchen-history.js",
+    "setup:documents": "node scripts/setup-documents.js",
+    "migrate": "node scripts/migrate-remove-threshold.js",
+    "migrate:execute": "node scripts/execute-migration.js",
+    "migrate:verify": "node scripts/verify-migration.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.4",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.1",
+    "resend": "^6.9.3"
+  }
+}

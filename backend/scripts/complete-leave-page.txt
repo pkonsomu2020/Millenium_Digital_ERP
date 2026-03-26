@@ -1,0 +1,174 @@
+
+      {/* View Dialog - Add after Create Dialog */}
+      <Dialog open={viewDialogOpen} onOpenChange={setViewDialogOpen}>
+        <DialogContent className="sm:max-w-[500px] dark:bg-gray-800">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-semibold text-gray-900 dark:text-white">
+              Leave Request Details
+            </DialogTitle>
+          </DialogHeader>
+
+          {selectedRequest && (
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-sm font-semibold text-gray-600 dark:text-gray-400">Employee</Label>
+                  <p className="text-sm text-gray-900 dark:text-white mt-1">{selectedRequest.employee_name}</p>
+                </div>
+                <div>
+                  <Label className="text-sm font-semibold text-gray-600 dark:text-gray-400">Email</Label>
+                  <p className="text-sm text-gray-900 dark:text-white mt-1">{selectedRequest.employee_email}</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-sm font-semibold text-gray-600 dark:text-gray-400">Leave Type</Label>
+                  <p className="text-sm text-gray-900 dark:text-white mt-1">{selectedRequest.leave_type}</p>
+                </div>
+                <div>
+                  <Label className="text-sm font-semibold text-gray-600 dark:text-gray-400">Days</Label>
+                  <p className="text-sm text-gray-900 dark:text-white mt-1">{selectedRequest.days} days</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-sm font-semibold text-gray-600 dark:text-gray-400">Start Date</Label>
+                  <p className="text-sm text-gray-900 dark:text-white mt-1">
+                    {new Date(selectedRequest.start_date).toLocaleDateString("en-US", {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </p>
+                </div>
+                <div>
+                  <Label className="text-sm font-semibold text-gray-600 dark:text-gray-400">End Date</Label>
+                  <p className="text-sm text-gray-900 dark:text-white mt-1">
+                    {new Date(selectedRequest.end_date).toLocaleDateString("en-US", {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <Label className="text-sm font-semibold text-gray-600 dark:text-gray-400">Reason</Label>
+                <p className="text-sm text-gray-900 dark:text-white mt-1">{selectedRequest.reason}</p>
+              </div>
+
+              <div>
+                <Label className="text-sm font-semibold text-gray-600 dark:text-gray-400">Status</Label>
+                <div className="mt-1">{getStatusBadge(selectedRequest.status)}</div>
+              </div>
+
+              {selectedRequest.reviewed_by && (
+                <>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label className="text-sm font-semibold text-gray-600 dark:text-gray-400">Reviewed By</Label>
+                      <p className="text-sm text-gray-900 dark:text-white mt-1">{selectedRequest.reviewed_by}</p>
+                    </div>
+                    <div>
+                      <Label className="text-sm font-semibold text-gray-600 dark:text-gray-400">Reviewed On</Label>
+                      <p className="text-sm text-gray-900 dark:text-white mt-1">
+                        {selectedRequest.reviewed_on && new Date(selectedRequest.reviewed_on).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
+                      </p>
+                    </div>
+                  </div>
+
+                  {selectedRequest.review_reason && (
+                    <div>
+                      <Label className="text-sm font-semibold text-gray-600 dark:text-gray-400">Review Reason</Label>
+                      <p className="text-sm text-gray-900 dark:text-white mt-1">{selectedRequest.review_reason}</p>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          )}
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setViewDialogOpen(false)}>
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Review Dialog */}
+      <Dialog open={reviewDialogOpen} onOpenChange={setReviewDialogOpen}>
+        <DialogContent className="sm:max-w-[500px] dark:bg-gray-800">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-semibold text-gray-900 dark:text-white">
+              {reviewAction === "Approved" ? "Approve" : "Reject"} Leave Request
+            </DialogTitle>
+          </DialogHeader>
+
+          {selectedRequest && (
+            <div className="grid gap-4 py-4">
+              <div>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  You are about to {reviewAction.toLowerCase()} the leave request from{" "}
+                  <span className="font-semibold text-gray-900 dark:text-white">{selectedRequest.employee_name}</span>
+                </p>
+              </div>
+
+              {reviewAction === "Rejected" && (
+                <div className="grid gap-2">
+                  <Label htmlFor="review_reason">Reason for Rejection *</Label>
+                  <Textarea
+                    id="review_reason"
+                    value={reviewReason}
+                    onChange={(e) => setReviewReason(e.target.value)}
+                    placeholder="Please provide a reason for rejecting this request"
+                    className="dark:bg-gray-700 dark:border-gray-600"
+                    rows={4}
+                  />
+                </div>
+              )}
+
+              {reviewAction === "Approved" && (
+                <div className="grid gap-2">
+                  <Label htmlFor="review_reason">Additional Notes (Optional)</Label>
+                  <Textarea
+                    id="review_reason"
+                    value={reviewReason}
+                    onChange={(e) => setReviewReason(e.target.value)}
+                    placeholder="Add any notes about this approval"
+                    className="dark:bg-gray-700 dark:border-gray-600"
+                    rows={3}
+                  />
+                </div>
+              )}
+            </div>
+          )}
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setReviewDialogOpen(false)}
+              disabled={submitting}
+            >
+              Cancel
+            </Button>
+            <Button
+              className={reviewAction === "Approved" ? "bg-green-500 hover:bg-green-600" : "bg-[#D1131B] hover:bg-[#B01018]"}
+              onClick={handleReviewSubmit}
+              disabled={submitting}
+            >
+              {submitting ? "Processing..." : reviewAction === "Approved" ? "Approve" : "Reject"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
