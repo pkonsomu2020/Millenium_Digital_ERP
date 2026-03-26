@@ -205,12 +205,10 @@ export function LeaveRequests() {
                 <div><p className="text-gray-500 dark:text-gray-400 text-xs">Status</p><div className="mt-1">{getStatusBadge(selectedRequest.status)}</div></div>
               </div>
               <Separator />
-              <div><p className="text-gray-500 dark:text-gray-400 text-xs">Reason</p><p className="font-medium dark:text-white">{selectedRequest.reason}</p></div>
+              <div><p className="text-gray-500 dark:text-gray-400 text-xs">Status</p><div className="mt-1">{getStatusBadge(selectedRequest.status)}</div></div>
               <div className="grid grid-cols-2 gap-3">
-                <div><p className="text-gray-500 dark:text-gray-400 text-xs">Handover Reviewed</p><p className="font-medium dark:text-white">{selectedRequest.handover_reviewed ? "Yes" : "No"}</p></div>
                 <div><p className="text-gray-500 dark:text-gray-400 text-xs">Employee Signature</p><p className="font-medium dark:text-white">{selectedRequest.employee_signature || "—"}</p></div>
               </div>
-              {selectedRequest.handover_notes && <div><p className="text-gray-500 dark:text-gray-400 text-xs">Handover Notes</p><p className="font-medium dark:text-white">{selectedRequest.handover_notes}</p></div>}
               {selectedRequest.reviewed_by && (<>
                 <Separator />
                 <div className="grid grid-cols-2 gap-3">

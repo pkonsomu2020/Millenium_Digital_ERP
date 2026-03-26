@@ -5,7 +5,6 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Textarea } from "../components/ui/textarea";
-import { Checkbox } from "../components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "../components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
@@ -47,12 +46,13 @@ interface LeaveRequest {
   deferred_date: string | null;
 }
 
+const DEFAULT_MANAGER = "Rose Kirwa";
+
 const emptyForm = {
-  employee_name: "", employee_email: "", manager: "", contact_while_on_leave: "",
+  employee_name: "", employee_email: "", manager: DEFAULT_MANAGER, contact_while_on_leave: "",
   leave_type: "", custom_leave_type: "",
   start_date: "", end_date: "", days_applied: "",
   days_accrued: "", leave_balance: "", balance_bf: "",
-  reason: "", handover_reviewed: false, handover_notes: "",
   submitted_by: "", employee_signature: "",
 };
 
@@ -90,16 +90,21 @@ export function LeaveRequests() {
   const setF = (k: string, v: unknown) => setForm(p => ({ ...p, [k]: v }));
 
   const handleCreate = async () => {
-    if (!form.employee_name || !form.employee_email || !form.leave_type || !form.start_date || !form.end_date || !form.reason || !form.submitted_by) {
-      toast.error("Please fill in all required fields"); return;
-    }
-    if (form.leave_type === "Others" && !form.custom_leave_type.trim()) {
-      toast.error("Please specify the leave type"); return;
-    }
+    if (!form.employee_name.trim()) { toast.error("Please fill in Employee Name"); return; }
+    if (!form.employee_email.trim()) { toast.error("Please fill in Employee Email"); return; }
+    if (!form.leave_type) { toast.error("Please select a Type of Leave"); return; }
+    if (form.leave_type === "Others" && !form.custom_leave_type.trim()) { toast.error("Please specify the leave type"); return; }
+    if (!form.start_date) { toast.error("Please select a Start Date"); return; }
+    if (!form.end_date) { toast.error("Please select an End Date"); return; }
+    if (!form.submitted_by.trim()) { toast.error("Please fill in Submitted By"); return; }
     try {
       setSubmitting(true);
       await api.createLeaveRequest({
         ...form,
+        manager: DEFAULT_MANAGER,
+        reason: "",
+        handover_reviewed: false,
+        handover_notes: null,
         days_applied: calcDays(form.start_date, form.end_date),
         days_accrued: form.days_accrued ? parseInt(form.days_accrued) : null,
         leave_balance: form.leave_balance ? parseInt(form.leave_balance) : null,
@@ -119,7 +124,7 @@ export function LeaveRequests() {
     setForm({
       employee_name: r.employee_name,
       employee_email: r.employee_email,
-      manager: r.manager || "",
+      manager: r.manager || DEFAULT_MANAGER,
       contact_while_on_leave: r.contact_while_on_leave || "",
       leave_type: r.leave_type,
       custom_leave_type: r.custom_leave_type || "",
@@ -129,9 +134,6 @@ export function LeaveRequests() {
       days_accrued: r.days_accrued != null ? String(r.days_accrued) : "",
       leave_balance: r.leave_balance != null ? String(r.leave_balance) : "",
       balance_bf: r.balance_bf != null ? String(r.balance_bf) : "",
-      reason: r.reason,
-      handover_reviewed: r.handover_reviewed,
-      handover_notes: r.handover_notes || "",
       submitted_by: r.submitted_by,
       employee_signature: r.employee_signature || "",
     });
@@ -140,16 +142,21 @@ export function LeaveRequests() {
 
   const handleEdit = async () => {
     if (!selectedRequest) return;
-    if (!form.employee_name || !form.employee_email || !form.leave_type || !form.start_date || !form.end_date || !form.reason || !form.submitted_by) {
-      toast.error("Please fill in all required fields"); return;
-    }
-    if (form.leave_type === "Others" && !form.custom_leave_type.trim()) {
-      toast.error("Please specify the leave type"); return;
-    }
+    if (!form.employee_name.trim()) { toast.error("Please fill in Employee Name"); return; }
+    if (!form.employee_email.trim()) { toast.error("Please fill in Employee Email"); return; }
+    if (!form.leave_type) { toast.error("Please select a Type of Leave"); return; }
+    if (form.leave_type === "Others" && !form.custom_leave_type.trim()) { toast.error("Please specify the leave type"); return; }
+    if (!form.start_date) { toast.error("Please select a Start Date"); return; }
+    if (!form.end_date) { toast.error("Please select an End Date"); return; }
+    if (!form.submitted_by.trim()) { toast.error("Please fill in Submitted By"); return; }
     try {
       setSubmitting(true);
       await api.updateLeaveRequest(selectedRequest.id, {
         ...form,
+        manager: DEFAULT_MANAGER,
+        reason: "",
+        handover_reviewed: false,
+        handover_notes: null,
         days_applied: calcDays(form.start_date, form.end_date),
         days_accrued: form.days_accrued ? parseInt(form.days_accrued) : null,
         leave_balance: form.leave_balance ? parseInt(form.leave_balance) : null,
@@ -312,7 +319,6 @@ export function LeaveRequests() {
               <div className="grid gap-2"><Label>Employee Email *</Label><Input type="email" value={form.employee_email} onChange={e => setF("employee_email", e.target.value)} placeholder="email@company.com" className="dark:bg-gray-700 dark:border-gray-600" /></div>
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <div className="grid gap-2"><Label>Manager</Label><Input value={form.manager} onChange={e => setF("manager", e.target.value)} placeholder="Manager name" className="dark:bg-gray-700 dark:border-gray-600" /></div>
               <div className="grid gap-2"><Label>Contact While on Leave</Label><Input value={form.contact_while_on_leave} onChange={e => setF("contact_while_on_leave", e.target.value)} placeholder="Phone number" className="dark:bg-gray-700 dark:border-gray-600" /></div>
             </div>
 
@@ -343,20 +349,6 @@ export function LeaveRequests() {
               <div className="grid gap-2"><Label>Leave Balance</Label><Input type="number" value={form.leave_balance} onChange={e => setF("leave_balance", e.target.value)} placeholder="0" className="dark:bg-gray-700 dark:border-gray-600" /></div>
               <div className="grid gap-2"><Label>Balance B/F</Label><Input type="number" value={form.balance_bf} onChange={e => setF("balance_bf", e.target.value)} placeholder="0" className="dark:bg-gray-700 dark:border-gray-600" /></div>
             </div>
-
-            <Separator />
-
-            {/* Reason */}
-            <div className="grid gap-2"><Label>Reason *</Label><Textarea value={form.reason} onChange={e => setF("reason", e.target.value)} placeholder="Reason for leave" className="dark:bg-gray-700 dark:border-gray-600" rows={3} /></div>
-
-            {/* Handover */}
-            <div className="flex items-center gap-3">
-              <Checkbox id="handover" checked={form.handover_reviewed} onCheckedChange={v => setF("handover_reviewed", v)} />
-              <Label htmlFor="handover">Handover work reviewed</Label>
-            </div>
-            {form.handover_reviewed && (
-              <div className="grid gap-2"><Label>Handover Notes</Label><Textarea value={form.handover_notes} onChange={e => setF("handover_notes", e.target.value)} placeholder="Handover details..." className="dark:bg-gray-700 dark:border-gray-600" rows={2} /></div>
-            )}
 
             <Separator />
 
@@ -397,12 +389,10 @@ export function LeaveRequests() {
                 <div><p className="text-gray-500 dark:text-gray-400 text-xs">Status</p><div className="mt-1">{getStatusBadge(selectedRequest.status)}</div></div>
               </div>
               <Separator />
-              <div><p className="text-gray-500 dark:text-gray-400 text-xs">Reason</p><p className="font-medium dark:text-white">{selectedRequest.reason}</p></div>
+              <div><p className="text-gray-500 dark:text-gray-400 text-xs">Status</p><div className="mt-1">{getStatusBadge(selectedRequest.status)}</div></div>
               <div className="grid grid-cols-2 gap-3">
-                <div><p className="text-gray-500 dark:text-gray-400 text-xs">Handover Reviewed</p><p className="font-medium dark:text-white">{selectedRequest.handover_reviewed ? "Yes" : "No"}</p></div>
                 <div><p className="text-gray-500 dark:text-gray-400 text-xs">Employee Signature</p><p className="font-medium dark:text-white">{selectedRequest.employee_signature || "—"}</p></div>
               </div>
-              {selectedRequest.handover_notes && <div><p className="text-gray-500 dark:text-gray-400 text-xs">Handover Notes</p><p className="font-medium dark:text-white">{selectedRequest.handover_notes}</p></div>}
               {selectedRequest.reviewed_by && (<>
                 <Separator />
                 <div className="grid grid-cols-2 gap-3">
