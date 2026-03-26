@@ -184,7 +184,7 @@ export function DashboardLayout() {
                        <DropdownMenuSeparator className="dark:bg-gray-700" />
                        <DropdownMenuItem
                          className="cursor-pointer text-red-600 focus:text-red-600 dark:text-red-400 focus:dark:bg-gray-700"
-                         onClick={() => { sessionStorage.removeItem("auth_hr"); sessionStorage.removeItem("auth_user"); window.location.href = "http://localhost:5173/"; }}
+                         onClick={() => { sessionStorage.removeItem("auth_hr"); sessionStorage.removeItem("auth_user"); window.location.href = `${import.meta.env.VITE_ADMIN_URL || ""}/login/hr`; }}
                        >
                          <LogOut className="mr-2 h-4 w-4" />
                          <span>Log out</span>
