@@ -186,7 +186,7 @@ export function DashboardLayout() {
                        <DropdownMenuSeparator className="dark:bg-gray-700" />
                        <DropdownMenuItem
                          className="cursor-pointer text-red-600 focus:text-red-600 dark:text-red-400 focus:dark:bg-gray-700"
-                         onClick={() => { sessionStorage.removeItem("auth_admin"); sessionStorage.removeItem("auth_user"); window.location.href = "/login/admin"; }}
+                         onClick={() => { sessionStorage.removeItem("auth_admin"); sessionStorage.removeItem("auth_user"); window.location.href = "/"; }}
                        >
                          <LogOut className="mr-2 h-4 w-4" />
                          <span>Log out</span>

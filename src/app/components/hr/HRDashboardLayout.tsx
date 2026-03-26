@@ -137,7 +137,7 @@ export function HRDashboardLayout() {
                       onClick={() => {
                         sessionStorage.removeItem("auth_hr");
                         sessionStorage.removeItem("auth_user");
-                        window.location.href = "/login/hr";
+                        window.location.href = "/";
                       }}
                     >
                       <LogOut className="mr-2 h-4 w-4" /><span>Log out</span>
