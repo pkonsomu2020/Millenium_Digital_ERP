@@ -4,8 +4,7 @@
 
 ```
 Vercel (Admin)          Vercel (HR)             Render (Backend)
-millenium-admin         millenium-hr            millenium-backend
-.vercel.app             .vercel.app             .onrender.com
+?.vercel.app            ?.vercel.app            millenium-digital-erp.onrender.com
      │                       │                        │
      └───────────────────────┴────────────────────────┘
                                     │
@@ -36,7 +35,7 @@ HR_FRONTEND_URL=https://your-hr-app.vercel.app
 PORT=3000
 ```
 
-> After deploy, copy your Render URL: `https://millenium-das-backend.onrender.com`
+> Your Render URL: `https://millenium-digital-erp.onrender.com`
 
 ---
 
@@ -50,7 +49,7 @@ PORT=3000
 
 ### Environment Variables (set in Vercel dashboard)
 ```
-VITE_API_URL=https://your-backend.onrender.com/api
+VITE_API_URL=https://millenium-digital-erp.onrender.com/api
 VITE_HR_URL=https://your-hr-app.vercel.app
 ```
 
@@ -68,7 +67,7 @@ The `vercel.json` at root handles SPA routing (all routes → index.html).
 
 ### Environment Variables (set in Vercel dashboard)
 ```
-VITE_API_URL=https://your-backend.onrender.com/api
+VITE_API_URL=https://millenium-digital-erp.onrender.com/api
 VITE_ADMIN_URL=https://your-admin-app.vercel.app
 ```
 
