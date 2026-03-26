@@ -446,7 +446,6 @@ export function LeaveRequests() {
               <div className="grid gap-2"><Label>Employee Email *</Label><Input type="email" value={form.employee_email} onChange={e => setF("employee_email", e.target.value)} className="dark:bg-gray-700 dark:border-gray-600" /></div>
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <div className="grid gap-2"><Label>Manager</Label><Input value={form.manager} onChange={e => setF("manager", e.target.value)} className="dark:bg-gray-700 dark:border-gray-600" /></div>
               <div className="grid gap-2"><Label>Contact While on Leave</Label><Input value={form.contact_while_on_leave} onChange={e => setF("contact_while_on_leave", e.target.value)} className="dark:bg-gray-700 dark:border-gray-600" /></div>
             </div>
             <Separator />
@@ -470,15 +469,6 @@ export function LeaveRequests() {
               <div className="grid gap-2"><Label>Leave Balance</Label><Input type="number" value={form.leave_balance} onChange={e => setF("leave_balance", e.target.value)} className="dark:bg-gray-700 dark:border-gray-600" /></div>
               <div className="grid gap-2"><Label>Balance B/F</Label><Input type="number" value={form.balance_bf} onChange={e => setF("balance_bf", e.target.value)} className="dark:bg-gray-700 dark:border-gray-600" /></div>
             </div>
-            <Separator />
-            <div className="grid gap-2"><Label>Reason *</Label><Textarea value={form.reason} onChange={e => setF("reason", e.target.value)} className="dark:bg-gray-700 dark:border-gray-600" rows={3} /></div>
-            <div className="flex items-center gap-3">
-              <Checkbox id="edit_handover" checked={form.handover_reviewed} onCheckedChange={v => setF("handover_reviewed", v)} />
-              <Label htmlFor="edit_handover">Handover work reviewed</Label>
-            </div>
-            {form.handover_reviewed && (
-              <div className="grid gap-2"><Label>Handover Notes</Label><Textarea value={form.handover_notes} onChange={e => setF("handover_notes", e.target.value)} className="dark:bg-gray-700 dark:border-gray-600" rows={2} /></div>
-            )}
             <Separator />
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2"><Label>Submitted By *</Label><Input value={form.submitted_by} onChange={e => setF("submitted_by", e.target.value)} className="dark:bg-gray-700 dark:border-gray-600" /></div>
