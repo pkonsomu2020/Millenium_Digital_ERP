@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-import { Search, CheckCircle, XCircle, Clock, Eye, Plus, Trash2, Pencil } from "lucide-react";
+import { Search, Clock, Eye, Plus, Trash2, Pencil } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { Textarea } from "../components/ui/textarea";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "../components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
@@ -63,10 +62,7 @@ export function LeaveRequests() {
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [viewDialogOpen, setViewDialogOpen] = useState(false);
-  const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<LeaveRequest | null>(null);
-  const [reviewAction, setReviewAction] = useState<"Approved" | "Rejected" | "Deferred">("Approved");
-  const [reviewData, setReviewData] = useState({ hr_remarks: "", hr_signature: "", deferred_date: "" });
   const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState(emptyForm);
 
@@ -171,30 +167,6 @@ export function LeaveRequests() {
     finally { setSubmitting(false); }
   };
 
-  const handleReviewSubmit = async () => {
-    if (!selectedRequest) return;
-    if (reviewAction === "Rejected" && !reviewData.hr_remarks.trim()) {
-      toast.error("Please provide remarks for rejection"); return;
-    }
-    if (reviewAction === "Deferred" && !reviewData.deferred_date) {
-      toast.error("Please provide the deferred date"); return;
-    }
-    try {
-      setSubmitting(true);
-      await api.updateLeaveStatus(selectedRequest.id, {
-        status: reviewAction,
-        reviewed_by: "Admin",
-        hr_remarks: reviewData.hr_remarks || null,
-        hr_signature: reviewData.hr_signature || null,
-        deferred_date: reviewData.deferred_date || null,
-      });
-      toast.success(`Leave request ${reviewAction.toLowerCase()} successfully`);
-      setReviewDialogOpen(false);
-      fetchLeaveRequests();
-    } catch { toast.error("Failed to update leave request"); }
-    finally { setSubmitting(false); }
-  };
-
   const handleDelete = async (id: string, name: string) => {
     if (!confirm(`Delete leave request from ${name}?`)) return;
     try {
@@ -289,11 +261,6 @@ export function LeaveRequests() {
                         <div className="flex gap-1 justify-end">
                           <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-blue-600 dark:text-blue-400" onClick={() => { setSelectedRequest(r); setViewDialogOpen(true); }} title="View"><Eye className="w-4 h-4" /></Button>
                           <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-yellow-500 dark:text-yellow-400" onClick={() => openEditDialog(r)} title="Edit"><Pencil className="w-4 h-4" /></Button>
-                          {r.status === "Pending" && (<>
-                            <Button size="sm" className="bg-green-500 hover:bg-green-600 text-white text-xs h-8 px-2" onClick={() => { setSelectedRequest(r); setReviewAction("Approved"); setReviewData({ hr_remarks: "", hr_signature: "", deferred_date: "" }); setReviewDialogOpen(true); }}><CheckCircle className="w-3 h-3 sm:mr-1" /><span className="hidden sm:inline">Approve</span></Button>
-                            <Button size="sm" className="bg-blue-500 hover:bg-blue-600 text-white text-xs h-8 px-2" onClick={() => { setSelectedRequest(r); setReviewAction("Deferred"); setReviewData({ hr_remarks: "", hr_signature: "", deferred_date: "" }); setReviewDialogOpen(true); }}><span className="hidden sm:inline">Defer</span><span className="sm:hidden">D</span></Button>
-                            <Button size="sm" className="bg-[#D1131B] hover:bg-[#B01018] text-white text-xs h-8 px-2" onClick={() => { setSelectedRequest(r); setReviewAction("Rejected"); setReviewData({ hr_remarks: "", hr_signature: "", deferred_date: "" }); setReviewDialogOpen(true); }}><XCircle className="w-3 h-3 sm:mr-1" /><span className="hidden sm:inline">Reject</span></Button>
-                          </>)}
                           <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-red-500" onClick={() => handleDelete(r.id, r.employee_name)} title="Delete"><Trash2 className="w-4 h-4" /></Button>
                         </div>
                       </TableCell>
@@ -408,32 +375,6 @@ export function LeaveRequests() {
         </DialogContent>
       </Dialog>
 
-      {/* Review Dialog */}
-      <Dialog open={reviewDialogOpen} onOpenChange={setReviewDialogOpen}>
-        <DialogContent className="sm:max-w-[480px] dark:bg-gray-800">
-          <DialogHeader>
-            <DialogTitle className="dark:text-white">
-              {reviewAction === "Approved" ? "Approve" : reviewAction === "Deferred" ? "Defer" : "Reject"} Leave — {selectedRequest?.employee_name}
-            </DialogTitle>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            {reviewAction === "Deferred" && (
-              <div className="grid gap-2"><Label>Deferred Date *</Label><Input type="date" value={reviewData.deferred_date} onChange={e => setReviewData(p => ({ ...p, deferred_date: e.target.value }))} className="dark:bg-gray-700 dark:border-gray-600" /></div>
-            )}
-            <div className="grid gap-2">
-              <Label>HR Remarks {reviewAction === "Rejected" ? "*" : "(Optional)"}</Label>
-              <Textarea value={reviewData.hr_remarks} onChange={e => setReviewData(p => ({ ...p, hr_remarks: e.target.value }))} placeholder={reviewAction === "Rejected" ? "Reason for rejection..." : reviewAction === "Deferred" ? "Reason for deferral..." : "Any notes..."} className="dark:bg-gray-700 dark:border-gray-600" rows={3} />
-            </div>
-            <div className="grid gap-2"><Label>HR Signature</Label><Input value={reviewData.hr_signature} onChange={e => setReviewData(p => ({ ...p, hr_signature: e.target.value }))} placeholder="Type full name as signature" className="dark:bg-gray-700 dark:border-gray-600" /></div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setReviewDialogOpen(false)} disabled={submitting}>Cancel</Button>
-            <Button className={reviewAction === "Approved" ? "bg-green-500 hover:bg-green-600" : reviewAction === "Deferred" ? "bg-blue-500 hover:bg-blue-600" : "bg-[#D1131B] hover:bg-[#B01018]"} onClick={handleReviewSubmit} disabled={submitting}>
-              {submitting ? "Processing..." : reviewAction}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
       {/* Edit Dialog */}
       <Dialog open={editDialogOpen} onOpenChange={v => { setEditDialogOpen(v); if (!v) setForm(emptyForm); }}>
         <DialogContent className="sm:max-w-[680px] dark:bg-gray-800 max-h-[90vh] overflow-y-auto">
