@@ -6,6 +6,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "build": "echo 'No build step required'",
     "dev": "node --watch server.js",
     "test-connection": "node scripts/test-connection.js",
     "seed": "node scripts/seed-stock-data.js",
