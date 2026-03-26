@@ -13,12 +13,28 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Allowed origins
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  process.env.HR_FRONTEND_URL,
+  'http://localhost:5173',
+  'http://localhost:5174',
+].filter(Boolean);
+
 // Middleware
 app.use(cors({
-  origin: [
-    process.env.FRONTEND_URL || 'http://localhost:5173',
-    process.env.HR_FRONTEND_URL || 'http://localhost:5174'
-  ],
+  origin: (origin, callback) => {
+    // Allow requests with no origin (mobile apps, curl, Render health checks)
+    if (!origin) return callback(null, true);
+    // Allow any vercel.app subdomain or any explicitly listed origin
+    if (
+      allowedOrigins.includes(origin) ||
+      /^https:\/\/[a-z0-9-]+\.vercel\.app$/.test(origin)
+    ) {
+      return callback(null, true);
+    }
+    callback(new Error(`CORS blocked: ${origin}`));
+  },
   credentials: true
 }));
 app.use(express.json());
