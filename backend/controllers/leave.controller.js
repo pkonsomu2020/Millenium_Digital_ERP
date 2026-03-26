@@ -23,7 +23,7 @@ export const createLeaveRequest = async (req, res) => {
       submitted_by, employee_signature
     } = req.body;
 
-    if (!employee_name || !employee_email || !leave_type || !start_date || !end_date || !days_applied || !reason || !submitted_by) {
+    if (!employee_name || !employee_email || !leave_type || !start_date || !end_date || days_applied == null || !reason || !submitted_by) {
       return res.status(400).json({ error: 'Required fields are missing' });
     }
     if (leave_type === 'Others' && !custom_leave_type) {
@@ -33,14 +33,16 @@ export const createLeaveRequest = async (req, res) => {
     const { data, error } = await supabase
       .from('leave_requests')
       .insert({
-        employee_name, employee_email, manager, contact_while_on_leave,
+        employee_name, employee_email,
+        manager: manager || null,
+        contact_while_on_leave: contact_while_on_leave || null,
         leave_type,
         custom_leave_type: leave_type === 'Others' ? custom_leave_type : null,
         start_date, end_date,
-        days_applied,
-        days_accrued: days_accrued || null,
-        leave_balance: leave_balance || null,
-        balance_bf: balance_bf || null,
+        days_applied: parseInt(days_applied),
+        days_accrued: days_accrued != null && days_accrued !== '' ? parseInt(days_accrued) : null,
+        leave_balance: leave_balance != null && leave_balance !== '' ? parseInt(leave_balance) : null,
+        balance_bf: balance_bf != null && balance_bf !== '' ? parseInt(balance_bf) : null,
         reason,
         handover_reviewed: handover_reviewed || false,
         handover_notes: handover_notes || null,
@@ -54,6 +56,7 @@ export const createLeaveRequest = async (req, res) => {
     if (error) throw error;
     res.status(201).json(data);
   } catch (error) {
+    console.error('createLeaveRequest error:', error);
     res.status(500).json({ error: error.message });
   }
 };
