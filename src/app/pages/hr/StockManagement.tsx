@@ -60,7 +60,11 @@ export function HRStockManagement() {
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({ total_items: 0, categories_count: 0 });
 
-  useEffect(() => { fetchData(); }, []);
+  useEffect(() => {
+    fetchData();
+    const interval = setInterval(fetchData, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   const fetchData = async () => {
     try {

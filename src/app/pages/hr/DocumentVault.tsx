@@ -18,7 +18,11 @@ export function HRDocumentVault() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState("All Documents");
 
-  useEffect(() => { fetchDocuments(); }, []);
+  useEffect(() => {
+    fetchDocuments();
+    const interval = setInterval(fetchDocuments, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   const fetchDocuments = async () => {
     try {

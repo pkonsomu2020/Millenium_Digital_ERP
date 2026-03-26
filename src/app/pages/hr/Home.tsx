@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { AlertTriangle, Clock, Calendar, Package, TrendingUp, CheckCircle, RefreshCw } from "lucide-react";
+import { AlertTriangle, Clock, Calendar, Package, TrendingUp, CheckCircle } from "lucide-react";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   AreaChart, Area, PieChart, Pie, Cell, Legend, LineChart, Line,
@@ -29,12 +29,10 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 export function HRHome() {
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
   const fetchStats = useCallback(async (silent = false) => {
     if (!silent) setLoading(true);
-    else setRefreshing(true);
     try {
       const data = await api.getDashboardStats();
       setStats(data);
@@ -43,7 +41,6 @@ export function HRHome() {
       console.error(err);
     } finally {
       setLoading(false);
-      setRefreshing(false);
     }
   }, []);
 
@@ -84,10 +81,6 @@ export function HRHome() {
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Overview</h2>
           {lastUpdated && <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">Last updated: {lastUpdated.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit" })}</p>}
         </div>
-        <button onClick={() => fetchStats(true)} disabled={refreshing} className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 hover:text-[#D1131B] dark:hover:text-[#D1131B] transition-colors px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-[#D1131B]/40 bg-white dark:bg-gray-800">
-          <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? "animate-spin" : ""}`} />
-          {refreshing ? "Refreshing..." : "Refresh"}
-        </button>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

@@ -51,15 +51,19 @@ export function LeaveRequests() {
   const [reviewData, setReviewData] = useState({ hr_remarks: "", hr_signature: "", deferred_date: "" });
   const [submitting, setSubmitting] = useState(false);
 
-  useEffect(() => { fetchLeaveRequests(); }, []);
+  useEffect(() => {
+    fetchLeaveRequests();
+    const interval = setInterval(() => fetchLeaveRequests(true), 30000);
+    return () => clearInterval(interval);
+  }, []);
 
-  const fetchLeaveRequests = async () => {
+  const fetchLeaveRequests = async (silent = false) => {
     try {
-      setLoading(true);
+      if (!silent) setLoading(true);
       const data = await api.getAllLeaveRequests();
       setLeaveRequests(data);
-    } catch { toast.error("Failed to load leave requests"); }
-    finally { setLoading(false); }
+    } catch { if (!silent) toast.error("Failed to load leave requests"); }
+    finally { if (!silent) setLoading(false); }
   };
 
   const handleReviewSubmit = async () => {

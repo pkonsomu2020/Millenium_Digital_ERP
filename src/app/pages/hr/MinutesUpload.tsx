@@ -14,7 +14,11 @@ export function HRMinutesUpload() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
-  useEffect(() => { fetchMinutes(); }, []);
+  useEffect(() => {
+    fetchMinutes();
+    const interval = setInterval(fetchMinutes, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   const fetchMinutes = async () => {
     try {
