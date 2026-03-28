@@ -1,14 +1,13 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Eye, EyeOff, Lock, Mail, Users, ArrowLeft } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { api } from "../../services/api";
 
-const HR_URL = import.meta.env.VITE_HR_URL || "http://localhost:5174";
-
 export function HRLogin() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);
@@ -25,9 +24,10 @@ export function HRLogin() {
         setError("Access denied. This portal is for HR staff only.");
         return;
       }
-      // sessionStorage is per-origin, so we pass auth via URL param to the HR app
-      const payload = btoa(JSON.stringify({ name: user.name, email: user.email, role: user.role }));
-      window.location.href = `${HR_URL}/?auth=${payload}`;
+      // Same domain — store directly in sessionStorage and navigate
+      sessionStorage.setItem("auth_hr", "true");
+      sessionStorage.setItem("auth_user", JSON.stringify({ name: user.name, email: user.email, role: user.role }));
+      navigate("/hr/dashboard");
     } catch (err: any) {
       setError(err.message || "Invalid email or password.");
     } finally {
