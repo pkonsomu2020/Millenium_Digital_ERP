@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 import { Eye, EyeOff, Lock, Mail, Users, ArrowLeft } from "lucide-react";
 import { Button } from "../components/ui/button";
@@ -13,6 +13,14 @@ export function HRLogin() {
   const [showPw, setShowPw] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [warming, setWarming] = useState(true);
+
+  // Ping backend on mount so it's warm when user submits
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL?.replace('/api', '')}/health`)
+      .catch(() => {})
+      .finally(() => setWarming(false));
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,9 +91,9 @@ export function HRLogin() {
                 </button>
               </div>
             </div>
-            <Button type="submit" disabled={loading}
+            <Button type="submit" disabled={loading || warming}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold h-11 mt-2">
-              {loading ? "Signing in..." : "Sign In"}
+              {warming ? "Connecting..." : loading ? "Signing in..." : "Sign In"}
             </Button>
           </form>
 

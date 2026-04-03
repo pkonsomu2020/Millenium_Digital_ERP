@@ -123,6 +123,14 @@ class ApiService {
     });
   }
 
+  async replaceDocument(id, formData) {
+    const url = `${API_BASE_URL}/documents/${id}/replace`;
+    const response = await fetch(url, { method: 'PUT', body: formData });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || 'Replace failed');
+    return data;
+  }
+
   // Meeting Minutes APIs
   async getAllMinutes() {
     return this.request('/minutes');
@@ -152,6 +160,14 @@ class ApiService {
       method: 'PUT',
       body: JSON.stringify(data),
     });
+  }
+
+  async replaceMinutes(id, formData) {
+    const url = `${API_BASE_URL}/minutes/${id}/replace`;
+    const response = await fetch(url, { method: 'PUT', body: formData });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || 'Replace failed');
+    return data;
   }
 
   // Leave Request APIs

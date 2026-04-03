@@ -63,6 +63,7 @@ export function DocumentVault() {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editingDoc, setEditingDoc] = useState<Document | null>(null);
   const [editForm, setEditForm] = useState({ original_name: "", category: "", uploaded_by: "", notes: "" });
+  const [replaceFile, setReplaceFile] = useState<File | null>(null);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -122,22 +123,30 @@ export function DocumentVault() {
   const openEditDialog = (doc: Document) => {
     setEditingDoc(doc);
     setEditForm({ original_name: doc.original_name, category: doc.category, uploaded_by: doc.uploaded_by, notes: doc.notes || "" });
+    setReplaceFile(null);
     setEditDialogOpen(true);
   };
 
   const handleSaveEdit = async () => {
     if (!editingDoc) return;
     if (!editForm.original_name || !editForm.category || !editForm.uploaded_by) {
-      toast.error("Please fill in all required fields");
-      return;
+      toast.error("Please fill in all required fields"); return;
     }
     try {
       setSaving(true);
+      // If a replacement file was selected, replace the file first
+      if (replaceFile) {
+        const fd = new FormData();
+        fd.append("file", replaceFile);
+        await api.replaceDocument(editingDoc.id, fd);
+      }
+      // Always update metadata
       await api.updateDocument(editingDoc.id, editForm);
       toast.success("Document updated successfully");
       setEditDialogOpen(false);
+      setReplaceFile(null);
       fetchDocuments();
-    } catch (error) {
+    } catch {
       toast.error("Failed to update document");
     } finally {
       setSaving(false);
@@ -440,7 +449,7 @@ export function DocumentVault() {
         </DialogContent>
       </Dialog>
       {/* Edit Dialog */}
-      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+      <Dialog open={editDialogOpen} onOpenChange={(v) => { setEditDialogOpen(v); if (!v) setReplaceFile(null); }}>
         <DialogContent className="sm:max-w-[500px] dark:bg-gray-800">
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -450,55 +459,33 @@ export function DocumentVault() {
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="edit_name">Document Name *</Label>
-              <Input
-                id="edit_name"
-                value={editForm.original_name}
-                onChange={(e) => setEditForm({ ...editForm, original_name: e.target.value })}
-                className="dark:bg-gray-700 dark:border-gray-600"
-              />
+              <Input id="edit_name" value={editForm.original_name} onChange={(e) => setEditForm({ ...editForm, original_name: e.target.value })} className="dark:bg-gray-700 dark:border-gray-600" />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="edit_category">Category *</Label>
               <Select value={editForm.category} onValueChange={(v) => setEditForm({ ...editForm, category: v })}>
-                <SelectTrigger className="dark:bg-gray-700 dark:border-gray-600">
-                  <SelectValue placeholder="Select category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {CATEGORIES.map((cat) => (
-                    <SelectItem key={cat} value={cat}>{cat}</SelectItem>
-                  ))}
-                </SelectContent>
+                <SelectTrigger className="dark:bg-gray-700 dark:border-gray-600"><SelectValue placeholder="Select category" /></SelectTrigger>
+                <SelectContent>{CATEGORIES.map((cat) => <SelectItem key={cat} value={cat}>{cat}</SelectItem>)}</SelectContent>
               </Select>
             </div>
             <div className="grid gap-2">
               <Label htmlFor="edit_uploaded_by">Uploaded By *</Label>
-              <Input
-                id="edit_uploaded_by"
-                value={editForm.uploaded_by}
-                onChange={(e) => setEditForm({ ...editForm, uploaded_by: e.target.value })}
-                className="dark:bg-gray-700 dark:border-gray-600"
-              />
+              <Input id="edit_uploaded_by" value={editForm.uploaded_by} onChange={(e) => setEditForm({ ...editForm, uploaded_by: e.target.value })} className="dark:bg-gray-700 dark:border-gray-600" />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="edit_notes">Notes</Label>
-              <Textarea
-                id="edit_notes"
-                value={editForm.notes}
-                onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })}
-                className="dark:bg-gray-700 dark:border-gray-600"
-                rows={3}
-              />
+              <Textarea id="edit_notes" value={editForm.notes} onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })} className="dark:bg-gray-700 dark:border-gray-600" rows={3} />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="replace_file">Replace File (optional)</Label>
+              <Input id="replace_file" type="file" onChange={(e) => setReplaceFile(e.target.files?.[0] || null)} className="dark:bg-gray-700 dark:border-gray-600" />
+              {replaceFile && <p className="text-xs text-green-600 dark:text-green-400">New file: {replaceFile.name} ({formatFileSize(replaceFile.size)})</p>}
+              {!replaceFile && editingDoc && <p className="text-xs text-gray-500 dark:text-gray-400">Current: {editingDoc.original_name} — leave blank to keep existing file</p>}
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setEditDialogOpen(false)} disabled={saving}>
-              Cancel
-            </Button>
-            <Button
-              className="bg-[#D1131B] hover:bg-[#B01018] text-white"
-              onClick={handleSaveEdit}
-              disabled={saving}
-            >
+            <Button variant="outline" onClick={() => { setEditDialogOpen(false); setReplaceFile(null); }} disabled={saving}>Cancel</Button>
+            <Button className="bg-[#D1131B] hover:bg-[#B01018] text-white" onClick={handleSaveEdit} disabled={saving}>
               {saving ? "Saving..." : "Save Changes"}
             </Button>
           </DialogFooter>

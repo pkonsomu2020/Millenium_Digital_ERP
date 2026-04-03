@@ -45,6 +45,12 @@ MD FILES/
 *.xls
 *.csv
 
+# ── Backend scripts (contain sensitive data) ──────────────
+backend/scripts/
+
+# ── Backend docs (internal reference only) ────────────────
+backend/docs/
+
 # ── Misc ──────────────────────────────────────────────────
 *.local
 .cache/

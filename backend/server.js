@@ -12,6 +12,7 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const SELF_URL = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
 
 // Allowed origins
 const allowedOrigins = [
@@ -54,4 +55,16 @@ app.get('/health', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+
+  // Self-ping every 14 minutes to prevent Render free tier from sleeping
+  if (process.env.NODE_ENV === 'production') {
+    setInterval(async () => {
+      try {
+        await fetch(`${SELF_URL}/health`);
+        console.log('[keep-alive] ping sent');
+      } catch (e) {
+        console.warn('[keep-alive] ping failed:', e.message);
+      }
+    }, 14 * 60 * 1000); // 14 minutes
+  }
 });

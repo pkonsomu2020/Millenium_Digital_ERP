@@ -252,3 +252,97 @@ export const updateDocument = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// Replace document file (keeps same record, swaps the file)
+export const replaceDocument = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const file = req.file;
+    if (!file) return res.status(400).json({ error: 'No file uploaded' });
+
+    // Get existing record to delete old file
+    const { data: existing, error: fetchError } = await supabase
+      .from('documents')
+      .select('file_name')
+      .eq('id', id)
+      .single();
+    if (fetchError) throw fetchError;
+
+    // Delete old file from storage
+    await supabase.storage.from('documents').remove([existing.file_name]);
+
+    // Upload new file
+    const fileName = `${Date.now()}-${file.originalname}`;
+    const { error: uploadError } = await supabase.storage
+      .from('documents')
+      .upload(fileName, file.buffer, { contentType: file.mimetype, upsert: false });
+    if (uploadError) throw uploadError;
+
+    const { data: { publicUrl } } = supabase.storage.from('documents').getPublicUrl(fileName);
+
+    // Update DB record
+    const { data, error } = await supabase
+      .from('documents')
+      .update({
+        file_name: fileName,
+        original_name: file.originalname,
+        file_type: file.mimetype,
+        file_size: file.size,
+        file_url: publicUrl,
+      })
+      .eq('id', id)
+      .select()
+      .single();
+    if (error) throw error;
+
+    res.json(data);
+  } catch (error) {
+    console.error('Error replacing document:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Replace meeting minutes file
+export const replaceMinutes = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const file = req.file;
+    if (!file) return res.status(400).json({ error: 'No file uploaded' });
+
+    const { data: existing, error: fetchError } = await supabase
+      .from('meeting_minutes')
+      .select('file_name')
+      .eq('id', id)
+      .single();
+    if (fetchError) throw fetchError;
+
+    await supabase.storage.from('meeting-minutes').remove([existing.file_name]);
+
+    const fileName = `minutes-${Date.now()}-${file.originalname}`;
+    const { error: uploadError } = await supabase.storage
+      .from('meeting-minutes')
+      .upload(fileName, file.buffer, { contentType: file.mimetype, upsert: false });
+    if (uploadError) throw uploadError;
+
+    const { data: { publicUrl } } = supabase.storage.from('meeting-minutes').getPublicUrl(fileName);
+
+    const { data, error } = await supabase
+      .from('meeting_minutes')
+      .update({
+        file_name: fileName,
+        original_name: file.originalname,
+        file_type: file.mimetype,
+        file_size: file.size,
+        file_url: publicUrl,
+      })
+      .eq('id', id)
+      .select()
+      .single();
+    if (error) throw error;
+
+    res.json(data);
+  } catch (error) {
+    console.error('Error replacing minutes:', error);
+    res.status(500).json({ error: error.message });
+  }
+};

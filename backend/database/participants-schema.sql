@@ -14,11 +14,11 @@ ALTER TABLE meeting_participants ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Allow all operations on meeting_participants" ON meeting_participants
   FOR ALL USING (true) WITH CHECK (true);
 
--- Seed the admin contacts
+-- Seed participants
 INSERT INTO meeting_participants (name, email, role) VALUES
-  ('Rose Kirwa',   'Rosekirwa@millenium.co.ke', 'HR'),
-  ('Esther Kiilu', 'Ekiilu@afosi.org',           'Admin'),
-  ('Winnie',       'Winnie@signvrse.com',         'Admin'),
-  ('Muthoni',      'Muthoni@signvrse.com',        'Admin'),
-  ('Grace Wanjiru','wanjirugrace678@gmail.com',   'Admin')
+  ('Grace Wanjiru', 'grace.wanjiru@millenium.co.ke', 'Admin'),
+  ('Rose Kirwa',    'rosekirwa@millenium.co.ke',     'HR'),
+  ('Ekiilu',        'ekiilu@afosi.org',               'HR'),
+  ('Winnie',        'winnie@signvrse.com',             'HR'),
+  ('Muthoni',       'muthoni@signvrse.com',            'HR')
 ON CONFLICT (email) DO NOTHING;
