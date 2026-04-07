@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Upload, Search, FileText, Download, Eye, Trash2, Calendar, Pencil } from "lucide-react";
+import { Upload, Search, FileText, Download, Eye, Trash2, Calendar, Pencil, FileSpreadsheet, FileType, Presentation } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -57,6 +57,34 @@ export function MinutesUpload() {
   const [editForm, setEditForm] = useState({ meeting_date: "", meeting_title: "", uploaded_by: "", notes: "" });
   const [replaceFile, setReplaceFile] = useState<File | null>(null);
   const [saving, setSaving] = useState(false);
+
+  // Inline text editor state
+  const [textEditorOpen, setTextEditorOpen] = useState(false);
+  const [textEditorDoc, setTextEditorDoc] = useState<MeetingMinutes | null>(null);
+  const [textContent, setTextContent] = useState("");
+  const [textLoading, setTextLoading] = useState(false);
+  const [textSaving, setTextSaving] = useState(false);
+
+  const getExt = (name: string) => name?.split('.').pop()?.toLowerCase() || '';
+  const isOffice = (name: string) => ['docx','doc','xlsx','xls','pptx','ppt'].includes(getExt(name));
+  const isText = (name: string) => ['txt','csv'].includes(getExt(name));
+  const isEditable = (name: string) => isOffice(name) || isText(name);
+
+  const getOfficeIcon = (name: string) => {
+    const ext = getExt(name);
+    if (['xlsx','xls'].includes(ext)) return <FileSpreadsheet className="w-4 h-4 text-green-600" />;
+    if (['pptx','ppt'].includes(ext)) return <Presentation className="w-4 h-4 text-orange-500" />;
+    if (['docx','doc'].includes(ext)) return <FileType className="w-4 h-4 text-blue-500" />;
+    return <FileText className="w-3 h-3 sm:w-4 sm:h-4 text-[#D1131B] flex-shrink-0" />;
+  };
+
+  const getEditLabel = (name: string) => {
+    const ext = getExt(name);
+    if (['xlsx','xls'].includes(ext)) return 'Edit in Excel';
+    if (['pptx','ppt'].includes(ext)) return 'Edit in PowerPoint';
+    if (['docx','doc'].includes(ext)) return 'Edit in Word';
+    return 'Edit Inline';
+  };
 
   useEffect(() => {
     fetchMinutes();
@@ -139,6 +167,46 @@ export function MinutesUpload() {
     } finally {
       setSaving(false);
     }
+  };
+
+  const handleOpenInOffice = (minute: MeetingMinutes) => {
+    const wopiSrc = encodeURIComponent(
+      `${(import.meta.env.VITE_API_URL || 'http://localhost:3000/api').replace('/api', '')}/wopi/files/${minute.id}?table=minutes`
+    );
+    const ext = getExt(minute.original_name);
+    let officeUrl = '';
+    if (['xlsx','xls'].includes(ext)) officeUrl = `https://excel.office.live.com/op/edit.aspx?WOPISrc=${wopiSrc}`;
+    else if (['pptx','ppt'].includes(ext)) officeUrl = `https://powerpoint.office.live.com/op/edit.aspx?WOPISrc=${wopiSrc}`;
+    else officeUrl = `https://word.office.live.com/op/edit.aspx?WOPISrc=${wopiSrc}`;
+    window.open(officeUrl, '_blank');
+  };
+
+  const openTextEditor = async (minute: MeetingMinutes) => {
+    setTextEditorDoc(minute);
+    setTextEditorOpen(true);
+    setTextLoading(true);
+    try {
+      const content = await api.getTextContent(minute.id, 'minutes');
+      setTextContent(content);
+    } catch { toast.error("Failed to load file content"); }
+    finally { setTextLoading(false); }
+  };
+
+  const handleSaveText = async () => {
+    if (!textEditorDoc) return;
+    setTextSaving(true);
+    try {
+      await api.saveTextContent(textEditorDoc.id, textContent, 'minutes');
+      toast.success("File saved successfully");
+      setTextEditorOpen(false);
+      fetchMinutes();
+    } catch { toast.error("Failed to save file"); }
+    finally { setTextSaving(false); }
+  };
+
+  const handleEditDocument = (minute: MeetingMinutes) => {
+    if (isText(minute.original_name)) openTextEditor(minute);
+    else if (isOffice(minute.original_name)) handleOpenInOffice(minute);
   };
 
   const handleDelete = async (id: string, title: string) => {
@@ -310,7 +378,7 @@ export function MinutesUpload() {
                           <TableRow key={minute.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                             <TableCell className="text-xs sm:text-sm">
                               <div className="flex items-center gap-2">
-                                <FileText className="w-3 h-3 sm:w-4 sm:h-4 text-[#D1131B] flex-shrink-0" />
+                                {getOfficeIcon(minute.original_name)}
                                 <span className="text-gray-900 dark:text-white font-medium">{minute.meeting_title}</span>
                               </div>
                             </TableCell>
@@ -329,43 +397,23 @@ export function MinutesUpload() {
                               {minute.uploaded_by}
                             </TableCell>
                             <TableCell className="text-right">
-                              <div className="flex gap-1 sm:gap-2 justify-end">
-                                <Button 
-                                  variant="ghost" 
-                                  size="sm" 
-                                  className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 h-8 w-8 p-0"
-                                  onClick={() => handleView(minute.file_url)}
-                                  title="View"
-                                >
-                                  <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
-                                </Button>
-                                <Button 
-                                  variant="ghost" 
-                                  size="sm" 
-                                  className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 h-8 w-8 p-0"
-                                  onClick={() => handleDownload(minute.file_url, minute.original_name)}
-                                  title="Download"
-                                >
-                                  <Download className="w-3 h-3 sm:w-4 sm:h-4" />
-                                </Button>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300 h-8 w-8 p-0"
-                                  onClick={() => openEditDialog(minute)}
-                                  title="Edit"
-                                >
-                                  <Pencil className="w-3 h-3 sm:w-4 sm:h-4" />
-                                </Button>
-                                <Button 
-                                  variant="ghost" 
-                                  size="sm" 
-                                  className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 h-8 w-8 p-0"
-                                  onClick={() => handleDelete(minute.id, minute.meeting_title)}
-                                  title="Delete"
-                                >
-                                  <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
-                                </Button>
+                              <div className="flex gap-1 sm:gap-2 justify-end items-center">
+                                <Button variant="ghost" size="sm" className="text-blue-600 dark:text-blue-400 hover:text-blue-700 h-8 w-8 p-0" onClick={() => handleView(minute.file_url)} title="View"><Eye className="w-3 h-3 sm:w-4 sm:h-4" /></Button>
+                                <Button variant="ghost" size="sm" className="text-green-600 dark:text-green-400 hover:text-green-700 h-8 w-8 p-0" onClick={() => handleDownload(minute.file_url, minute.original_name)} title="Download"><Download className="w-3 h-3 sm:w-4 sm:h-4" /></Button>
+                                {isEditable(minute.original_name) && (
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-8 px-2 text-xs font-medium text-white bg-[#D1131B] hover:bg-[#B01018] rounded-md flex items-center gap-1"
+                                    onClick={() => handleEditDocument(minute)}
+                                    title={getEditLabel(minute.original_name)}
+                                  >
+                                    <Pencil className="w-3 h-3" />
+                                    <span className="hidden sm:inline">{getEditLabel(minute.original_name)}</span>
+                                  </Button>
+                                )}
+                                <Button variant="ghost" size="sm" className="text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 h-8 w-8 p-0" onClick={() => openEditDialog(minute)} title="Edit metadata"><Pencil className="w-3 h-3 sm:w-4 sm:h-4" /></Button>
+                                <Button variant="ghost" size="sm" className="text-red-600 dark:text-red-400 hover:text-red-700 h-8 w-8 p-0" onClick={() => handleDelete(minute.id, minute.meeting_title)} title="Delete"><Trash2 className="w-3 h-3 sm:w-4 sm:h-4" /></Button>
                               </div>
                             </TableCell>
                           </TableRow>
@@ -509,6 +557,35 @@ export function MinutesUpload() {
             <Button variant="outline" onClick={() => { setEditDialogOpen(false); setReplaceFile(null); }} disabled={saving}>Cancel</Button>
             <Button className="bg-[#D1131B] hover:bg-[#B01018] text-white" onClick={handleSaveEdit} disabled={saving}>
               {saving ? "Saving..." : "Save Changes"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      {/* Inline Text / CSV Editor Dialog */}
+      <Dialog open={textEditorOpen} onOpenChange={setTextEditorOpen}>
+        <DialogContent className="sm:max-w-[800px] w-full dark:bg-gray-800 max-h-[90vh] flex flex-col">
+          <DialogHeader>
+            <DialogTitle className="dark:text-white flex items-center gap-2">
+              <Pencil className="w-4 h-4 text-[#D1131B]" />
+              Editing: {textEditorDoc?.original_name}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="flex-1 min-h-0 py-2">
+            {textLoading ? (
+              <div className="flex items-center justify-center h-48 text-gray-500">Loading file content...</div>
+            ) : (
+              <textarea
+                value={textContent}
+                onChange={e => setTextContent(e.target.value)}
+                className="w-full h-[50vh] p-3 font-mono text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white resize-none focus:outline-none focus:ring-2 focus:ring-[#D1131B]"
+                spellCheck={false}
+              />
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setTextEditorOpen(false)} disabled={textSaving}>Cancel</Button>
+            <Button className="bg-[#D1131B] hover:bg-[#B01018] text-white" onClick={handleSaveText} disabled={textSaving || textLoading}>
+              {textSaving ? "Saving..." : "Save Changes"}
             </Button>
           </DialogFooter>
         </DialogContent>
