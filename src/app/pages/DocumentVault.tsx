@@ -90,9 +90,9 @@ export function DocumentVault() {
 
   const getEditLabel = (name: string) => {
     const ext = getExt(name);
-    if (['xlsx','xls'].includes(ext)) return 'Edit in Excel';
-    if (['pptx','ppt'].includes(ext)) return 'Edit in PowerPoint';
-    if (['docx','doc'].includes(ext)) return 'Edit in Word';
+    if (['xlsx','xls'].includes(ext)) return 'Open in Sheets';
+    if (['pptx','ppt'].includes(ext)) return 'Open in Slides';
+    if (['docx','doc'].includes(ext)) return 'Open in Docs';
     if (['txt','csv'].includes(ext)) return 'Edit Inline';
     return 'Edit';
   };
@@ -185,15 +185,19 @@ export function DocumentVault() {
   };
 
   const handleOpenInOffice = (doc: Document) => {
-    const wopiSrc = encodeURIComponent(
-      `${(import.meta.env.VITE_API_URL || 'http://localhost:3000/api').replace('/api', '')}/wopi/files/${doc.id}?table=documents`
-    );
     const ext = getExt(doc.original_name);
-    let officeUrl = '';
-    if (['xlsx','xls'].includes(ext)) officeUrl = `https://excel.office.live.com/op/edit.aspx?WOPISrc=${wopiSrc}`;
-    else if (['pptx','ppt'].includes(ext)) officeUrl = `https://powerpoint.office.live.com/op/edit.aspx?WOPISrc=${wopiSrc}`;
-    else officeUrl = `https://word.office.live.com/op/edit.aspx?WOPISrc=${wopiSrc}`;
-    window.open(officeUrl, '_blank');
+    // Use Google Docs/Sheets/Slides for editing - genuinely free, works with public URLs
+    let editUrl = '';
+    if (['xlsx','xls'].includes(ext)) {
+      editUrl = `https://docs.google.com/spreadsheets/d/import?url=${encodeURIComponent(doc.file_url)}`;
+    } else if (['pptx','ppt'].includes(ext)) {
+      editUrl = `https://docs.google.com/presentation/d/import?url=${encodeURIComponent(doc.file_url)}`;
+    } else {
+      // Word docs - open in Google Docs
+      editUrl = `https://docs.google.com/document/d/import?url=${encodeURIComponent(doc.file_url)}`;
+    }
+    window.open(editUrl, '_blank');
+    toast.info("Edit in Google Docs, then download and use 'Replace File' to save back.", { duration: 6000 });
   };
 
   const openTextEditor = async (doc: Document) => {
