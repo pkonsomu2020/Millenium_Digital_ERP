@@ -252,36 +252,6 @@ class ApiService {
       body: JSON.stringify({ email, password }),
     });
   }
-
-  // WOPI / inline text editor
-  async getTextContent(id, table = 'documents') {
-    const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
-    const wopiBase = API_BASE.replace('/api', '');
-    const res = await fetch(`${wopiBase}/wopi/text/${id}?table=${table}`);
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed to load content');
-    return data.content;
-  }
-
-  async saveTextContent(id, content, table = 'documents') {
-    const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
-    const wopiBase = API_BASE.replace('/api', '');
-    const res = await fetch(`${wopiBase}/wopi/text/${id}?table=${table}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ content }),
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed to save content');
-    return data;
-  }
-
-  getWopiEditUrl(id, table = 'documents') {
-    const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
-    const wopiBase = API_BASE.replace('/api', '');
-    const wopiSrc = encodeURIComponent(`${wopiBase}/wopi/files/${id}?table=${table}`);
-    return `https://office.live.com/op/edit.aspx?WOPISrc=${wopiSrc}`;
-  }
 }
 
 export const api = new ApiService();

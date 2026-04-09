@@ -7,7 +7,6 @@ import documentRoutes from './routes/document.routes.js';
 import leaveRoutes from './routes/leave.routes.js';
 import meetingRoutes from './routes/meeting.routes.js';
 import dashboardRoutes from './routes/dashboard.routes.js';
-import wopiRoutes from './routes/wopi.routes.js';
 
 dotenv.config();
 
@@ -39,8 +38,6 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
-// Raw body for WOPI PutFile (Office Online sends raw binary)
-app.use('/wopi/files', express.raw({ type: '*/*', limit: '50mb' }));
 
 // Routes
 app.use('/api', authRoutes);
@@ -49,7 +46,6 @@ app.use('/api', documentRoutes);
 app.use('/api', leaveRoutes);
 app.use('/api', meetingRoutes);
 app.use('/api', dashboardRoutes);
-app.use('/wopi', wopiRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
