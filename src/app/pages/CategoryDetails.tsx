@@ -66,7 +66,52 @@ function EditableCell({ value, onSave, className }) {
   );
 }
 
-// Add Purchase Modal — with ability to add new item
+// Inline editable DATE cell — click to change date or month
+function EditableDateCell({ value, isMonth, rowSpan, displayValue, onSave, className }) {
+  const [editing, setEditing] = useState(false);
+  const [val, setVal] = useState(value);
+  const ref = useRef(null);
+
+  useEffect(() => { if (editing) ref.current?.focus(); }, [editing]);
+
+  const commit = async () => {
+    setEditing(false);
+    if (!val || val === value) return;
+    await onSave(val);
+  };
+
+  if (editing) {
+    const inputEl = (
+      <input
+        ref={ref}
+        type={isMonth ? "month" : "date"}
+        value={isMonth ? value.slice(0,7) : val}
+        onChange={e => setVal(isMonth ? e.target.value + "-01" : e.target.value)}
+        onBlur={commit}
+        onKeyDown={e => { if (e.key === "Enter") commit(); if (e.key === "Escape") { setEditing(false); setVal(value); } }}
+        className="w-full px-1 py-1 text-[11px] text-center bg-yellow-50 dark:bg-yellow-900/30 border-2 border-yellow-400 outline-none"
+        style={{minWidth: isMonth ? "70px" : "90px"}}
+      />
+    );
+    return rowSpan
+      ? <td rowSpan={rowSpan} className={className} style={{padding:0}}>{inputEl}</td>
+      : <td className={className} style={{padding:0}}>{inputEl}</td>;
+  }
+
+  const el = (
+    <span
+      className="cursor-pointer hover:underline hover:text-yellow-600 dark:hover:text-yellow-400"
+      onClick={() => setEditing(true)}
+      title="Click to edit"
+    >
+      {displayValue}
+    </span>
+  );
+
+  return rowSpan
+    ? <td rowSpan={rowSpan} className={`${className} cursor-pointer`}>{el}</td>
+    : <td className={`${className} cursor-pointer`}>{el}</td>;
+}
 function AddPurchaseModal({ items, cat, onClose, onSave }) {
   const [date, setDate] = useState(today());
   const [qty, setQty] = useState({});
@@ -219,8 +264,9 @@ function AddRowModal({ onClose, onSave, items }) {
 }
 
 // Monthly Table with inline editing, auto TOTAL, auto TREND
-function MonthlyTable({ items, months, canAdd, onAdd, onAddRow, onCellSave, onDeleteRow }) {
+function MonthlyTable({ items, months, canAdd, onAdd, onAddRow, onCellSave, onDeleteRow, onDateChange }) {
   const cols = items.length + 3;
+
   return (
     <div className="space-y-3">
       {canAdd && (
@@ -241,10 +287,10 @@ function MonthlyTable({ items, months, canAdd, onAdd, onAddRow, onCellSave, onDe
           <thead>
             <tr>
               <th className={`${TH} min-w-[52px] sticky left-0 z-20`}>Month</th>
-              <th className={`${TH} min-w-[80px]`}>Date</th>
+              <th className={`${TH} min-w-[90px]`}>Date</th>
               {items.map(i => <th key={i.id} className={`${TH} min-w-[88px]`}>{i.item_name}{i.unit?` (${i.unit})`:""}</th>)}
               <th className={`${TH} min-w-[90px]`}>Comments</th>
-              {canAdd && <th className={`${TH} min-w-[40px]`}></th>}
+              {canAdd && <th className={`${TH} min-w-[40px]`}>Del</th>}
             </tr>
           </thead>
           <tbody>
@@ -255,17 +301,18 @@ function MonthlyTable({ items, months, canAdd, onAdd, onAddRow, onCellSave, onDe
               const full = new Date(m.key+"-01").toLocaleString("en-GB",{month:"long"}).toUpperCase();
               const ps = prev ? new Date(prev.key+"-01").toLocaleString("en-GB",{month:"short"}).toUpperCase() : "";
 
-              // Auto-compute totals from current data (formula: sum all values in column for this month)
+              // Auto-compute totals: sum all values in column for this month
               const computedTotals = {};
               items.forEach(i => {
                 computedTotals[i.id] = dates.reduce((sum, d) => sum + (m.dates[d]?.[i.id] ?? 0), 0);
               });
 
-              // Auto-compute trends (current month total - previous month total)
+              // Auto-compute trends: current month total - previous month total
               const computedTrends = {};
               if (prev) {
+                const prevDates = Object.keys(prev.dates);
                 items.forEach(i => {
-                  const prevTotal = Object.keys(prev.dates).reduce((sum, d) => sum + (prev.dates[d]?.[i.id] ?? 0), 0);
+                  const prevTotal = prevDates.reduce((sum, d) => sum + (prev.dates[d]?.[i.id] ?? 0), 0);
                   computedTrends[i.id] = computedTotals[i.id] - prevTotal;
                 });
               }
@@ -273,9 +320,27 @@ function MonthlyTable({ items, months, canAdd, onAdd, onAddRow, onCellSave, onDe
               return (
                 <>
                   {dates.map((d, di) => (
-                    <tr key={`${m.key}-${d}`}>
-                      {di===0 && <td rowSpan={dates.length} className={`${MON} sticky left-0 z-10`}>{short}</td>}
-                      <td className={TDL}>{fmt(d)}</td>
+                    <tr key={`${m.key}-${d}`} className="group">
+                      {/* Month cell — editable, only on first row, rowspans all date rows */}
+                      {di === 0 && (
+                        <EditableDateCell
+                          value={m.key + "-01"}
+                          isMonth={true}
+                          rowSpan={dates.length}
+                          displayValue={short}
+                          onSave={newDate => onDateChange(d, newDate, items)}
+                          className={`${MON} sticky left-0 z-10`}
+                        />
+                      )}
+                      {/* Date cell — editable */}
+                      <EditableDateCell
+                        value={d}
+                        isMonth={false}
+                        displayValue={fmt(d)}
+                        onSave={newDate => onDateChange(d, newDate, items)}
+                        className={TDL}
+                      />
+                      {/* Data cells — editable numbers */}
                       {items.map(i => (
                         <EditableCell
                           key={i.id}
@@ -285,10 +350,15 @@ function MonthlyTable({ items, months, canAdd, onAdd, onAddRow, onCellSave, onDe
                         />
                       ))}
                       <td className={CMT}></td>
+                      {/* Delete row button — always visible */}
                       {canAdd && (
                         <td className="border border-gray-200 dark:border-gray-700 px-1 text-center bg-white dark:bg-[#1a2235]">
-                          <button onClick={()=>onDeleteRow(i => i.id, d, m.key)} className="text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100" title="Delete row">
-                            <Trash2 className="w-3 h-3"/>
+                          <button
+                            onClick={() => onDeleteRow(d, items)}
+                            className="text-red-400 hover:text-red-600 transition-colors"
+                            title="Delete this row"
+                          >
+                            <Trash2 className="w-3.5 h-3.5"/>
                           </button>
                         </td>
                       )}
@@ -298,11 +368,28 @@ function MonthlyTable({ items, months, canAdd, onAdd, onAddRow, onCellSave, onDe
                   <tr key={`${m.key}-tot`}>
                     <td className={`${TOT} sticky left-0 z-10`}>TOTAL</td>
                     <td className={TOTL}>{full}</td>
-                    {items.map(i => (
-                      <td key={i.id} className={TOT}>{computedTotals[i.id] ?? 0}</td>
-                    ))}
+                    {items.map(i => <td key={i.id} className={TOT}>{computedTotals[i.id] ?? 0}</td>)}
                     <td className={TOT}></td>
                     {canAdd && <td className={TOT}></td>}
+                  </tr>
+                  {/* REMAINING row — manually filled, no formula */}
+                  <tr key={`${m.key}-rem`}>
+                    <td className="border border-gray-400 dark:border-gray-600 px-2 py-1 text-[11px] font-bold text-center bg-[#70AD47] text-white whitespace-nowrap sticky left-0 z-10">REMAINING</td>
+                    <td className="border border-gray-400 dark:border-gray-600 px-2 py-1 text-[11px] font-bold text-left bg-[#70AD47] text-white whitespace-nowrap"></td>
+                    {items.map(i => (
+                      canAdd ? (
+                        <EditableCell
+                          key={i.id}
+                          value={null}
+                          className="border border-gray-400 dark:border-gray-600 px-2 py-1 text-[11px] font-bold text-center bg-[#70AD47] text-white whitespace-nowrap"
+                          onSave={() => {}}
+                        />
+                      ) : (
+                        <td key={i.id} className="border border-gray-400 dark:border-gray-600 px-2 py-1 text-[11px] font-bold text-center bg-[#70AD47] text-white whitespace-nowrap"></td>
+                      )
+                    ))}
+                    <td className="border border-gray-400 dark:border-gray-600 px-2 py-1 bg-[#70AD47]"></td>
+                    {canAdd && <td className="border border-gray-400 dark:border-gray-600 px-2 py-1 bg-[#70AD47]"></td>}
                   </tr>
                   {/* TREND row — formula: current month total - previous month total */}
                   {prev && (
@@ -317,7 +404,7 @@ function MonthlyTable({ items, months, canAdd, onAdd, onAddRow, onCellSave, onDe
                       {canAdd && <td className={TRD}></td>}
                     </tr>
                   )}
-                  <tr key={`${m.key}-sp`}><td colSpan={cols + (canAdd?1:0)} className="h-3 bg-gray-100 dark:bg-[#111827] border-0"></td></tr>
+                  <tr key={`${m.key}-sp`}><td colSpan={cols + (canAdd ? 1 : 0)} className="h-3 bg-gray-100 dark:bg-[#111827] border-0"></td></tr>
                 </>
               );
             })}
@@ -485,7 +572,38 @@ export function CategoryDetails() {
     catch(e) { toast.error(e.message||"Failed"); }
   };
 
-  // Inline cell save — find existing purchase record for this item+date and update, or create new
+  // Delete entire row — deletes all purchase records for all items on that date
+  const handleDeleteRow = async (dateStr, items) => {
+    if (!confirm(`Delete entire row for ${fmt(dateStr)}? This removes all purchase records on this date.`)) return;
+    try {
+      const res = await api.getMonthlyCategoryPurchases(cat);
+      const allItems = res.items || [];
+      const deletePromises = [];
+      for (const item of allItems) {
+        const hist = await api.getPurchaseHistory(item.id);
+        const record = (hist.data || []).find(p => p.purchase_date === dateStr || p.purchase_date?.startsWith(dateStr));
+        if (record) deletePromises.push(api.deletePurchaseRecord(record.id));
+      }
+      await Promise.all(deletePromises);
+      toast.success(`Row ${fmt(dateStr)} deleted`);
+      load();
+    } catch(e) { toast.error(e.message || "Failed to delete row"); }
+  };
+
+  // Change date of a row — updates all purchase records on that date to the new date
+  const handleDateChange = async (oldDate, newDate, items) => {
+    try {
+      const updatePromises = [];
+      for (const item of items) {
+        const hist = await api.getPurchaseHistory(item.id);
+        const record = (hist.data || []).find(p => p.purchase_date === oldDate || p.purchase_date?.startsWith(oldDate));
+        if (record) updatePromises.push(api.updatePurchaseRecord(record.id, { quantity: record.quantity, notes: record.notes, purchase_date: newDate }));
+      }
+      await Promise.all(updatePromises);
+      toast.success("Date updated");
+      load();
+    } catch(e) { toast.error(e.message || "Failed to update date"); }
+  };
   const handleCellSave = async (itemId, dateStr, newValue) => {
     try {
       // Get purchase history for this item
@@ -534,7 +652,8 @@ export function CategoryDetails() {
               onAdd={()=>setShowPurchase(true)}
               onAddRow={()=>setShowAddRow(true)}
               onCellSave={handleCellSave}
-              onDeleteRow={()=>{}}
+              onDeleteRow={handleDeleteRow}
+              onDateChange={handleDateChange}
             />
           )}
         </>

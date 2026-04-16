@@ -1,4 +1,5 @@
 import { supabase } from '../config/supabase.js';
+import { sendLeaveNotification } from '../services/email.service.js';
 
 export const getAllLeaveRequests = async (req, res) => {
   try {
@@ -53,6 +54,12 @@ export const createLeaveRequest = async (req, res) => {
       .single();
 
     if (error) throw error;
+
+    // Send email notification to HR team (non-blocking)
+    sendLeaveNotification(data).catch(err =>
+      console.error('Leave notification email failed:', err.message)
+    );
+
     res.status(201).json(data);
   } catch (error) {
     console.error('createLeaveRequest error:', error);
