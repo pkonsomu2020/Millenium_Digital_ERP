@@ -79,6 +79,33 @@ class ApiService {
     return this.request(`/stock/${id}/purchase-history`);
   }
 
+  // New Excel-style stock methods
+  async getMonthlyCategoryPurchases(category) {
+    return this.request(`/stock/category/${encodeURIComponent(category)}/monthly`);
+  }
+
+  async getWaterDeliveries() {
+    return this.request('/stock/water/deliveries');
+  }
+
+  async addWaterDelivery(payload) {
+    return this.request('/stock/water/deliveries', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async deleteWaterDelivery(id) {
+    return this.request(`/stock/water/deliveries/${id}`, { method: 'DELETE' });
+  }
+
+  async addPurchaseHistory(id, payload) {
+    return this.request(`/stock/${id}/purchase`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
   async updatePurchaseRecord(purchaseId, data) {
     return this.request(`/stock/purchase/${purchaseId}`, {
       method: 'PUT',
