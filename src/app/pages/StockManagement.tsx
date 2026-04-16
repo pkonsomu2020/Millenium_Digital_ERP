@@ -7,7 +7,6 @@ import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 import { api } from "../../services/api";
 import { useNavigate } from "react-router";
-import { AddItemDialog } from "../components/stock/AddItemDialog";
 
 const CATEGORY_ORDER = [
   "Kitchen Essentials",
@@ -112,20 +111,17 @@ export function StockManagement() {
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-6">
 
-      {/* Stats + Actions */}
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="flex gap-6">
-          <div>
-            <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total Items</p>
-            <p className="text-3xl font-bold text-gray-800 dark:text-white">{loading ? "—" : stats.total_items}</p>
-          </div>
-          <div className="w-px bg-gray-200 dark:bg-gray-700" />
-          <div>
-            <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">Categories</p>
-            <p className="text-3xl font-bold text-gray-800 dark:text-white">{loading ? "—" : stats.categories_count}</p>
-          </div>
+      {/* Stats */}
+      <div className="flex gap-6">
+        <div>
+          <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total Items</p>
+          <p className="text-3xl font-bold text-gray-800 dark:text-white">{loading ? "—" : stats.total_items}</p>
         </div>
-        <AddItemDialog onItemAdded={fetchData} />
+        <div className="w-px bg-gray-200 dark:bg-gray-700" />
+        <div>
+          <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">Categories</p>
+          <p className="text-3xl font-bold text-gray-800 dark:text-white">{loading ? "—" : stats.categories_count}</p>
+        </div>
       </div>
 
       {/* Search */}
