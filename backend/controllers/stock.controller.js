@@ -464,3 +464,52 @@ export const getMonthlyCategoryPurchases = async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 };
+
+// Get comments for a category
+export const getCategoryComments = async (req, res) => {
+  try {
+    const { category } = req.params;
+    const { data, error } = await supabase
+      .from('purchase_date_comments')
+      .select('*')
+      .eq('category', category);
+    if (error) throw error;
+    res.json({ success: true, data });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+// Save/update comment for a date
+export const saveComment = async (req, res) => {
+  try {
+    const { category, purchase_date, comment } = req.body;
+    const { data, error } = await supabase
+      .from('purchase_date_comments')
+      .upsert({ category, purchase_date, comment }, { onConflict: 'category,purchase_date' })
+      .select()
+      .single();
+    if (error) throw error;
+    res.json({ success: true, data });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+// Update water delivery (for inline editing)
+export const updateWaterDelivery = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { delivery_date, bottles_delivered } = req.body;
+    const { data, error } = await supabase
+      .from('water_deliveries')
+      .update({ delivery_date, bottles_delivered })
+      .eq('id', id)
+      .select()
+      .single();
+    if (error) throw error;
+    res.json({ success: true, data });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};

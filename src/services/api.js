@@ -99,6 +99,24 @@ class ApiService {
     return this.request(`/stock/water/deliveries/${id}`, { method: 'DELETE' });
   }
 
+  async updateWaterDelivery(id, payload) {
+    return this.request(`/stock/water/deliveries/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async getCategoryComments(category) {
+    return this.request(`/stock/comments/${encodeURIComponent(category)}`);
+  }
+
+  async saveComment(category, purchase_date, comment) {
+    return this.request('/stock/comments', {
+      method: 'POST',
+      body: JSON.stringify({ category, purchase_date, comment }),
+    });
+  }
+
   async addPurchaseHistory(id, payload) {
     return this.request(`/stock/${id}/purchase`, {
       method: 'POST',

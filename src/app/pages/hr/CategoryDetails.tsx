@@ -19,7 +19,7 @@ const TRD = "border border-gray-400 dark:border-gray-600 px-2 py-1 text-[11px] f
 const TRDL = "border border-gray-400 dark:border-gray-600 px-2 py-1 text-[11px] font-bold text-left bg-[#C00000] text-white whitespace-nowrap";
 const CMT = "border border-gray-300 dark:border-gray-600 px-2 py-1 text-[11px] text-gray-400 whitespace-nowrap bg-white dark:bg-[#1a2235]";
 
-function MonthlyTable({ items, months }) {
+function MonthlyTable({ items, months, comments }) {
   const cols = items.length + 3;
   return (
     <div className="overflow-x-auto rounded-xl border border-gray-300 dark:border-gray-700 shadow">
@@ -46,7 +46,7 @@ function MonthlyTable({ items, months }) {
                     {di===0 && <td rowSpan={dates.length} className={`${MON} sticky left-0 z-10`}>{short}</td>}
                     <td className={TDL}>{fmt(d)}</td>
                     {items.map(i => <td key={i.id} className={TD}>{m.dates[d]?.[i.id] != null ? m.dates[d][i.id] : ""}</td>)}
-                    <td className={CMT}></td>
+                    <td className={CMT}>{comments?.[d] || ""}</td>
                   </tr>
                 ))}
                 <tr key={`${m.key}-tot`}>
@@ -195,6 +195,7 @@ export function HRCategoryDetails() {
   const [monthly, setMonthly] = useState(null);
   const [water, setWater] = useState(null);
   const [stock, setStock] = useState([]);
+  const [comments, setComments] = useState({});
 
   useEffect(() => { if (cat) load(); }, [cat]);
 
@@ -208,8 +209,14 @@ export function HRCategoryDetails() {
         const r = await api.getMonthlyCategoryPurchases(cat);
         setStock(r.items||[]);
       } else {
-        const r = await api.getMonthlyCategoryPurchases(cat);
+        const [r, c] = await Promise.all([
+          api.getMonthlyCategoryPurchases(cat),
+          api.getCategoryComments(cat),
+        ]);
         setMonthly({ items: r.items||[], months: r.months||[] });
+        const cmap = {};
+        (c.data||[]).forEach(row => { cmap[row.purchase_date] = row.comment; });
+        setComments(cmap);
       }
     } catch(e) { console.error(e); }
     finally { setLoading(false); }
@@ -235,7 +242,7 @@ export function HRCategoryDetails() {
           {cat==="Water Count" && water && <WaterTable months={water.months} stats={water.stats}/>}
           {cat==="Kitchen Stock" && <KitchenStockTable items={stock}/>}
           {(cat==="Kitchen Essentials"||cat==="Washroom Essentials"||cat==="Snacks"||cat==="Other Purchases") && monthly && (
-            <MonthlyTable items={monthly.items} months={monthly.months}/>
+            <MonthlyTable items={monthly.items} months={monthly.months} comments={comments}/>
           )}
         </>
       )}

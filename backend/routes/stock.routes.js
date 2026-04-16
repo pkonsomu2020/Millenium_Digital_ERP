@@ -15,7 +15,10 @@ import {
   getWaterDeliveries,
   addWaterDelivery,
   deleteWaterDelivery,
+  updateWaterDelivery,
   getMonthlyCategoryPurchases,
+  getCategoryComments,
+  saveComment,
 } from '../controllers/stock.controller.js';
 
 const router = express.Router();
@@ -40,6 +43,11 @@ router.delete('/purchase/:purchaseId', deletePurchaseHistory);
 // Water deliveries
 router.get('/water/deliveries', getWaterDeliveries);
 router.post('/water/deliveries', addWaterDelivery);
+router.put('/water/deliveries/:id', updateWaterDelivery);
 router.delete('/water/deliveries/:id', deleteWaterDelivery);
+
+// Comments
+router.get('/comments/:category', getCategoryComments);
+router.post('/comments', saveComment);
 
 export default router;
