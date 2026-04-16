@@ -56,6 +56,27 @@ class ApiService {
     return this.request(`/stock/category/${encodeURIComponent(category)}/monthly`);
   }
 
+  // Stock write APIs (Admin only)
+  async createStockItem(payload) {
+    return this.request('/stock', { method: 'POST', body: JSON.stringify(payload) });
+  }
+
+  async updateStockItem(id, payload) {
+    return this.request(`/stock/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
+  }
+
+  async deleteStockItem(id) {
+    return this.request(`/stock/${id}`, { method: 'DELETE' });
+  }
+
+  async addPurchaseHistory(id, payload) {
+    return this.request(`/stock/${id}/purchase`, { method: 'POST', body: JSON.stringify(payload) });
+  }
+
+  async deletePurchaseRecord(purchaseId) {
+    return this.request(`/stock/purchase/${purchaseId}`, { method: 'DELETE' });
+  }
+
   async getWaterDeliveries() {
     return this.request('/stock/water/deliveries');
   }
