@@ -52,6 +52,25 @@ class ApiService {
     return this.request(`/stock/${id}/purchase-history`);
   }
 
+  async getMonthlyCategoryPurchases(category) {
+    return this.request(`/stock/category/${encodeURIComponent(category)}/monthly`);
+  }
+
+  async getWaterDeliveries() {
+    return this.request('/stock/water/deliveries');
+  }
+
+  async addWaterDelivery(payload) {
+    return this.request('/stock/water/deliveries', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async deleteWaterDelivery(id) {
+    return this.request(`/stock/water/deliveries/${id}`, { method: 'DELETE' });
+  }
+
   // Document Management APIs (Read-only for HR)
   async getAllDocuments() {
     return this.request('/documents');

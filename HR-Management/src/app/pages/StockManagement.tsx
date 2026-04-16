@@ -71,6 +71,15 @@ const CATEGORY_ICONS: Record<string, any> = {
   "Other Purchases": Package,
 };
 
+const CATEGORY_DESC: Record<string, string> = {
+  "Kitchen Essentials": "Consumable items — Sugar, Milk, Coffee, Tea & more",
+  "Washroom Essentials": "Cleaning & washroom supplies",
+  "Water Count": "Water bottle delivery log",
+  "Kitchen Stock": "Durable kitchen equipment & inventory",
+  "Snacks": "Snack & beverage items",
+  "Other Purchases": "Miscellaneous purchases",
+};
+
 export function StockManagement() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
@@ -153,7 +162,10 @@ export function StockManagement() {
                 <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-700/60">
                   <div className="flex items-center gap-3">
                     <CatIcon className="w-5 h-5 text-[#D1131B]" />
-                    <h2 className="text-base font-bold text-gray-800 dark:text-white">{category}</h2>
+                    <div>
+                      <h2 className="text-base font-bold text-gray-800 dark:text-white">{category}</h2>
+                      <p className="text-[11px] text-gray-400 dark:text-gray-500 hidden sm:block">{CATEGORY_DESC[category] || ""}</p>
+                    </div>
                     <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#D1131B] text-white text-xs font-bold">
                       {items.length}
                     </span>

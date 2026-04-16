@@ -343,3 +343,124 @@ export const deletePurchaseHistory = async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 };
+
+// Get all water deliveries (full log)
+export const getWaterDeliveries = async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('water_deliveries')
+      .select('*')
+      .order('delivery_date', { ascending: true });
+
+    if (error) throw error;
+
+    // Group by month and compute monthly totals
+    const monthMap = {};
+    data.forEach(row => {
+      const d = new Date(row.delivery_date);
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      const label = d.toLocaleString('en-GB', { month: 'short', year: '2-digit' }).toUpperCase();
+      if (!monthMap[key]) monthMap[key] = { label, deliveries: [], total: 0 };
+      monthMap[key].deliveries.push(row);
+      monthMap[key].total += row.bottles_delivered;
+    });
+
+    const grandTotal = data.reduce((s, r) => s + r.bottles_delivered, 0);
+    const allBottles = data.map(r => r.bottles_delivered);
+    const stats = {
+      grand_total: grandTotal,
+      total_deliveries: data.length,
+      average_per_delivery: data.length ? Math.round(grandTotal / data.length) : 0,
+      max_delivery: allBottles.length ? Math.max(...allBottles) : 0,
+      min_delivery: allBottles.length ? Math.min(...allBottles) : 0,
+    };
+
+    res.json({ success: true, data, months: Object.values(monthMap), stats });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+// Add a water delivery
+export const addWaterDelivery = async (req, res) => {
+  try {
+    const { delivery_date, bottles_delivered, notes } = req.body;
+    const { data, error } = await supabase
+      .from('water_deliveries')
+      .insert([{ delivery_date, bottles_delivered, notes: notes || '' }])
+      .select()
+      .single();
+    if (error) throw error;
+    res.status(201).json({ success: true, data });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+// Delete a water delivery
+export const deleteWaterDelivery = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { error } = await supabase.from('water_deliveries').delete().eq('id', id);
+    if (error) throw error;
+    res.json({ success: true, message: 'Delivery deleted' });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+// Get monthly purchase summary for a category (Excel-style grouped view)
+export const getMonthlyCategoryPurchases = async (req, res) => {
+  try {
+    const { category } = req.params;
+
+    const { data: items, error: itemsError } = await supabase
+      .from('stock_items')
+      .select('id, item_name, unit, current_quantity, purchased_qty, total_qty, notes, is_durable')
+      .eq('category', category)
+      .order('item_name', { ascending: true });
+
+    if (itemsError) throw itemsError;
+
+    const { data: history, error: histError } = await supabase
+      .from('purchase_history')
+      .select('*')
+      .in('stock_item_id', items.map(i => i.id))
+      .order('purchase_date', { ascending: true });
+
+    if (histError) throw histError;
+
+    // Group purchase history by month
+    const monthMap = {};
+    history.forEach(row => {
+      const d = new Date(row.purchase_date);
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      const label = d.toLocaleString('en-GB', { month: 'short', year: '2-digit' }).toUpperCase();
+      if (!monthMap[key]) monthMap[key] = { key, label, dates: {}, totals: {}, trends: {} };
+      const dateStr = row.purchase_date;
+      if (!monthMap[key].dates[dateStr]) monthMap[key].dates[dateStr] = {};
+      monthMap[key].dates[dateStr][row.stock_item_id] = row.quantity;
+      monthMap[key].totals[row.stock_item_id] = (monthMap[key].totals[row.stock_item_id] || 0) + row.quantity;
+    });
+
+    // Compute trends (current month total vs previous month total)
+    const monthKeys = Object.keys(monthMap).sort();
+    monthKeys.forEach((key, idx) => {
+      if (idx === 0) return;
+      const prev = monthMap[monthKeys[idx - 1]];
+      items.forEach(item => {
+        const curr = monthMap[key].totals[item.id] || 0;
+        const prevVal = prev.totals[item.id] || 0;
+        monthMap[key].trends[item.id] = curr - prevVal;
+      });
+    });
+
+    res.json({
+      success: true,
+      items,
+      months: monthKeys.map(k => monthMap[k]),
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};

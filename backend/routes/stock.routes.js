@@ -11,7 +11,11 @@ import {
   getStockStats,
   getPurchaseHistory,
   updatePurchaseHistory,
-  deletePurchaseHistory
+  deletePurchaseHistory,
+  getWaterDeliveries,
+  addWaterDelivery,
+  deleteWaterDelivery,
+  getMonthlyCategoryPurchases,
 } from '../controllers/stock.controller.js';
 
 const router = express.Router();
@@ -21,6 +25,7 @@ router.get('/', getAllStockItems);
 router.get('/stats', getStockStats);
 router.get('/low-stock', getLowStockItems);
 router.get('/category/:category', getStockByCategory);
+router.get('/category/:category/monthly', getMonthlyCategoryPurchases);
 router.get('/:id', getStockItemById);
 router.post('/', createStockItem);
 router.put('/:id', updateStockItem);
@@ -31,5 +36,10 @@ router.post('/:id/purchase', addPurchaseHistory);
 router.get('/:id/purchase-history', getPurchaseHistory);
 router.put('/purchase/:purchaseId', updatePurchaseHistory);
 router.delete('/purchase/:purchaseId', deletePurchaseHistory);
+
+// Water deliveries
+router.get('/water/deliveries', getWaterDeliveries);
+router.post('/water/deliveries', addWaterDelivery);
+router.delete('/water/deliveries/:id', deleteWaterDelivery);
 
 export default router;

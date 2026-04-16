@@ -16,6 +16,7 @@
     "import:csv": "node scripts/clear-and-import-csv.js",
     "import:history": "node scripts/import-purchase-history.js",
     "import:water-kitchen": "node scripts/import-water-kitchen-history.js",
+    "seed:excel-history": "node scripts/seed-excel-purchase-history.js",
     "setup:documents": "node scripts/setup-documents.js",
     "migrate": "node scripts/migrate-remove-threshold.js",
     "migrate:execute": "node scripts/execute-migration.js",
