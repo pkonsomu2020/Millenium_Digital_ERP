@@ -143,18 +143,17 @@ function WaterTable({ months, stats }) {
 
 function KitchenStockTable({ items }) {
   const tc = items.reduce((s,i)=>s+(i.current_quantity||0),0);
-  const tp = items.reduce((s,i)=>s+(i.purchased_qty||0),0);
-  const tt = items.reduce((s,i)=>s+(i.total_qty||0),0);
+  const tt = items.reduce((s,i)=> i.purchased_qty ? s+((i.current_quantity||0)+(i.purchased_qty||0)) : s, 0);
   return (
     <div className="overflow-x-auto rounded-xl border border-gray-300 dark:border-gray-700 shadow">
       <table className="border-collapse" style={{minWidth:"600px",fontSize:"11px"}}>
         <thead>
           <tr>
-            <th className={`${TH} min-w-[36px]`}>#</th>
+            <th className={`${TH} min-w-[36px]`}></th>
             <th className={`${TH} min-w-[180px] text-left`}>Item Name</th>
-            <th className={`${TH} min-w-[100px]`}>Current Qty</th>
+            <th className={`${TH} min-w-[100px]`} style={{borderLeft:"3px solid #70AD47"}}>Current Qty</th>
             <th className={`${TH} min-w-[100px]`}>Purchased</th>
-            <th className={`${TH} min-w-[80px]`}>Total</th>
+            <th className={`${TH} min-w-[80px]`} style={{borderLeft:"3px solid #70AD47",borderRight:"3px solid #70AD47"}}>Total</th>
             <th className={`${TH} min-w-[120px]`}>Notes</th>
           </tr>
         </thead>
@@ -162,24 +161,28 @@ function KitchenStockTable({ items }) {
           {items.map((item,idx) => {
             const bg = idx%2===0 ? "bg-white dark:bg-[#1a2235]" : "bg-gray-50 dark:bg-[#111827]";
             const c = `border border-gray-300 dark:border-gray-600 px-2 py-1.5 text-center text-[11px] whitespace-nowrap ${bg} text-gray-800 dark:text-gray-100`;
+            const autoTotal = item.purchased_qty ? (item.current_quantity||0)+(item.purchased_qty||0) : null;
             return (
               <tr key={item.id} className={bg}>
                 <td className={`${c} text-gray-500`}>{idx+1}</td>
                 <td className={`${c} text-left font-medium`}>{item.item_name}</td>
-                <td className={c}>{item.current_quantity||""}</td>
+                <td className={c} style={{borderLeft:"2px solid #70AD47"}}>{item.current_quantity||""}</td>
                 <td className={c}>{item.purchased_qty||""}</td>
-                <td className={c}>{item.total_qty||""}</td>
+                <td className={`border border-gray-300 dark:border-gray-600 px-2 py-1.5 text-center text-[11px] whitespace-nowrap font-semibold ${bg} text-gray-800 dark:text-gray-100`}
+                  style={{borderLeft:"2px solid #70AD47",borderRight:"2px solid #70AD47"}}>
+                  {autoTotal ?? ""}
+                </td>
                 <td className={`${c} text-gray-500 dark:text-gray-400`}>{item.notes||""}</td>
               </tr>
             );
           })}
           <tr className="bg-[#BDD7EE] dark:bg-[#1e3a5f] font-bold">
-            <td className="border border-gray-400 dark:border-gray-600 px-2 py-1.5 text-center text-[11px]"></td>
-            <td className="border border-gray-400 dark:border-gray-600 px-2 py-1.5 text-left text-[11px] font-bold text-gray-900 dark:text-white">TOTAL ITEMS IN INVENTORY</td>
-            <td className="border border-gray-400 dark:border-gray-600 px-2 py-1.5 text-center text-[11px] font-bold text-gray-900 dark:text-white">{tc}</td>
-            <td className="border border-gray-400 dark:border-gray-600 px-2 py-1.5 text-center text-[11px] font-bold text-gray-900 dark:text-white">{tp||""}</td>
-            <td className="border border-gray-400 dark:border-gray-600 px-2 py-1.5 text-center text-[11px] font-bold text-gray-900 dark:text-white">{tt||""}</td>
-            <td className="border border-gray-400 dark:border-gray-600 px-2 py-1.5"></td>
+            <td className="border border-gray-400 dark:border-gray-600 px-2 py-2 text-center text-[11px]"></td>
+            <td className="border border-gray-400 dark:border-gray-600 px-2 py-2 text-left text-[11px] font-bold text-gray-900 dark:text-white">TOTAL ITEMS IN INVENTORY</td>
+            <td className="border border-gray-400 dark:border-gray-600 px-2 py-2 text-center text-[11px] font-bold text-gray-900 dark:text-white" style={{borderLeft:"2px solid #70AD47"}}>{tc}</td>
+            <td className="border border-gray-400 dark:border-gray-600 px-2 py-2 text-center text-[11px] text-gray-900 dark:text-white"></td>
+            <td className="border border-gray-400 dark:border-gray-600 px-2 py-2 text-center text-[11px] font-bold text-gray-900 dark:text-white" style={{borderLeft:"2px solid #70AD47",borderRight:"2px solid #70AD47"}}>{tt||""}</td>
+            <td className="border border-gray-400 dark:border-gray-600 px-2 py-2"></td>
           </tr>
         </tbody>
       </table>

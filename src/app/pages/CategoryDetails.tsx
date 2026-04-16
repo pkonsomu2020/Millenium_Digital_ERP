@@ -506,21 +506,33 @@ function WaterEditableCell({ value, type, rowClass, onSave }) {
 
 // ── Kitchen Stock Table (admin — inline edit all fields) ──────────────────────
 function KitchenStockTable({ items, onUpdateItem }) {
-  const tc=items.reduce((s,i)=>s+(i.current_quantity||0),0);
-  const tp=items.reduce((s,i)=>s+(i.purchased_qty||0),0);
-  const tt=items.reduce((s,i)=>s+(i.total_qty||0),0);
+  const tc = items.reduce((s,i)=>s+(i.current_quantity||0),0);
+  const tp = items.reduce((s,i)=>s+(i.purchased_qty||0),0);
+  // Total per row = Current Qty + Purchased ONLY if Purchased has a value
+  // Grand total of Total column = sum of rows that have a Purchased value
+  const tt = items.reduce((s,i)=> i.purchased_qty ? s+((i.current_quantity||0)+(i.purchased_qty||0)) : s, 0);
+
+  const handleQtyChange = async (item, field, newVal) => {
+    const current = field==="current_quantity" ? (newVal??0) : (item.current_quantity||0);
+    const purchased = field==="purchased_qty" ? (newVal??0) : (item.purchased_qty||0);
+    const total = purchased ? current + purchased : null;
+    await onUpdateItem(item.id, { [field]: newVal??0, total_qty: total });
+  };
+
   return (
     <div className="space-y-3">
-      <p className="text-[11px] text-gray-400 dark:text-gray-500">Click any cell to edit directly</p>
+      <p className="text-[11px] text-gray-400 dark:text-gray-500">
+        Click any cell to edit. <span className="text-[#70AD47] font-medium">Total = Current Qty + Purchased (auto, only when Purchased is filled)</span>
+      </p>
       <div className="overflow-x-auto rounded-xl border border-gray-300 dark:border-gray-700 shadow">
         <table className="border-collapse" style={{minWidth:"600px",fontSize:"11px"}}>
           <thead>
             <tr>
-              <th className={`${TH} min-w-[36px]`}>#</th>
+              <th className={`${TH} min-w-[36px]`}></th>
               <th className={`${TH} min-w-[180px] text-left`}>Item Name</th>
-              <th className={`${TH} min-w-[100px]`}>Current Qty</th>
+              <th className={`${TH} min-w-[100px]`} style={{borderLeft:"3px solid #70AD47"}}>Current Qty</th>
               <th className={`${TH} min-w-[100px]`}>Purchased</th>
-              <th className={`${TH} min-w-[80px]`}>Total</th>
+              <th className={`${TH} min-w-[80px]`} style={{borderLeft:"3px solid #70AD47",borderRight:"3px solid #70AD47"}}>Total</th>
               <th className={`${TH} min-w-[120px]`}>Notes</th>
             </tr>
           </thead>
@@ -528,24 +540,31 @@ function KitchenStockTable({ items, onUpdateItem }) {
             {items.map((item,idx)=>{
               const bg=idx%2===0?"bg-white dark:bg-[#1a2235]":"bg-gray-50 dark:bg-[#111827]";
               const c=`border border-gray-300 dark:border-gray-600 px-2 py-1.5 text-center text-[11px] whitespace-nowrap ${bg} text-gray-800 dark:text-gray-100`;
+              // Only show Total if Purchased has a value
+              const autoTotal = item.purchased_qty ? (item.current_quantity||0)+(item.purchased_qty||0) : null;
               return(
                 <tr key={item.id} className={bg}>
                   <td className={`${c} text-gray-500`}>{idx+1}</td>
                   <KitchenTextCell value={item.item_name} className={`${c} text-left font-medium`} onSave={v=>onUpdateItem(item.id,{item_name:v})}/>
-                  <EditableCell value={item.current_quantity||null} className={c} onSave={v=>onUpdateItem(item.id,{current_quantity:v??0})}/>
-                  <EditableCell value={item.purchased_qty||null} className={c} onSave={v=>onUpdateItem(item.id,{purchased_qty:v??0})}/>
-                  <EditableCell value={item.total_qty||null} className={c} onSave={v=>onUpdateItem(item.id,{total_qty:v??0})}/>
+                  <EditableCell value={item.current_quantity||null} className={`${c}`} style={{borderLeft:"2px solid #70AD47"}} onSave={v=>handleQtyChange(item,"current_quantity",v)}/>
+                  <EditableCell value={item.purchased_qty||null} className={c} onSave={v=>handleQtyChange(item,"purchased_qty",v)}/>
+                  {/* Total — auto-calculated, read-only */}
+                  <td className={`border border-gray-300 dark:border-gray-600 px-2 py-1.5 text-center text-[11px] whitespace-nowrap font-semibold ${bg} text-gray-800 dark:text-gray-100`}
+                    style={{borderLeft:"2px solid #70AD47",borderRight:"2px solid #70AD47"}}>
+                    {autoTotal ?? ""}
+                  </td>
                   <KitchenTextCell value={item.notes||""} className={`${c} text-gray-500 dark:text-gray-400`} onSave={v=>onUpdateItem(item.id,{notes:v})}/>
                 </tr>
               );
             })}
+            {/* TOTAL row */}
             <tr className="bg-[#BDD7EE] dark:bg-[#1e3a5f] font-bold">
-              <td className="border border-gray-400 dark:border-gray-600 px-2 py-1.5 text-center text-[11px]"></td>
-              <td className="border border-gray-400 dark:border-gray-600 px-2 py-1.5 text-left text-[11px] font-bold text-gray-900 dark:text-white">TOTAL ITEMS IN INVENTORY</td>
-              <td className="border border-gray-400 dark:border-gray-600 px-2 py-1.5 text-center text-[11px] font-bold text-gray-900 dark:text-white">{tc}</td>
-              <td className="border border-gray-400 dark:border-gray-600 px-2 py-1.5 text-center text-[11px] font-bold text-gray-900 dark:text-white">{tp||""}</td>
-              <td className="border border-gray-400 dark:border-gray-600 px-2 py-1.5 text-center text-[11px] font-bold text-gray-900 dark:text-white">{tt||""}</td>
-              <td className="border border-gray-400 dark:border-gray-600 px-2 py-1.5"></td>
+              <td className="border border-gray-400 dark:border-gray-600 px-2 py-2 text-center text-[11px]"></td>
+              <td className="border border-gray-400 dark:border-gray-600 px-2 py-2 text-left text-[11px] font-bold text-gray-900 dark:text-white">TOTAL ITEMS IN INVENTORY</td>
+              <td className="border border-gray-400 dark:border-gray-600 px-2 py-2 text-center text-[11px] font-bold text-gray-900 dark:text-white" style={{borderLeft:"2px solid #70AD47"}}>{tc}</td>
+              <td className="border border-gray-400 dark:border-gray-600 px-2 py-2 text-center text-[11px] text-gray-900 dark:text-white"></td>
+              <td className="border border-gray-400 dark:border-gray-600 px-2 py-2 text-center text-[11px] font-bold text-gray-900 dark:text-white" style={{borderLeft:"2px solid #70AD47",borderRight:"2px solid #70AD47"}}>{tt||""}</td>
+              <td className="border border-gray-400 dark:border-gray-600 px-2 py-2"></td>
             </tr>
           </tbody>
         </table>
