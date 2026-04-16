@@ -290,7 +290,7 @@ function MonthlyTable({ items, months, canAdd, onAdd, onAddRow, onCellSave, onDe
               <th className={`${TH} min-w-[90px]`}>Date</th>
               {items.map(i => <th key={i.id} className={`${TH} min-w-[88px]`}>{i.item_name}{i.unit?` (${i.unit})`:""}</th>)}
               <th className={`${TH} min-w-[90px]`}>Comments</th>
-              {canAdd && <th className={`${TH} min-w-[40px]`}>Del</th>}
+              {canAdd && <th className={`${TH} min-w-[50px]`}>🗑</th>}
             </tr>
           </thead>
           <tbody>
@@ -352,10 +352,10 @@ function MonthlyTable({ items, months, canAdd, onAdd, onAddRow, onCellSave, onDe
                       <td className={CMT}></td>
                       {/* Delete row button — always visible */}
                       {canAdd && (
-                        <td className="border border-gray-200 dark:border-gray-700 px-1 text-center bg-white dark:bg-[#1a2235]">
+                        <td className="border border-gray-200 dark:border-gray-700 px-2 text-center bg-white dark:bg-[#1a2235] whitespace-nowrap">
                           <button
                             onClick={() => onDeleteRow(d, items)}
-                            className="text-red-400 hover:text-red-600 transition-colors"
+                            className="inline-flex items-center justify-center w-6 h-6 rounded bg-red-100 dark:bg-red-900/30 text-red-500 hover:bg-red-500 hover:text-white transition-colors"
                             title="Delete this row"
                           >
                             <Trash2 className="w-3.5 h-3.5"/>
