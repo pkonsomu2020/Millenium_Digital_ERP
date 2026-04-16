@@ -55,6 +55,12 @@ function MonthlyTable({ items, months }) {
                   {items.map(i => <td key={i.id} className={TOT}>{m.totals[i.id]??0}</td>)}
                   <td className={TOT}></td>
                 </tr>
+                <tr key={`${m.key}-rem`}>
+                  <td className="border border-gray-400 dark:border-gray-600 px-2 py-1 text-[11px] font-bold text-center bg-[#70AD47] text-white whitespace-nowrap sticky left-0 z-10">REMAINING</td>
+                  <td className="border border-gray-400 dark:border-gray-600 px-2 py-1 text-[11px] font-bold text-left bg-[#70AD47] text-white whitespace-nowrap"></td>
+                  {items.map(i => <td key={i.id} className="border border-gray-400 dark:border-gray-600 px-2 py-1 text-[11px] font-bold text-center bg-[#70AD47] text-white whitespace-nowrap"></td>)}
+                  <td className="border border-gray-400 dark:border-gray-600 px-2 py-1 bg-[#70AD47]"></td>
+                </tr>
                 {prev && (
                   <tr key={`${m.key}-trd`}>
                     <td className={`${TRD} sticky left-0 z-10`}>TREND</td>

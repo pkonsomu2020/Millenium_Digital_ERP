@@ -21,6 +21,52 @@ const TRD = "border border-gray-400 dark:border-gray-600 px-2 py-1 text-[11px] f
 const TRDL = "border border-gray-400 dark:border-gray-600 px-2 py-1 text-[11px] font-bold text-left bg-[#C00000] text-white whitespace-nowrap";
 const CMT = "border border-gray-300 dark:border-gray-600 px-2 py-1 text-[11px] text-gray-400 whitespace-nowrap bg-white dark:bg-[#1a2235]";
 
+// Inline editable TEXT cell — for comments
+function EditableTextCell({ value, onSave, className, readOnly }) {
+  const [editing, setEditing] = useState(false);
+  const [val, setVal] = useState(value ?? "");
+  const ref = useRef(null);
+
+  useEffect(() => { if (editing) ref.current?.focus(); }, [editing]);
+
+  const commit = async () => {
+    setEditing(false);
+    if (val === value) return;
+    await onSave(val);
+  };
+
+  if (readOnly) {
+    return <td className={className}>{value || ""}</td>;
+  }
+
+  if (editing) {
+    return (
+      <td className={className} style={{padding:0}}>
+        <input
+          ref={ref}
+          type="text"
+          value={val}
+          onChange={e => setVal(e.target.value)}
+          onBlur={commit}
+          onKeyDown={e => { if (e.key === "Enter") commit(); if (e.key === "Escape") { setEditing(false); setVal(value ?? ""); } }}
+          className="w-full h-full px-2 py-1 text-[11px] bg-yellow-50 dark:bg-yellow-900/30 border-2 border-yellow-400 outline-none"
+          style={{minWidth:"80px"}}
+        />
+      </td>
+    );
+  }
+
+  return (
+    <td
+      className={`${className} cursor-pointer hover:bg-yellow-50 dark:hover:bg-yellow-900/20 hover:outline hover:outline-2 hover:outline-yellow-400`}
+      onClick={() => setEditing(true)}
+      title="Click to add comment"
+    >
+      {value || ""}
+    </td>
+  );
+}
+
 // Inline editable cell — click to edit, Enter/blur to save
 function EditableCell({ value, onSave, className }) {
   const [editing, setEditing] = useState(false);
@@ -264,7 +310,7 @@ function AddRowModal({ onClose, onSave, items }) {
 }
 
 // Monthly Table with inline editing, auto TOTAL, auto TREND
-function MonthlyTable({ items, months, canAdd, onAdd, onAddRow, onCellSave, onDeleteRow, onDateChange }) {
+function MonthlyTable({ items, months, canAdd, onAdd, onAddRow, onCellSave, onDeleteRow, onDateChange, onCommentSave, comments }) {
   const cols = items.length + 3;
 
   return (
@@ -349,7 +395,12 @@ function MonthlyTable({ items, months, canAdd, onAdd, onAddRow, onCellSave, onDe
                           onSave={v => onCellSave(i.id, d, v)}
                         />
                       ))}
-                      <td className={CMT}></td>
+                      <EditableTextCell
+                        value={comments?.[d] || ""}
+                        onSave={v => onCommentSave(d, v)}
+                        className={CMT}
+                        readOnly={!canAdd}
+                      />
                       {/* Delete row button — always visible */}
                       {canAdd && (
                         <td className="border border-gray-200 dark:border-gray-700 px-2 text-center bg-white dark:bg-[#1a2235] whitespace-nowrap">
@@ -546,6 +597,7 @@ export function CategoryDetails() {
   const [showPurchase, setShowPurchase] = useState(false);
   const [showWater, setShowWater] = useState(false);
   const [showAddRow, setShowAddRow] = useState(false);
+  const [comments, setComments] = useState({});
 
   useEffect(() => { if (cat) load(); }, [cat]);
 
@@ -570,6 +622,13 @@ export function CategoryDetails() {
     if (!confirm("Delete this delivery?")) return;
     try { await api.deleteWaterDelivery(id); toast.success("Deleted"); load(); }
     catch(e) { toast.error(e.message||"Failed"); }
+  };
+
+  // Save comment for a date (stored in localStorage for now, or can be added to DB)
+  const handleCommentSave = async (dateStr, comment) => {
+    setComments(p => ({ ...p, [dateStr]: comment }));
+    toast.success("Comment saved");
+    // TODO: persist to database if needed
   };
 
   // Delete entire row — deletes all purchase records for all items on that date
@@ -654,6 +713,8 @@ export function CategoryDetails() {
               onCellSave={handleCellSave}
               onDeleteRow={handleDeleteRow}
               onDateChange={handleDateChange}
+              onCommentSave={handleCommentSave}
+              comments={comments}
             />
           )}
         </>
