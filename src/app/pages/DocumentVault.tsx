@@ -118,7 +118,21 @@ export function DocumentVault() {
     } catch { toast.error("Failed to delete document"); }
   };
 
-  const handleView = (url: string) => window.open(url, "_blank");
+  const handleView = (url: string, fileType: string) => {
+    // PDFs open natively in the browser
+    if (fileType.includes("pdf")) {
+      window.open(url, "_blank");
+      return;
+    }
+    // Word docs (.doc, .docx) use Google Docs Viewer for in-browser preview
+    if (fileType.includes("word") || fileType.includes("doc") || url.match(/\.docx?$/i)) {
+      const viewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`;
+      window.open(viewerUrl, "_blank");
+      return;
+    }
+    // Fallback: open directly
+    window.open(url, "_blank");
+  };
 
   const handleDownload = async (url: string, filename: string) => {
     try {
@@ -220,7 +234,7 @@ export function DocumentVault() {
                       <TableCell className="text-gray-700 dark:text-gray-300 text-xs sm:text-sm whitespace-nowrap hidden lg:table-cell">{doc.uploaded_by}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex gap-1 sm:gap-2 justify-end">
-                          <Button variant="ghost" size="sm" className="text-blue-600 dark:text-blue-400 hover:text-blue-700 h-8 w-8 p-0" onClick={() => handleView(doc.file_url)} title="View"><Eye className="w-3 h-3 sm:w-4 sm:h-4" /></Button>
+                          <Button variant="ghost" size="sm" className="text-blue-600 dark:text-blue-400 hover:text-blue-700 h-8 w-8 p-0" onClick={() => handleView(doc.file_url, doc.file_type)} title="View"><Eye className="w-3 h-3 sm:w-4 sm:h-4" /></Button>
                           <Button variant="ghost" size="sm" className="text-green-600 dark:text-green-400 hover:text-green-700 h-8 w-8 p-0" onClick={() => handleDownload(doc.file_url, doc.original_name)} title="Download"><Download className="w-3 h-3 sm:w-4 sm:h-4" /></Button>
                           <Button variant="ghost" size="sm" className="text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 h-8 w-8 p-0" onClick={() => openEditDialog(doc)} title="Edit"><Pencil className="w-3 h-3 sm:w-4 sm:h-4" /></Button>
                           <Button variant="ghost" size="sm" className="text-red-600 dark:text-red-400 hover:text-red-700 h-8 w-8 p-0" onClick={() => handleDelete(doc.id, doc.original_name)} title="Delete"><Trash2 className="w-3 h-3 sm:w-4 sm:h-4" /></Button>

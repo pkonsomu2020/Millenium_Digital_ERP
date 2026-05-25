@@ -33,7 +33,18 @@ export function HRDocumentVault() {
     finally { setLoading(false); }
   };
 
-  const handleView = (url: string) => window.open(url, "_blank");
+  const handleView = (url: string, fileType: string) => {
+    if (fileType.includes("pdf")) {
+      window.open(url, "_blank");
+      return;
+    }
+    if (fileType.includes("word") || fileType.includes("doc") || url.match(/\.docx?$/i)) {
+      const viewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`;
+      window.open(viewerUrl, "_blank");
+      return;
+    }
+    window.open(url, "_blank");
+  };
 
   const handleDownload = async (url: string, filename: string) => {
     try {
@@ -107,7 +118,7 @@ export function HRDocumentVault() {
                       <TableCell className="text-gray-700 dark:text-gray-300 text-xs sm:text-sm whitespace-nowrap hidden lg:table-cell">{doc.uploaded_by}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex gap-1 sm:gap-2 justify-end">
-                          <Button variant="ghost" size="sm" className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 h-8 w-8 p-0" onClick={() => handleView(doc.file_url)} title="View"><Eye className="w-3 h-3 sm:w-4 sm:h-4" /></Button>
+                          <Button variant="ghost" size="sm" className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 h-8 w-8 p-0" onClick={() => handleView(doc.file_url, doc.file_type)} title="View"><Eye className="w-3 h-3 sm:w-4 sm:h-4" /></Button>
                           <Button variant="ghost" size="sm" className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 h-8 w-8 p-0" onClick={() => handleDownload(doc.file_url, doc.original_name)} title="Download"><Download className="w-3 h-3 sm:w-4 sm:h-4" /></Button>
                         </div>
                       </TableCell>

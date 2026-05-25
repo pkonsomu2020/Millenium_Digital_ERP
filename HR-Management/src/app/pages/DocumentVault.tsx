@@ -52,7 +52,19 @@ export function DocumentVault() {
     }
   };
 
-  const handleView = (url: string) => {
+  const handleView = (url: string, fileType: string) => {
+    // PDFs open natively in the browser
+    if (fileType.includes("pdf")) {
+      window.open(url, "_blank");
+      return;
+    }
+    // Word docs (.doc, .docx) use Google Docs Viewer for in-browser preview
+    if (fileType.includes("word") || fileType.includes("doc") || url.match(/\.docx?$/i)) {
+      const viewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`;
+      window.open(viewerUrl, "_blank");
+      return;
+    }
+    // Fallback: open directly
     window.open(url, "_blank");
   };
 
@@ -199,7 +211,7 @@ export function DocumentVault() {
                             variant="ghost" 
                             size="sm" 
                             className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 h-8 w-8 p-0"
-                            onClick={() => handleView(doc.file_url)}
+                            onClick={() => handleView(doc.file_url, doc.file_type)}
                             title="View"
                           >
                             <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
