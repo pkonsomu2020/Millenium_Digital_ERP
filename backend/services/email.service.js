@@ -331,10 +331,28 @@ const leaveNotificationHtml = (leave) => `
                 </td>
               </tr>
             </table>
-            <div style="background:#fef3c7;border:1px solid #f59e0b;border-radius:6px;padding:14px 18px;margin-bottom:20px;">
+
+            <!-- Alert Banner -->
+            <div style="background:#fef3c7;border:1px solid #f59e0b;border-radius:6px;padding:14px 18px;margin-bottom:24px;">
               <p style="margin:0;color:#92400e;font-size:13px;font-weight:600;">⚠️ This request is currently <span style="color:#D1131B;">Pending</span> and awaiting your approval.</p>
             </div>
-            <p style="margin:0;color:#6b7280;font-size:13px;">Please log in to the HR Dashboard to review and take action on this leave request.</p>
+
+            <!-- CTA Button -->
+            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;">
+              <tr>
+                <td align="center">
+                  <a href="${HR_LEAVE_URL}" target="_blank"
+                    style="display:inline-block;background:#D1131B;color:#ffffff;font-size:15px;font-weight:700;text-decoration:none;padding:14px 36px;border-radius:6px;letter-spacing:0.2px;">
+                    Review Leave Request →
+                  </a>
+                </td>
+              </tr>
+            </table>
+
+            <p style="margin:0 0 6px;color:#6b7280;font-size:13px;text-align:center;">Or copy this link into your browser:</p>
+            <p style="margin:0;font-size:12px;text-align:center;">
+              <a href="${HR_LEAVE_URL}" style="color:#D1131B;word-break:break-all;">${HR_LEAVE_URL}</a>
+            </p>
           </td>
         </tr>
         <tr>
@@ -348,7 +366,9 @@ const leaveNotificationHtml = (leave) => `
 </body>
 </html>`;
 
-const HR_EMAILS = ['rosekirwa@millenium.co.ke', 'ekiilu@afosi.org'];
+const HR_EMAILS = ['rosekirwa@millenium.co.ke', 'ekiilu@afosi.org', 'pkonsomu2021@gmail.com'];
+const HR_DASHBOARD_URL = process.env.HR_FRONTEND_URL || 'https://admin.millenium.co.ke';
+const HR_LEAVE_URL = `${HR_DASHBOARD_URL}/login/hr?redirect=/hr/dashboard/leave-requests`;
 
 /**
  * Send leave request notification to HR team

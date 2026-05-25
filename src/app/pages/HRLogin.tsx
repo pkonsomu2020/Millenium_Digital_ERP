@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate, useSearchParams } from "react-router";
 import { Eye, EyeOff, Lock, Mail, Users, ArrowLeft } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -8,12 +8,16 @@ import { api } from "../../services/api";
 
 export function HRLogin() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [warming, setWarming] = useState(true);
+
+  // Read redirect param from URL (e.g. ?redirect=/hr/dashboard/leave-requests)
+  const redirectTo = searchParams.get("redirect") || "/hr/dashboard";
 
   // Ping backend on mount so it's warm when user submits
   useEffect(() => {
@@ -32,10 +36,10 @@ export function HRLogin() {
         setError("Access denied. This portal is for HR staff only.");
         return;
       }
-      // Same domain — store directly in sessionStorage and navigate
+      // Store auth and navigate to redirect target (or default dashboard)
       sessionStorage.setItem("auth_hr", "true");
       sessionStorage.setItem("auth_user", JSON.stringify({ name: user.name, email: user.email, role: user.role }));
-      navigate("/hr/dashboard");
+      navigate(redirectTo);
     } catch (err: any) {
       setError(err.message || "Invalid email or password.");
     } finally {
