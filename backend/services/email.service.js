@@ -394,3 +394,172 @@ export const sendLeaveNotification = async (leave) => {
 
   return { sent, errors };
 };
+
+// ─────────────────────────────────────────────────────────────
+// LEAVE DECISION EMAIL — sent to the employee when HR acts
+// ─────────────────────────────────────────────────────────────
+
+const leaveDecisionHtml = (leave) => {
+  const status = leave.status; // 'Approved' | 'Rejected' | 'Deferred'
+  const leaveType = leave.leave_type === 'Others' && leave.custom_leave_type
+    ? leave.custom_leave_type
+    : leave.leave_type;
+
+  const statusConfig = {
+    Approved: {
+      headerBg: '#16a34a',
+      label: '✅ Leave Approved',
+      subtitle: 'Your leave request has been approved.',
+      bannerBg: '#f0fdf4',
+      bannerBorder: '#86efac',
+      bannerText: '#166534',
+      bannerMsg: 'Your leave has been approved. Please ensure your handover is complete before your leave starts.',
+    },
+    Rejected: {
+      headerBg: '#D1131B',
+      label: '❌ Leave Rejected',
+      subtitle: 'Your leave request has been rejected.',
+      bannerBg: '#fef2f2',
+      bannerBorder: '#fca5a5',
+      bannerText: '#991b1b',
+      bannerMsg: 'Your leave request was not approved. Please review the remarks below and contact HR if you have questions.',
+    },
+    Deferred: {
+      headerBg: '#2563eb',
+      label: '🔄 Leave Deferred',
+      subtitle: 'Your leave request has been deferred.',
+      bannerBg: '#eff6ff',
+      bannerBorder: '#93c5fd',
+      bannerText: '#1e40af',
+      bannerMsg: 'Your leave request has been deferred to a later date. Please see the details below.',
+    },
+  };
+
+  const cfg = statusConfig[status] || statusConfig.Rejected;
+
+  return `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f4f4f5;font-family:Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f5;padding:32px 0;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+
+        <!-- Header -->
+        <tr>
+          <td style="background:${cfg.headerBg};padding:28px 32px;">
+            <h1 style="margin:0;color:#ffffff;font-size:22px;font-weight:700;">Millenium Solutions</h1>
+            <p style="margin:4px 0 0;color:rgba(255,255,255,0.85);font-size:13px;">${cfg.label}</p>
+          </td>
+        </tr>
+
+        <!-- Body -->
+        <tr>
+          <td style="padding:32px;">
+            <p style="margin:0 0 6px;color:#374151;font-size:16px;font-weight:600;">Dear ${leave.employee_name},</p>
+            <p style="margin:0 0 24px;color:#374151;font-size:15px;">${cfg.subtitle}</p>
+
+            <!-- Leave Details Card -->
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;margin-bottom:20px;">
+              <tr>
+                <td style="padding:16px 24px;border-bottom:1px solid #e5e7eb;">
+                  <p style="margin:0 0 4px;color:#6b7280;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;">Leave Type</p>
+                  <p style="margin:0;color:#111827;font-size:16px;font-weight:700;">${leaveType}</p>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:0;">
+                  <table width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td width="50%" style="padding:14px 24px;border-bottom:1px solid #e5e7eb;border-right:1px solid #e5e7eb;">
+                        <p style="margin:0 0 4px;color:#6b7280;font-size:11px;text-transform:uppercase;">📅 Start Date</p>
+                        <p style="margin:0;color:#374151;font-size:14px;font-weight:600;">${formatDate(leave.start_date)}</p>
+                      </td>
+                      <td width="50%" style="padding:14px 24px;border-bottom:1px solid #e5e7eb;">
+                        <p style="margin:0 0 4px;color:#6b7280;font-size:11px;text-transform:uppercase;">📅 End Date</p>
+                        <p style="margin:0;color:#374151;font-size:14px;font-weight:600;">${formatDate(leave.end_date)}</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="50%" style="padding:14px 24px;border-right:1px solid #e5e7eb;">
+                        <p style="margin:0 0 4px;color:#6b7280;font-size:11px;text-transform:uppercase;">Days Applied</p>
+                        <p style="margin:0;color:#374151;font-size:14px;font-weight:600;">${leave.days_applied} day(s)</p>
+                      </td>
+                      <td width="50%" style="padding:14px 24px;">
+                        <p style="margin:0 0 4px;color:#6b7280;font-size:11px;text-transform:uppercase;">Decision By</p>
+                        <p style="margin:0;color:#374151;font-size:14px;font-weight:600;">${leave.reviewed_by || 'HR Manager'}</p>
+                      </td>
+                    </tr>
+                    ${leave.deferred_date ? `
+                    <tr>
+                      <td colspan="2" style="padding:14px 24px;border-top:1px solid #e5e7eb;">
+                        <p style="margin:0 0 4px;color:#6b7280;font-size:11px;text-transform:uppercase;">🔄 Deferred To</p>
+                        <p style="margin:0;color:#374151;font-size:14px;font-weight:600;">${formatDate(leave.deferred_date)}</p>
+                      </td>
+                    </tr>` : ''}
+                  </table>
+                </td>
+              </tr>
+            </table>
+
+            <!-- Status Banner -->
+            <div style="background:${cfg.bannerBg};border:1px solid ${cfg.bannerBorder};border-radius:6px;padding:14px 18px;margin-bottom:${leave.hr_remarks ? '16px' : '24px'};">
+              <p style="margin:0;color:${cfg.bannerText};font-size:13px;">${cfg.bannerMsg}</p>
+            </div>
+
+            <!-- HR Remarks (if any) -->
+            ${leave.hr_remarks ? `
+            <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:6px;padding:14px 18px;margin-bottom:24px;">
+              <p style="margin:0 0 6px;color:#6b7280;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;">HR Remarks</p>
+              <p style="margin:0;color:#374151;font-size:14px;font-style:italic;">"${leave.hr_remarks}"</p>
+            </div>` : ''}
+
+            <p style="margin:0;color:#6b7280;font-size:13px;">If you have any questions regarding this decision, please contact your HR manager directly.</p>
+          </td>
+        </tr>
+
+        <!-- Footer -->
+        <tr>
+          <td style="background:#f9fafb;padding:20px 32px;border-top:1px solid #e5e7eb;">
+            <p style="margin:0;color:#9ca3af;font-size:12px;text-align:center;">© ${new Date().getFullYear()} Millenium Solutions &nbsp;·&nbsp; This is an automated notification</p>
+          </td>
+        </tr>
+
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+};
+
+/**
+ * Send leave decision notification to the employee
+ * Called when HR approves, rejects, or defers a leave request
+ */
+export const sendLeaveDecisionNotification = async (leave) => {
+  const status = leave.status;
+  const leaveType = leave.leave_type === 'Others' && leave.custom_leave_type
+    ? leave.custom_leave_type
+    : leave.leave_type;
+
+  const subjectMap = {
+    Approved: `✅ Leave Approved — ${leaveType} (${leave.days_applied} day(s))`,
+    Rejected: `❌ Leave Rejected — ${leaveType}`,
+    Deferred: `🔄 Leave Deferred — ${leaveType}`,
+  };
+
+  try {
+    await resend.emails.send({
+      from: `Millenium Solutions <${FROM}>`,
+      to: leave.employee_email,
+      subject: subjectMap[status] || `Leave Request Update — ${leaveType}`,
+      html: leaveDecisionHtml(leave),
+    });
+    console.log(`[leave-decision] Email sent to ${leave.employee_email} — ${status}`);
+    return { sent: 1, errors: [] };
+  } catch (err) {
+    console.error(`[leave-decision] Failed to send to ${leave.employee_email}:`, err.message);
+    return { sent: 0, errors: [{ email: leave.employee_email, error: err.message }] };
+  }
+};

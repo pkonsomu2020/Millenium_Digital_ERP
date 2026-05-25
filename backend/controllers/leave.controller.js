@@ -1,5 +1,5 @@
 import { supabase } from '../config/supabase.js';
-import { sendLeaveNotification } from '../services/email.service.js';
+import { sendLeaveNotification, sendLeaveDecisionNotification } from '../services/email.service.js';
 
 export const getAllLeaveRequests = async (req, res) => {
   try {
@@ -101,6 +101,12 @@ export const updateLeaveRequestStatus = async (req, res) => {
       .single();
 
     if (error) throw error;
+
+    // Send decision email to the employee (non-blocking)
+    sendLeaveDecisionNotification(data).catch(err =>
+      console.error('Leave decision email failed:', err.message)
+    );
+
     res.json(data);
   } catch (error) {
     res.status(500).json({ error: error.message });
