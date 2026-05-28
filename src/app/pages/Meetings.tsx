@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Plus, Search, Calendar as CalendarIcon, Clock, Users, MapPin, Eye, Pencil, Trash2, Bell } from "lucide-react";
 import { format, addMonths, subMonths } from "date-fns";
 import { DayPicker } from "react-day-picker";
@@ -235,8 +235,8 @@ export function Meetings() {
         <div className="mb-6 p-3 bg-gray-50 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700 rounded-lg flex flex-wrap items-center gap-2">
           <Users className="w-4 h-4 text-gray-400 shrink-0" />
           <span className="text-xs text-gray-500 dark:text-gray-400 mr-1">Invites auto-sent to:</span>
-          {participants.map(p => (
-            <span key={p.email} className="text-xs bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-full px-2 py-0.5 text-gray-700 dark:text-gray-300">{p.name}</span>
+          {Array.from(new Set(participants.map(p => p.name))).map(name => (
+            <span key={name} className="text-xs bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-full px-2 py-0.5 text-gray-700 dark:text-gray-300">{name}</span>
           ))}
         </div>
       )}
@@ -330,7 +330,7 @@ export function Meetings() {
                         <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 dark:text-gray-400">
                           <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{new Date(m.meeting_date).toLocaleDateString("en-GB")} • {m.meeting_time.slice(0, 5)}{m.duration ? ` (${m.duration})` : ""}</span>
                           {m.location && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{m.location}</span>}
-                          {m.participants?.length > 0 && <span className="flex items-center gap-1"><Users className="w-3 h-3" />{m.participants.join(", ")}</span>}
+                          {m.participants?.length > 0 && <span className="flex items-center gap-1"><Users className="w-3 h-3" />{Array.from(new Set(m.participants)).join(", ")}</span>}
                           <span className="text-gray-400">Created by {m.created_by}</span>
                         </div>
                       </div>
@@ -359,7 +359,7 @@ export function Meetings() {
           {participants.length > 0 && (
             <div className="px-1 pb-2">
               <p className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
-                <Users className="w-3 h-3" /> Invite emails will be auto-sent to: {participants.map(p => p.name).join(", ")}
+                <Users className="w-3 h-3" /> Invite emails will be auto-sent to: {Array.from(new Set(participants.map(p => p.name))).join(", ")}
               </p>
             </div>
           )}
@@ -378,7 +378,7 @@ export function Meetings() {
           {participants.length > 0 && (
             <div className="px-1 pb-2">
               <p className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
-                <Users className="w-3 h-3" /> Update notifications will be sent to: {participants.map(p => p.name).join(", ")}
+                <Users className="w-3 h-3" /> Update notifications will be sent to: {Array.from(new Set(participants.map(p => p.name))).join(", ")}
               </p>
             </div>
           )}
@@ -410,8 +410,8 @@ export function Meetings() {
                 <div className="bg-purple-50 dark:bg-purple-900/20 border border-purple-100 dark:border-purple-800/50 rounded-lg p-3">
                   <p className="text-xs font-medium text-purple-700 dark:text-purple-300 mb-2 flex items-center gap-1"><Users className="w-3 h-3" /> Reminder will be sent to:</p>
                   <div className="flex flex-wrap gap-1">
-                    {participants.map(p => (
-                      <span key={p.email} className="text-xs bg-white dark:bg-gray-700 border border-purple-200 dark:border-purple-700 rounded-full px-2 py-0.5 text-gray-700 dark:text-gray-300">{p.name}</span>
+                    {Array.from(new Set(participants.map(p => p.name))).map(name => (
+                      <span key={name} className="text-xs bg-white dark:bg-gray-700 border border-purple-200 dark:border-purple-700 rounded-full px-2 py-0.5 text-gray-700 dark:text-gray-300">{name}</span>
                     ))}
                   </div>
                 </div>
@@ -454,7 +454,7 @@ export function Meetings() {
                 {selected.location && <div><p className="text-xs text-gray-500 dark:text-gray-400">Location</p><p className="font-medium dark:text-white">{selected.location}</p></div>}
               </div>
               {selected.participants?.length > 0 && (
-                <div><p className="text-xs text-gray-500 dark:text-gray-400">Participants</p><p className="font-medium dark:text-white">{selected.participants.join(", ")}</p></div>
+                <div><p className="text-xs text-gray-500 dark:text-gray-400">Participants</p><p className="font-medium dark:text-white">{Array.from(new Set(selected.participants)).join(", ")}</p></div>
               )}
               <div><p className="text-xs text-gray-500 dark:text-gray-400">Created By</p><p className="font-medium dark:text-white">{selected.created_by}</p></div>
             </div>

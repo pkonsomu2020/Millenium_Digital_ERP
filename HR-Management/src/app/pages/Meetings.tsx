@@ -201,7 +201,7 @@ export function Meetings() {
                 {selected.duration && <div><p className="text-xs text-gray-500 dark:text-gray-400">Duration</p><p className="font-medium dark:text-white">{selected.duration}</p></div>}
                 {selected.location && <div><p className="text-xs text-gray-500 dark:text-gray-400">Location</p><p className="font-medium dark:text-white">{selected.location}</p></div>}
               </div>
-              {selected.participants?.length > 0 && <div><p className="text-xs text-gray-500 dark:text-gray-400">Participants</p><p className="font-medium dark:text-white">{selected.participants.join(", ")}</p></div>}
+              {selected.participants?.length > 0 && <div><p className="text-xs text-gray-500 dark:text-gray-400">Participants</p><p className="font-medium dark:text-white">{Array.from(new Set(selected.participants)).join(", ")}</p></div>}
               <div><p className="text-xs text-gray-500 dark:text-gray-400">Created By</p><p className="font-medium dark:text-white">{selected.created_by}</p></div>
             </div>
           )}

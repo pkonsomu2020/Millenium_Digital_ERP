@@ -368,7 +368,7 @@ const leaveNotificationHtml = (leave) => `
 
 const HR_EMAILS = ['rosekirwa@millenium.co.ke', 'ekiilu@afosi.org', 'pkonsomu2021@gmail.com'];
 const HR_DASHBOARD_URL = process.env.HR_FRONTEND_URL || 'https://admin.millenium.co.ke';
-const HR_LEAVE_URL = `${HR_DASHBOARD_URL}/login/hr?redirect=/hr/dashboard/leave-requests`;
+const HR_LEAVE_URL = 'https://admin.millenium.co.ke/hr/dashboard/leave-requests';
 
 /**
  * Send leave request notification to HR team
