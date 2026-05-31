@@ -30,6 +30,7 @@ export function Home() {
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
   const fetchStats = useCallback(async (silent = false) => {
@@ -37,10 +38,17 @@ export function Home() {
     else setRefreshing(true);
     try {
       const data = await api.getDashboardStats();
+      if (data?.error && !data?.stock) {
+        throw new Error(data.error);
+      }
       setStats(data);
+      setError(null);
       setLastUpdated(new Date());
-    } catch (err) {
+    } catch (err: unknown) {
       console.error(err);
+      const msg = err instanceof Error ? err.message : "Failed to load dashboard";
+      setError(msg);
+      if (!silent) setStats(null);
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -61,6 +69,23 @@ export function Home() {
           <div className="w-10 h-10 border-4 border-[#D1131B] border-t-transparent rounded-full animate-spin mx-auto" />
           <p className="text-gray-500 dark:text-gray-400 text-sm">Loading dashboard...</p>
         </div>
+      </div>
+    );
+  }
+
+  if (error && !stats) {
+    return (
+      <div className="p-8 flex flex-col items-center justify-center min-h-[50vh] gap-4">
+        <XCircle className="w-12 h-12 text-[#D1131B]" />
+        <p className="text-gray-700 dark:text-gray-200 font-medium">Could not load dashboard</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 text-center max-w-md">{error}</p>
+        <button
+          type="button"
+          onClick={() => fetchStats()}
+          className="px-4 py-2 rounded-lg bg-[#D1131B] text-white text-sm font-semibold hover:bg-[#b01016]"
+        >
+          Try again
+        </button>
       </div>
     );
   }
@@ -96,8 +121,8 @@ export function Home() {
     },
     {
       title: "Total Purchases",
-      value: (purchases.monthly || []).reduce((s: number, m: any) => s + m.quantity, 0),
-      sub: "Units across 6 months",
+      value: purchases.totalPurchased ?? 0,
+      sub: "Units bought across all months",
       icon: TrendingUp,
       gradient: "from-purple-500 to-purple-400",
     },
@@ -163,21 +188,35 @@ export function Home() {
           </CardHeader>
           <CardContent>
             <div className="h-[200px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie data={[
-                    { name: "Pending", value: leave.stats?.pending || 0 },
-                    { name: "Approved", value: leave.stats?.approved || 0 },
-                    { name: "Rejected", value: leave.stats?.rejected || 0 },
-                  ]} cx="50%" cy="50%" innerRadius={55} outerRadius={80} paddingAngle={3} dataKey="value">
-                    <Cell fill="#F59E0B" />
-                    <Cell fill="#10B981" />
-                    <Cell fill="#EF4444" />
-                  </Pie>
-                  <Tooltip content={<CustomTooltip />} />
-                  <Legend iconType="circle" iconSize={8} formatter={(v) => <span className="text-xs text-gray-600 dark:text-gray-300">{v}</span>} />
-                </PieChart>
-              </ResponsiveContainer>
+              {(() => {
+                const leavePieData = [
+                  { name: "Pending", value: leave.stats?.pending || 0, color: "#F59E0B" },
+                  { name: "Approved", value: leave.stats?.approved || 0, color: "#10B981" },
+                  { name: "Rejected", value: leave.stats?.rejected || 0, color: "#EF4444" },
+                  { name: "Deferred", value: leave.stats?.deferred || 0, color: "#8B5CF6" },
+                ].filter((d) => d.value > 0);
+                if (leavePieData.length === 0) {
+                  return (
+                    <div className="h-full flex flex-col items-center justify-center text-center px-4">
+                      <Users className="w-8 h-8 text-gray-300 dark:text-gray-600 mb-2" />
+                      <p className="text-sm text-gray-500 dark:text-gray-400">No leave requests yet</p>
+                    </div>
+                  );
+                }
+                return (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie data={leavePieData} cx="50%" cy="50%" innerRadius={55} outerRadius={80} paddingAngle={3} dataKey="value">
+                        {leavePieData.map((d) => (
+                          <Cell key={d.name} fill={d.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend iconType="circle" iconSize={8} formatter={(v) => <span className="text-xs text-gray-600 dark:text-gray-300">{v}</span>} />
+                    </PieChart>
+                  </ResponsiveContainer>
+                );
+              })()}
             </div>
             <div className="grid grid-cols-3 gap-2 mt-2">
               {[
@@ -350,7 +389,7 @@ export function Home() {
                       <TableCell className="text-xs text-gray-500 dark:text-gray-400 py-2">{item.category}</TableCell>
                       <TableCell className="text-right py-2">
                         <Badge className={`text-xs ${item.current_quantity === 0 ? "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400" : "bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400"} border-none`}>
-                          {item.current_quantity}
+                          {item.current_quantity === 0 ? "0" : item.current_quantity}
                         </Badge>
                       </TableCell>
                     </TableRow>
@@ -385,7 +424,7 @@ export function Home() {
                 ) : (purchases.recent || []).map((p: any, i: number) => (
                   <TableRow key={i} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                     <TableCell className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap py-3">
-                      {new Date(p.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                      {p.month || new Date(p.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
                     </TableCell>
                     <TableCell className="text-xs font-medium text-gray-900 dark:text-white py-3">{p.item}</TableCell>
                     <TableCell className="text-xs text-gray-500 dark:text-gray-400 hidden sm:table-cell py-3">

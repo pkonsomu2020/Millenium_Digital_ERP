@@ -11,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import { resolveDashboardPageContext } from "../lib/pageContext";
 
 const navItems = [
   { path: "/", label: "Home", icon: Home },
@@ -45,19 +46,9 @@ export function DashboardLayout() {
     return () => clearInterval(interval);
   }, []);
 
-  const getPageContext = (path: string) => {
-    switch (path) {
-      case "/": return { title: "Dashboard", subtitle: "Welcome to Millennium HR Management System" };
-      case "/stock-management": return { title: "Stock Management", subtitle: "Track and manage office inventory" };
-      case "/document-vault": return { title: "Document Vault", subtitle: "Manage and secure your digital documents" };
-      case "/minutes-upload": return { title: "Minutes Upload", subtitle: "View meeting minutes" };
-      case "/leave-requests": return { title: "Leave Requests", subtitle: "Manage employee leave and absences" };
-      case "/meetings": return { title: "Meetings", subtitle: "Schedule and manage company meetings" };
-      default: return { title: "Millennium HR", subtitle: "System Panel" };
-    }
-  };
-
-  const { title: pageTitle, subtitle: pageSubtitle } = getPageContext(location.pathname);
+  const { title: pageTitle, subtitle: pageSubtitle, hideTopbarOnMobile } = resolveDashboardPageContext(
+    location.pathname
+  );
 
   return (
     <div className="flex h-screen bg-white dark:bg-[#1F2937] overflow-hidden">
@@ -128,71 +119,115 @@ export function DashboardLayout() {
 
       {/* Main Content */}
       <main className="flex-1 overflow-auto bg-gray-50 dark:bg-[#111827] w-full flex flex-col">
-        {/* Mobile Header */}
-        <div className="lg:hidden sticky top-0 z-30 bg-[#374151] text-white p-4 flex items-center justify-between shadow-md">
+        <div className="lg:hidden sticky top-0 z-30 bg-[#374151] text-white px-3 py-2.5 flex items-center gap-2 shadow-md">
           <button
             onClick={() => setIsSidebarOpen(true)}
-            className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
+            className="p-2 -ml-1 hover:bg-gray-700 rounded-lg transition-colors shrink-0"
             aria-label="Open menu"
           >
-            <Menu className="w-6 h-6" />
+            <Menu className="w-5 h-5" />
           </button>
-          <h1 className="text-lg font-bold">Millennium HR</h1>
-          <div className="w-10" /> {/* Spacer for centering */}
+          <div className="flex-1 min-w-0 text-center px-1">
+            <h1 className="text-sm font-bold truncate leading-tight">{pageTitle}</h1>
+            {!hideTopbarOnMobile && (
+              <p className="text-[10px] text-gray-300 truncate">{pageSubtitle}</p>
+            )}
+          </div>
+          <div className="flex items-center gap-1.5 shrink-0">
+            <ThemeToggle />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className="relative h-9 w-9 rounded-full border-2 border-gray-400 hover:border-white overflow-hidden focus:outline-none focus:ring-2 focus:ring-[#D1131B]"
+                  aria-label="Account menu"
+                >
+                  <Avatar className="h-full w-full">
+                    <AvatarImage src={`https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=D1131B&color=fff`} alt={userName} />
+                    <AvatarFallback className="bg-[#D1131B] text-white text-xs font-bold">{initials}</AvatarFallback>
+                  </Avatar>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56 mt-2 dark:bg-gray-800 dark:border-gray-700">
+                <DropdownMenuLabel>
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none dark:text-white">{userName}</p>
+                    <p className="text-xs leading-none text-muted-foreground">{userEmail}</p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator className="dark:bg-gray-700" />
+                <DropdownMenuItem className="cursor-pointer dark:hover:bg-gray-700 dark:text-gray-200">
+                  <User className="mr-2 h-4 w-4" />
+                  <span>Profile</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator className="dark:bg-gray-700" />
+                <DropdownMenuItem
+                  className="cursor-pointer text-red-600 focus:text-red-600 dark:text-red-400 focus:dark:bg-gray-700"
+                  onClick={() => {
+                    sessionStorage.removeItem("auth_hr");
+                    sessionStorage.removeItem("auth_user");
+                    window.location.href = `${import.meta.env.VITE_ADMIN_URL || ""}/`;
+                  }}
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
 
-        {/* Global Topbar */}
-        <div className="p-4 sm:p-6 lg:p-8 pb-0 shrink-0">
-          <div className="bg-[#374151] text-white rounded-xl p-4 sm:p-6 shadow-lg flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-             <div className="flex-shrink-0">
-                <h1 className="text-2xl sm:text-3xl font-bold mb-1">{pageTitle}</h1>
-                <p className="text-sm sm:text-base text-gray-300">{pageSubtitle}</p>
-             </div>
-             
-             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full lg:w-auto lg:flex-shrink-0">
-                <div className="text-left order-2 sm:order-1">
-                   <p className="text-xs sm:text-sm text-gray-300">{currentDate}</p>
-                   <p className="text-xl sm:text-2xl font-bold mt-1">{currentTime}</p>
-                </div>
-                
-                <div className="hidden sm:block w-px h-12 bg-gray-500 order-2"></div>
-
-                <div className="flex items-center gap-3 order-1 sm:order-3 self-end sm:self-auto">
-                   <ThemeToggle />
-                   
-                   <DropdownMenu>
-                     <DropdownMenuTrigger asChild>
-                       <button className="relative h-10 w-10 rounded-full border-2 border-gray-400 hover:border-white transition-colors overflow-hidden focus:outline-none focus:ring-2 focus:ring-[#D1131B]">
-                         <Avatar className="h-full w-full">
-                           <AvatarImage src={`https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=D1131B&color=fff`} alt={userName} />
-                           <AvatarFallback className="bg-[#D1131B] text-white font-bold">{initials}</AvatarFallback>
-                         </Avatar>
-                       </button>
-                     </DropdownMenuTrigger>
-                     <DropdownMenuContent align="end" className="w-56 mt-2 dark:bg-gray-800 dark:border-gray-700">
-                       <DropdownMenuLabel>
-                         <div className="flex flex-col space-y-1">
-                           <p className="text-sm font-medium leading-none dark:text-white">{userName}</p>
-                           <p className="text-xs leading-none text-muted-foreground">{userEmail}</p>
-                         </div>
-                       </DropdownMenuLabel>
-                       <DropdownMenuSeparator className="dark:bg-gray-700" />
-                       <DropdownMenuItem className="cursor-pointer dark:hover:bg-gray-700 dark:text-gray-200">
-                         <User className="mr-2 h-4 w-4" />
-                         <span>Profile</span>
-                       </DropdownMenuItem>
-                       <DropdownMenuSeparator className="dark:bg-gray-700" />
-                       <DropdownMenuItem
-                         className="cursor-pointer text-red-600 focus:text-red-600 dark:text-red-400 focus:dark:bg-gray-700"
-                         onClick={() => { sessionStorage.removeItem("auth_hr"); sessionStorage.removeItem("auth_user"); window.location.href = `${import.meta.env.VITE_ADMIN_URL || ""}/`; }}
-                       >
-                         <LogOut className="mr-2 h-4 w-4" />
-                         <span>Log out</span>
-                       </DropdownMenuItem>
-                     </DropdownMenuContent>
-                   </DropdownMenu>
-                </div>
-             </div>
+        <div className="hidden lg:block shrink-0 px-8 pt-6 pb-0">
+          <div className="bg-[#374151] text-white rounded-xl p-6 shadow-lg flex flex-row items-center justify-between gap-4">
+            <div className="min-w-0 flex-1">
+              <h1 className="text-3xl font-bold truncate">{pageTitle}</h1>
+              <p className="text-sm text-gray-300 truncate mt-1">{pageSubtitle}</p>
+            </div>
+            <div className="flex items-center gap-4 shrink-0">
+              <div className="text-right">
+                <p className="text-xs text-gray-300">{currentDate}</p>
+                <p className="text-2xl font-bold tabular-nums mt-1">{currentTime}</p>
+              </div>
+              <div className="w-px h-12 bg-gray-500" />
+              <div className="flex items-center gap-3">
+                <ThemeToggle />
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="relative h-10 w-10 rounded-full border-2 border-gray-400 hover:border-white transition-colors overflow-hidden focus:outline-none focus:ring-2 focus:ring-[#D1131B]">
+                      <Avatar className="h-full w-full">
+                        <AvatarImage src={`https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=D1131B&color=fff`} alt={userName} />
+                        <AvatarFallback className="bg-[#D1131B] text-white font-bold">{initials}</AvatarFallback>
+                      </Avatar>
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56 mt-2 dark:bg-gray-800 dark:border-gray-700">
+                    <DropdownMenuLabel>
+                      <div className="flex flex-col space-y-1">
+                        <p className="text-sm font-medium leading-none dark:text-white">{userName}</p>
+                        <p className="text-xs leading-none text-muted-foreground">{userEmail}</p>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator className="dark:bg-gray-700" />
+                    <DropdownMenuItem className="cursor-pointer dark:hover:bg-gray-700 dark:text-gray-200">
+                      <User className="mr-2 h-4 w-4" />
+                      <span>Profile</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator className="dark:bg-gray-700" />
+                    <DropdownMenuItem
+                      className="cursor-pointer text-red-600 focus:text-red-600 dark:text-red-400 focus:dark:bg-gray-700"
+                      onClick={() => {
+                        sessionStorage.removeItem("auth_hr");
+                        sessionStorage.removeItem("auth_user");
+                        window.location.href = `${import.meta.env.VITE_ADMIN_URL || ""}/`;
+                      }}
+                    >
+                      <LogOut className="mr-2 h-4 w-4" />
+                      <span>Log out</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
           </div>
         </div>
 

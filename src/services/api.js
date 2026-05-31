@@ -27,17 +27,15 @@ class ApiService {
     }
   }
 
-  // Stock Management APIs
+  // ============================================
+  // Stock Items
+  // ============================================
   async getAllStock() {
     return this.request('/stock');
   }
 
   async getStockStats() {
     return this.request('/stock/stats');
-  }
-
-  async getLowStockItems() {
-    return this.request('/stock/low-stock');
   }
 
   async getStockByCategory(category) {
@@ -68,22 +66,44 @@ class ApiService {
     });
   }
 
-  async addPurchase(id, purchaseData) {
-    return this.request(`/stock/${id}/purchase`, {
+  // ============================================
+  // Stock Months
+  // ============================================
+  async getStockMonths(category) {
+    return this.request(`/stock/category/${encodeURIComponent(category)}/months`);
+  }
+
+  async createStockMonth(data) {
+    return this.request('/stock/months', {
       method: 'POST',
-      body: JSON.stringify(purchaseData),
+      body: JSON.stringify(data),
     });
   }
 
-  async getPurchaseHistory(id) {
-    return this.request(`/stock/${id}/purchase-history`);
+  // ============================================
+  // Stock Entries (dual-period data)
+  // ============================================
+  async getCategoryEntries(category) {
+    return this.request(`/stock/category/${encodeURIComponent(category)}/entries`);
   }
 
-  // New Excel-style stock methods
-  async getMonthlyCategoryPurchases(category) {
-    return this.request(`/stock/category/${encodeURIComponent(category)}/monthly`);
+  async upsertStockEntry(entryData) {
+    return this.request('/stock/entries', {
+      method: 'POST',
+      body: JSON.stringify(entryData),
+    });
   }
 
+  async batchUpsertEntries(entries) {
+    return this.request('/stock/entries/batch', {
+      method: 'POST',
+      body: JSON.stringify({ entries }),
+    });
+  }
+
+  // ============================================
+  // Water Deliveries
+  // ============================================
   async getWaterDeliveries() {
     return this.request('/stock/water/deliveries');
   }
@@ -106,6 +126,9 @@ class ApiService {
     });
   }
 
+  // ============================================
+  // Comments
+  // ============================================
   async getCategoryComments(category) {
     return this.request(`/stock/comments/${encodeURIComponent(category)}`);
   }
@@ -117,27 +140,9 @@ class ApiService {
     });
   }
 
-  async addPurchaseHistory(id, payload) {
-    return this.request(`/stock/${id}/purchase`, {
-      method: 'POST',
-      body: JSON.stringify(payload),
-    });
-  }
-
-  async updatePurchaseRecord(purchaseId, data) {
-    return this.request(`/stock/purchase/${purchaseId}`, {
-      method: 'PUT',
-      body: JSON.stringify(data),
-    });
-  }
-
-  async deletePurchaseRecord(purchaseId) {
-    return this.request(`/stock/purchase/${purchaseId}`, {
-      method: 'DELETE',
-    });
-  }
-
+  // ============================================
   // Document Management APIs
+  // ============================================
   async getAllDocuments() {
     return this.request('/documents');
   }
@@ -146,7 +151,7 @@ class ApiService {
     const url = `${API_BASE_URL}/documents`;
     const response = await fetch(url, {
       method: 'POST',
-      body: formData, // Don't set Content-Type, let browser set it with boundary
+      body: formData,
     });
     const data = await response.json();
     if (!response.ok) {
@@ -176,7 +181,9 @@ class ApiService {
     return data;
   }
 
+  // ============================================
   // Meeting Minutes APIs
+  // ============================================
   async getAllMinutes() {
     return this.request('/minutes');
   }
@@ -215,7 +222,9 @@ class ApiService {
     return data;
   }
 
+  // ============================================
   // Leave Request APIs
+  // ============================================
   async getAllLeaveRequests() {
     return this.request('/leave-requests');
   }
@@ -247,11 +256,9 @@ class ApiService {
     });
   }
 
-  async getLeaveStats() {
-    return this.request('/leave-requests/stats');
-  }
-
+  // ============================================
   // Meetings APIs
+  // ============================================
   async getAllMeetings() {
     return this.request('/meetings');
   }
@@ -287,6 +294,9 @@ class ApiService {
     });
   }
 
+  // ============================================
+  // Dashboard & Auth
+  // ============================================
   async getDashboardStats() {
     return this.request('/dashboard/stats');
   }

@@ -5,18 +5,17 @@ import {
   createStockItem,
   updateStockItem,
   deleteStockItem,
-  getLowStockItems,
   getStockByCategory,
-  addPurchaseHistory,
   getStockStats,
-  getPurchaseHistory,
-  updatePurchaseHistory,
-  deletePurchaseHistory,
+  getStockMonths,
+  createStockMonth,
+  getCategoryEntries,
+  upsertStockEntry,
+  batchUpsertEntries,
   getWaterDeliveries,
   addWaterDelivery,
   deleteWaterDelivery,
   updateWaterDelivery,
-  getMonthlyCategoryPurchases,
   getCategoryComments,
   saveComment,
 } from '../controllers/stock.controller.js';
@@ -26,19 +25,20 @@ const router = express.Router();
 // Stock item routes
 router.get('/', getAllStockItems);
 router.get('/stats', getStockStats);
-router.get('/low-stock', getLowStockItems);
 router.get('/category/:category', getStockByCategory);
-router.get('/category/:category/monthly', getMonthlyCategoryPurchases);
+router.get('/category/:category/months', getStockMonths);
+router.get('/category/:category/entries', getCategoryEntries);
 router.get('/:id', getStockItemById);
 router.post('/', createStockItem);
 router.put('/:id', updateStockItem);
 router.delete('/:id', deleteStockItem);
 
-// Purchase history
-router.post('/:id/purchase', addPurchaseHistory);
-router.get('/:id/purchase-history', getPurchaseHistory);
-router.put('/purchase/:purchaseId', updatePurchaseHistory);
-router.delete('/purchase/:purchaseId', deletePurchaseHistory);
+// Stock months
+router.post('/months', createStockMonth);
+
+// Stock entries (dual-period data)
+router.post('/entries', upsertStockEntry);
+router.post('/entries/batch', batchUpsertEntries);
 
 // Water deliveries
 router.get('/water/deliveries', getWaterDeliveries);

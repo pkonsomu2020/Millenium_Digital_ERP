@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { AlertTriangle, Clock, Calendar, Package, TrendingUp, CheckCircle, RefreshCw } from "lucide-react";
+import { AlertTriangle, Clock, Calendar, Package, TrendingUp, CheckCircle, RefreshCw, XCircle, Users } from "lucide-react";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   AreaChart, Area, PieChart, Pie, Cell, Legend, LineChart, Line,
@@ -30,6 +30,7 @@ export function Home() {
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
   const fetchStats = useCallback(async (silent = false) => {
@@ -37,10 +38,14 @@ export function Home() {
     else setRefreshing(true);
     try {
       const data = await api.getDashboardStats();
+      if (data?.error && !data?.stock) throw new Error(data.error);
       setStats(data);
+      setError(null);
       setLastUpdated(new Date());
-    } catch (err) {
+    } catch (err: unknown) {
       console.error(err);
+      setError(err instanceof Error ? err.message : "Failed to load dashboard");
+      if (!silent) setStats(null);
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -61,6 +66,19 @@ export function Home() {
           <div className="w-10 h-10 border-4 border-[#D1131B] border-t-transparent rounded-full animate-spin mx-auto" />
           <p className="text-gray-500 dark:text-gray-400 text-sm">Loading dashboard...</p>
         </div>
+      </div>
+    );
+  }
+
+  if (error && !stats) {
+    return (
+      <div className="p-8 flex flex-col items-center justify-center min-h-[50vh] gap-4">
+        <XCircle className="w-12 h-12 text-[#D1131B]" />
+        <p className="text-gray-700 dark:text-gray-200 font-medium">Could not load dashboard</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 text-center max-w-md">{error}</p>
+        <button type="button" onClick={() => fetchStats()} className="px-4 py-2 rounded-lg bg-[#D1131B] text-white text-sm font-semibold hover:bg-[#b01016]">
+          Try again
+        </button>
       </div>
     );
   }
@@ -96,8 +114,8 @@ export function Home() {
     },
     {
       title: "Total Purchases",
-      value: (purchases.monthly || []).reduce((s: number, m: any) => s + m.quantity, 0),
-      sub: "Units across 6 months",
+      value: purchases.totalPurchased ?? 0,
+      sub: "Units bought across all months",
       icon: TrendingUp,
       gradient: "from-purple-500 to-purple-400",
     },
@@ -375,7 +393,7 @@ export function Home() {
                 ) : (purchases.recent || []).map((p: any, i: number) => (
                   <TableRow key={i} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                     <TableCell className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap py-3">
-                      {new Date(p.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                      {p.month || new Date(p.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
                     </TableCell>
                     <TableCell className="text-xs font-medium text-gray-900 dark:text-white py-3">{p.item}</TableCell>
                     <TableCell className="text-xs text-gray-500 dark:text-gray-400 hidden sm:table-cell py-3">

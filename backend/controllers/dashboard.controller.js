@@ -2,68 +2,98 @@ import { supabase } from '../config/supabase.js';
 
 export const getDashboardStats = async (req, res) => {
   try {
-    // Run all queries in parallel
-    const [stockRes, purchaseRes, leaveRes, meetingsRes] = await Promise.all([
-      supabase.from('stock_items').select('id, category, item_name, current_quantity'),
-      supabase.from('purchase_history').select('stock_item_id, quantity, purchase_date, stock_items(item_name, category)'),
+    const [stockRes, leaveRes, meetingsRes, entriesRes] = await Promise.all([
+      supabase.from('stock_items').select('id, category, item_name, current_quantity, is_durable'),
       supabase.from('leave_requests').select('status, leave_type, submitted_on'),
       supabase.from('meetings').select('status, meeting_date'),
+      supabase
+        .from('stock_entries')
+        .select('total_bought, stock_months(month_label, month_key, sort_order)'),
     ]);
 
+    if (stockRes.error) throw stockRes.error;
+    if (leaveRes.error) throw leaveRes.error;
+    if (meetingsRes.error) throw meetingsRes.error;
+    if (entriesRes.error) throw entriesRes.error;
+
     const stock = stockRes.data || [];
-    const purchases = purchaseRes.data || [];
     const leaves = leaveRes.data || [];
     const meetings = meetingsRes.data || [];
+    const monthlyEntries = entriesRes.data || [];
+
+    const qty = (v) => {
+      const n = Number(v);
+      return Number.isNaN(n) ? 0 : n;
+    };
 
     // --- Stock stats ---
-    const lowStockItems = stock.filter(i => i.current_quantity <= 3);
+    const lowStockItems = stock
+      .filter((i) => !i.is_durable && qty(i.current_quantity) <= 3)
+      .sort((a, b) => qty(a.current_quantity) - qty(b.current_quantity));
 
-    // Stock by category (bar chart)
     const categoryMap = {};
-    stock.forEach(item => {
-      if (!categoryMap[item.category]) categoryMap[item.category] = 0;
-      categoryMap[item.category]++;
+    stock.forEach((item) => {
+      categoryMap[item.category] = (categoryMap[item.category] || 0) + 1;
     });
     const stockByCategory = Object.entries(categoryMap)
       .map(([category, count]) => ({ category, count }))
       .sort((a, b) => b.count - a.count);
 
-    // --- Purchase history: monthly spend trend (last 6 months) ---
-    const now = new Date();
-    const monthlySpend = [];
-    for (let i = 5; i >= 0; i--) {
-      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      const monthKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-      const label = d.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
-      const total = purchases
-        .filter(p => p.purchase_date && p.purchase_date.startsWith(monthKey))
-        .reduce((sum, p) => sum + (p.quantity || 0), 0);
-      monthlySpend.push({ month: label, quantity: total });
-    }
+    // --- Monthly purchase trend (aggregate in JS — Supabase cannot order by embedded resource) ---
+    const monthAgg = {};
+    monthlyEntries.forEach((e) => {
+      const m = e.stock_months;
+      if (!m) return;
+      const key = m.month_key || m.month_label;
+      if (!monthAgg[key]) {
+        monthAgg[key] = {
+          month: m.month_label || key,
+          quantity: 0,
+          sort_order: m.sort_order ?? 0,
+        };
+      }
+      monthAgg[key].quantity += qty(e.total_bought);
+    });
+    const purchasesMonthly = Object.values(monthAgg)
+      .sort((a, b) => a.sort_order - b.sort_order)
+      .map(({ month, quantity }) => ({ month, quantity }))
+      .slice(-8);
 
-    // Recent purchases (last 8)
-    const recentPurchases = [...purchases]
-      .filter(p => p.purchase_date)
-      .sort((a, b) => new Date(b.purchase_date) - new Date(a.purchase_date))
-      .slice(0, 8)
-      .map(p => ({
-        date: p.purchase_date,
-        item: p.stock_items?.item_name || 'Unknown',
-        category: p.stock_items?.category || '',
-        quantity: p.quantity,
+    const totalPurchased = monthlyEntries.reduce((s, e) => s + qty(e.total_bought), 0);
+
+    // --- Recent stock activity ---
+    const { data: recentEntries, error: recentErr } = await supabase
+      .from('stock_entries')
+      .select(
+        'total_bought, updated_at, stock_items(item_name, category), stock_months(month_label)'
+      )
+      .order('updated_at', { ascending: false })
+      .limit(40);
+
+    if (recentErr) throw recentErr;
+
+    const recentPurchases = (recentEntries || [])
+      .filter((e) => qty(e.total_bought) > 0)
+      .slice(0, 10)
+      .map((e) => ({
+        date: e.updated_at || new Date().toISOString(),
+        item: e.stock_items?.item_name || 'Unknown',
+        category: e.stock_items?.category || '',
+        quantity: qty(e.total_bought),
+        month: e.stock_months?.month_label || '',
       }));
 
     // --- Leave stats ---
     const leaveStats = {
-      pending: leaves.filter(l => l.status === 'Pending').length,
-      approved: leaves.filter(l => l.status === 'Approved').length,
-      rejected: leaves.filter(l => l.status === 'Rejected').length,
+      pending: leaves.filter((l) => l.status === 'Pending').length,
+      approved: leaves.filter((l) => l.status === 'Approved').length,
+      rejected: leaves.filter((l) => l.status === 'Rejected').length,
+      deferred: leaves.filter((l) => l.status === 'Deferred').length,
       total: leaves.length,
     };
 
-    // Leave by type (donut/bar)
     const leaveTypeMap = {};
-    leaves.forEach(l => {
+    leaves.forEach((l) => {
       const t = l.leave_type || 'Other';
       leaveTypeMap[t] = (leaveTypeMap[t] || 0) + 1;
     });
@@ -73,42 +103,60 @@ export const getDashboardStats = async (req, res) => {
       .slice(0, 6);
 
     // --- Meetings stats ---
-    const today = new Date().toISOString().split('T')[0];
-    const weekStart = new Date(); weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-    const weekEnd = new Date(weekStart); weekEnd.setDate(weekStart.getDate() + 6);
+    const weekStart = new Date();
+    weekStart.setHours(0, 0, 0, 0);
+    weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekStart.getDate() + 6);
+    weekEnd.setHours(23, 59, 59, 999);
 
     const meetingStats = {
-      upcoming: meetings.filter(m => m.status === 'Upcoming').length,
-      completed: meetings.filter(m => m.status === 'Completed').length,
-      thisWeek: meetings.filter(m => {
+      upcoming: meetings.filter((m) => m.status === 'Upcoming').length,
+      completed: meetings.filter((m) => m.status === 'Completed').length,
+      thisWeek: meetings.filter((m) => {
         const d = new Date(m.meeting_date);
         return d >= weekStart && d <= weekEnd;
       }).length,
       total: meetings.length,
     };
 
-    // Meetings per month (last 6)
-    const meetingsPerMonth = [];
-    for (let i = 5; i >= 0; i--) {
-      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      const monthKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-      const label = d.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
-      const count = meetings.filter(m => m.meeting_date && m.meeting_date.startsWith(monthKey)).length;
-      meetingsPerMonth.push({ month: label, count });
-    }
+    const meetingMonthMap = {};
+    meetings.forEach((m) => {
+      const d = new Date(m.meeting_date);
+      if (Number.isNaN(d.getTime())) return;
+      const sortKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      const label = d.toLocaleString('en-GB', { month: 'short', year: '2-digit' });
+      if (!meetingMonthMap[sortKey]) {
+        meetingMonthMap[sortKey] = { month: label, count: 0, sortKey };
+      }
+      meetingMonthMap[sortKey].count += 1;
+    });
+    const meetingsPerMonth = Object.values(meetingMonthMap)
+      .sort((a, b) => a.sortKey.localeCompare(b.sortKey))
+      .map(({ month, count }) => ({ month, count }))
+      .slice(-6);
 
     res.json({
+      success: true,
       stock: {
         total: stock.length,
         lowStock: lowStockItems.length,
         byCategory: stockByCategory,
-        lowStockItems: lowStockItems.slice(0, 5),
+        lowStockItems: lowStockItems.slice(0, 8).map((i) => ({
+          ...i,
+          current_quantity: qty(i.current_quantity),
+        })),
       },
-      purchases: { monthly: monthlySpend, recent: recentPurchases },
+      purchases: {
+        monthly: purchasesMonthly,
+        recent: recentPurchases,
+        totalPurchased,
+      },
       leave: { stats: leaveStats, byType: leaveByType },
       meetings: { stats: meetingStats, perMonth: meetingsPerMonth },
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Dashboard stats error:', error);
+    res.status(500).json({ success: false, error: error.message });
   }
 };

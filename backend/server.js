@@ -20,6 +20,10 @@ const allowedOrigins = [
   process.env.HR_FRONTEND_URL,
   'http://localhost:5173',
   'http://localhost:5174',
+  'http://localhost:5175',
+  'http://127.0.0.1:5173',
+  'http://127.0.0.1:5174',
+  'http://127.0.0.1:5175',
   'https://admin.millenium.co.ke',
   'https://hr.millenium.co.ke',
   'https://millenium.co.ke',
@@ -38,7 +42,8 @@ app.use(cors({
     if (
       allowedOrigins.includes(origin) ||
       /^https:\/\/[a-z0-9-]+\.vercel\.app$/.test(origin) ||
-      /^https?:\/\/([a-z0-9-]+\.)?millenium\.co\.ke$/.test(origin)
+      /^https?:\/\/([a-z0-9-]+\.)?millenium\.co\.ke$/.test(origin) ||
+      /^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(origin)
     ) {
       return callback(null, true);
     }
@@ -107,7 +112,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`CORS enabled for: ${allowedOrigins.join(', ')}`);
@@ -123,5 +128,15 @@ app.listen(PORT, () => {
       }
     }, 14 * 60 * 1000); // 14 minutes
   }
+});
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`\nPort ${PORT} is already in use. Stop the other backend first:`);
+    console.error(`  netstat -ano | findstr :${PORT}`);
+    console.error(`  taskkill /PID <pid> /F\n`);
+    process.exit(1);
+  }
+  throw err;
 });
 

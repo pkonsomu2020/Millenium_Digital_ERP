@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { AlertTriangle, Clock, Calendar, Package, TrendingUp, CheckCircle } from "lucide-react";
+import { AlertTriangle, Clock, Calendar, Package, TrendingUp, CheckCircle, XCircle } from "lucide-react";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   AreaChart, Area, PieChart, Pie, Cell, Legend, LineChart, Line,
@@ -29,16 +29,21 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 export function HRHome() {
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
   const fetchStats = useCallback(async (silent = false) => {
     if (!silent) setLoading(true);
     try {
       const data = await api.getDashboardStats();
+      if (data?.error && !data?.stock) throw new Error(data.error);
       setStats(data);
+      setError(null);
       setLastUpdated(new Date());
-    } catch (err) {
+    } catch (err: unknown) {
       console.error(err);
+      setError(err instanceof Error ? err.message : "Failed to load dashboard");
+      if (!silent) setStats(null);
     } finally {
       setLoading(false);
     }
@@ -61,6 +66,19 @@ export function HRHome() {
     );
   }
 
+  if (error && !stats) {
+    return (
+      <div className="p-8 flex flex-col items-center justify-center min-h-[50vh] gap-4">
+        <XCircle className="w-12 h-12 text-[#D1131B]" />
+        <p className="text-gray-700 dark:text-gray-200 font-medium">Could not load dashboard</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 text-center max-w-md">{error}</p>
+        <button type="button" onClick={() => fetchStats()} className="px-4 py-2 rounded-lg bg-[#D1131B] text-white text-sm font-semibold hover:bg-[#b01016]">
+          Try again
+        </button>
+      </div>
+    );
+  }
+
   const s = stats || {};
   const stock = s.stock || {};
   const purchases = s.purchases || {};
@@ -71,7 +89,7 @@ export function HRHome() {
     { title: "Stock Items", value: stock.total ?? 0, sub: `${stock.lowStock ?? 0} low stock alerts`, icon: Package, gradient: "from-[#D1131B] to-[#ff4d4d]", alert: (stock.lowStock ?? 0) > 0 },
     { title: "Pending Leave", value: leave.stats?.pending ?? 0, sub: `${leave.stats?.total ?? 0} total requests`, icon: Clock, gradient: "from-blue-500 to-blue-400" },
     { title: "Upcoming Meetings", value: meetings.stats?.upcoming ?? 0, sub: `${meetings.stats?.thisWeek ?? 0} this week`, icon: Calendar, gradient: "from-emerald-500 to-emerald-400" },
-    { title: "Total Purchases", value: (purchases.monthly || []).reduce((s: number, m: any) => s + m.quantity, 0), sub: "Units across 6 months", icon: TrendingUp, gradient: "from-purple-500 to-purple-400" },
+    { title: "Total Purchases", value: purchases.totalPurchased ?? 0, sub: "Units bought across all months", icon: TrendingUp, gradient: "from-purple-500 to-purple-400" },
   ];
 
   return (
@@ -258,7 +276,7 @@ export function HRHome() {
                   <TableRow><TableCell colSpan={4} className="text-center text-gray-400 py-8 text-sm">No purchases recorded yet</TableCell></TableRow>
                 ) : (purchases.recent || []).map((p: any, i: number) => (
                   <TableRow key={i} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                    <TableCell className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap py-3">{new Date(p.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</TableCell>
+                    <TableCell className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap py-3">{p.month || new Date(p.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</TableCell>
                     <TableCell className="text-xs font-medium text-gray-900 dark:text-white py-3">{p.item}</TableCell>
                     <TableCell className="text-xs text-gray-500 dark:text-gray-400 hidden sm:table-cell py-3"><Badge variant="secondary" className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 border-none">{p.category}</Badge></TableCell>
                     <TableCell className="text-right text-xs font-semibold text-gray-800 dark:text-white py-3">{p.quantity}</TableCell>

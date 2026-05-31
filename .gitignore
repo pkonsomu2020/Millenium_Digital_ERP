@@ -55,3 +55,7 @@ backend/docs/
 coverage/
 .vercel
 .env*.local
+
+generate_migration.py
+stock_management_webapp.html
+Stock Management 2025 final.xlsx

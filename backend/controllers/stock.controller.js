@@ -1,5 +1,9 @@
 import { supabase } from '../config/supabase.js';
 
+// ============================================
+// STOCK ITEMS
+// ============================================
+
 // Get all stock items
 export const getAllStockItems = async (req, res) => {
   try {
@@ -10,7 +14,6 @@ export const getAllStockItems = async (req, res) => {
       .order('item_name', { ascending: true });
 
     if (error) throw error;
-
     res.json({ success: true, data });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -21,15 +24,13 @@ export const getAllStockItems = async (req, res) => {
 export const getStockItemById = async (req, res) => {
   try {
     const { id } = req.params;
-    
     const { data, error } = await supabase
       .from('stock_items')
-      .select('*, purchase_history(*)')
+      .select('*')
       .eq('id', id)
       .single();
 
     if (error) throw error;
-
     res.json({ success: true, data });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -39,39 +40,29 @@ export const getStockItemById = async (req, res) => {
 // Create new stock item
 export const createStockItem = async (req, res) => {
   try {
-    const { category, item_name, current_quantity, unit, is_durable, notes } = req.body;
+    const { category, item_name, unit, is_durable, notes, current_quantity, purchased_qty, broken_lost_qty, total_qty } = req.body;
 
     const { data, error } = await supabase
       .from('stock_items')
       .insert([{
         category,
         item_name,
-        current_quantity: current_quantity || 0,
         unit,
         is_durable: is_durable || false,
-        notes: notes || ''
+        notes: notes || '',
+        current_quantity: current_quantity || 0,
+        purchased_qty: purchased_qty || 0,
+        broken_lost_qty: broken_lost_qty || 0,
+        total_qty: total_qty || 0,
       }])
       .select()
       .single();
 
     if (error) {
       if (error.code === '23505') {
-        return res.status(409).json({ success: false, error: `"${item_name}" already exists in ${category}. Use a different name or edit the existing item.` });
+        return res.status(409).json({ success: false, error: `"${item_name}" already exists in ${category}.` });
       }
       throw error;
-    }
-
-    // If initial quantity > 0, create a purchase history record
-    if (data && current_quantity && current_quantity > 0) {
-      await supabase
-        .from('purchase_history')
-        .insert([{
-          stock_item_id: data.id,
-          quantity: current_quantity,
-          unit_price: 0,
-          purchase_date: new Date().toISOString().split('T')[0],
-          notes: 'Initial stock'
-        }]);
     }
 
     res.status(201).json({ success: true, data });
@@ -95,7 +86,7 @@ export const updateStockItem = async (req, res) => {
 
     if (error) {
       if (error.code === '23505') {
-        return res.status(409).json({ success: false, error: `An item with that name already exists in this category.` });
+        return res.status(409).json({ success: false, error: 'An item with that name already exists in this category.' });
       }
       throw error;
     }
@@ -110,32 +101,9 @@ export const updateStockItem = async (req, res) => {
 export const deleteStockItem = async (req, res) => {
   try {
     const { id } = req.params;
-
-    const { error } = await supabase
-      .from('stock_items')
-      .delete()
-      .eq('id', id);
-
+    const { error } = await supabase.from('stock_items').delete().eq('id', id);
     if (error) throw error;
-
     res.json({ success: true, message: 'Stock item deleted successfully' });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-};
-
-// Get low stock items
-export const getLowStockItems = async (req, res) => {
-  try {
-    const { data, error } = await supabase
-      .from('stock_items')
-      .select('*')
-      .lte('current_quantity', supabase.raw('threshold'))
-      .order('current_quantity', { ascending: true });
-
-    if (error) throw error;
-
-    res.json({ success: true, data, count: data.length });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -145,7 +113,6 @@ export const getLowStockItems = async (req, res) => {
 export const getStockByCategory = async (req, res) => {
   try {
     const { category } = req.params;
-
     const { data, error } = await supabase
       .from('stock_items')
       .select('*')
@@ -153,66 +120,17 @@ export const getStockByCategory = async (req, res) => {
       .order('item_name', { ascending: true });
 
     if (error) throw error;
-
     res.json({ success: true, data });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
 };
 
-// Add purchase history
-export const addPurchaseHistory = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { quantity, unit_price, purchase_date, notes } = req.body;
-
-    // Insert purchase history
-    const { data: purchaseData, error: purchaseError } = await supabase
-      .from('purchase_history')
-      .insert([{
-        stock_item_id: id,
-        quantity,
-        unit_price: unit_price || 0,
-        purchase_date: purchase_date || new Date().toISOString(),
-        notes: notes || ''
-      }])
-      .select()
-      .single();
-
-    if (purchaseError) throw purchaseError;
-
-    // Update current quantity
-    const { data: stockItem, error: fetchError } = await supabase
-      .from('stock_items')
-      .select('current_quantity')
-      .eq('id', id)
-      .single();
-
-    if (fetchError) throw fetchError;
-
-    const newQuantity = (stockItem.current_quantity || 0) + quantity;
-
-    const { error: updateError } = await supabase
-      .from('stock_items')
-      .update({ current_quantity: newQuantity })
-      .eq('id', id);
-
-    if (updateError) throw updateError;
-
-    res.status(201).json({ success: true, data: purchaseData });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-};
-
-// Get stock statistics
+// Get stock stats
 export const getStockStats = async (req, res) => {
   try {
-    const { data: allItems, error: allError } = await supabase
-      .from('stock_items')
-      .select('*');
-
-    if (allError) throw allError;
+    const { data: allItems, error } = await supabase.from('stock_items').select('*');
+    if (error) throw error;
 
     const categories = [...new Set(allItems.map(item => item.category))];
 
@@ -221,7 +139,7 @@ export const getStockStats = async (req, res) => {
       stats: {
         total_items: allItems.length,
         categories_count: categories.length,
-        categories: categories
+        categories
       }
     });
   } catch (error) {
@@ -229,71 +147,155 @@ export const getStockStats = async (req, res) => {
   }
 };
 
-// Get purchase history for a specific item
-export const getPurchaseHistory = async (req, res) => {
-  try {
-    const { id } = req.params;
+// ============================================
+// STOCK MONTHS
+// ============================================
 
+// Get all months for a category
+export const getStockMonths = async (req, res) => {
+  try {
+    const { category } = req.params;
     const { data, error } = await supabase
-      .from('purchase_history')
+      .from('stock_months')
       .select('*')
-      .eq('stock_item_id', id)
-      .order('purchase_date', { ascending: false });
+      .eq('category', category)
+      .order('sort_order', { ascending: true });
 
     if (error) throw error;
-
     res.json({ success: true, data });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
 };
 
-// Update a purchase history record
-export const updatePurchaseHistory = async (req, res) => {
+// Create or add a new month
+export const createStockMonth = async (req, res) => {
   try {
-    const { purchaseId } = req.params;
-    const { quantity, notes, purchase_date } = req.body;
-
-    // Get the old record first
-    const { data: oldRecord, error: fetchError } = await supabase
-      .from('purchase_history')
-      .select('*')
-      .eq('id', purchaseId)
-      .single();
-
-    if (fetchError) throw fetchError;
-
-    // Update the purchase history record
-    const updateFields = {
-      quantity: quantity !== undefined ? quantity : oldRecord.quantity,
-      notes: notes !== undefined ? notes : oldRecord.notes,
-    };
-    if (purchase_date !== undefined) updateFields.purchase_date = purchase_date;
+    const { category, month_key, month_label, period_1_label, period_2_label, sort_order } = req.body;
 
     const { data, error } = await supabase
-      .from('purchase_history')
-      .update(updateFields)
-      .eq('id', purchaseId)
+      .from('stock_months')
+      .insert([{ category, month_key, month_label, period_1_label, period_2_label, sort_order }])
+      .select()
+      .single();
+
+    if (error) {
+      if (error.code === '23505') {
+        return res.status(409).json({ success: false, error: `Month ${month_key} already exists for ${category}.` });
+      }
+      throw error;
+    }
+
+    res.status(201).json({ success: true, data });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+// ============================================
+// STOCK ENTRIES (dual-period data)
+// ============================================
+
+// Get all entries for a category (with item names and month info)
+export const getCategoryEntries = async (req, res) => {
+  try {
+    const { category } = req.params;
+
+    // Get items for this category
+    const { data: items, error: itemsError } = await supabase
+      .from('stock_items')
+      .select('id, item_name, unit, is_durable, current_quantity, purchased_qty, broken_lost_qty, total_qty, notes')
+      .eq('category', category)
+      .order('item_name', { ascending: true });
+
+    if (itemsError) throw itemsError;
+
+    // Get months for this category
+    const { data: months, error: monthsError } = await supabase
+      .from('stock_months')
+      .select('*')
+      .eq('category', category)
+      .order('sort_order', { ascending: true });
+
+    if (monthsError) throw monthsError;
+
+    // Get all entries for these items
+    const itemIds = items.map(i => i.id);
+    const monthIds = months.map(m => m.id);
+
+    let entries = [];
+    if (itemIds.length > 0 && monthIds.length > 0) {
+      const { data: entryData, error: entriesError } = await supabase
+        .from('stock_entries')
+        .select('*')
+        .in('stock_item_id', itemIds)
+        .in('month_id', monthIds);
+
+      if (entriesError) throw entriesError;
+      entries = entryData || [];
+    }
+
+    res.json({
+      success: true,
+      items,
+      months,
+      entries,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+// Upsert a single stock entry
+export const upsertStockEntry = async (req, res) => {
+  try {
+    const { stock_item_id, month_id, p1_opening, p1_bought, p1_used, p1_closing, p2_opening, p2_bought, p2_used, p2_closing, total_bought, total_used, stock_movement, final_closing } = req.body;
+
+    const { data, error } = await supabase
+      .from('stock_entries')
+      .upsert({
+        stock_item_id,
+        month_id,
+        p1_opening: p1_opening || 0,
+        p1_bought: p1_bought || 0,
+        p1_used: p1_used || 0,
+        p1_closing: p1_closing || 0,
+        p2_opening: p2_opening || 0,
+        p2_bought: p2_bought || 0,
+        p2_used: p2_used || 0,
+        p2_closing: p2_closing || 0,
+        total_bought: total_bought || 0,
+        total_used: total_used || 0,
+        stock_movement: stock_movement || 0,
+        final_closing: final_closing || 0,
+      }, { onConflict: 'stock_item_id,month_id' })
       .select()
       .single();
 
     if (error) throw error;
 
-    // Adjust current_quantity on the stock item by the difference
-    const diff = quantity - oldRecord.quantity;
-    if (diff !== 0) {
-      const { data: stockItem, error: stockFetchError } = await supabase
-        .from('stock_items')
-        .select('current_quantity')
-        .eq('id', oldRecord.stock_item_id)
+    // Update stock_items.current_quantity only when this entry is for the latest month in its category
+    const { data: monthRow } = await supabase
+      .from('stock_months')
+      .select('category, sort_order')
+      .eq('id', month_id)
+      .single();
+
+    if (monthRow?.category) {
+      const { data: latestMonth } = await supabase
+        .from('stock_months')
+        .select('id')
+        .eq('category', monthRow.category)
+        .order('sort_order', { ascending: false })
+        .limit(1)
         .single();
 
-      if (stockFetchError) throw stockFetchError;
-
-      await supabase
-        .from('stock_items')
-        .update({ current_quantity: (stockItem.current_quantity || 0) + diff })
-        .eq('id', oldRecord.stock_item_id);
+      if (latestMonth?.id === month_id) {
+        await supabase
+          .from('stock_items')
+          .update({ current_quantity: data.final_closing ?? final_closing ?? 0 })
+          .eq('id', stock_item_id);
+      }
     }
 
     res.json({ success: true, data });
@@ -302,49 +304,50 @@ export const updatePurchaseHistory = async (req, res) => {
   }
 };
 
-// Delete a purchase history record
-export const deletePurchaseHistory = async (req, res) => {
+// Batch upsert stock entries
+export const batchUpsertEntries = async (req, res) => {
   try {
-    const { purchaseId } = req.params;
+    const { entries } = req.body;
+    if (!Array.isArray(entries) || entries.length === 0) {
+      return res.status(400).json({ success: false, error: 'Entries array is required' });
+    }
 
-    // Get the record first to adjust stock quantity
-    const { data: record, error: fetchError } = await supabase
-      .from('purchase_history')
-      .select('*')
-      .eq('id', purchaseId)
-      .single();
-
-    if (fetchError) throw fetchError;
-
-    const { error } = await supabase
-      .from('purchase_history')
-      .delete()
-      .eq('id', purchaseId);
+    const { data, error } = await supabase
+      .from('stock_entries')
+      .upsert(entries, { onConflict: 'stock_item_id,month_id' })
+      .select();
 
     if (error) throw error;
 
-    // Subtract the deleted quantity from current stock
-    const { data: stockItem, error: stockFetchError } = await supabase
-      .from('stock_items')
-      .select('current_quantity')
-      .eq('id', record.stock_item_id)
-      .single();
+    // Update current_quantity for all affected items
+    const itemIds = [...new Set(entries.map(e => e.stock_item_id))];
+    for (const itemId of itemIds) {
+      // Get the latest month entry for this item
+      const { data: latestEntry } = await supabase
+        .from('stock_entries')
+        .select('final_closing, stock_months(sort_order)')
+        .eq('stock_item_id', itemId)
+        .order('stock_months(sort_order)', { referencedTable: 'stock_months', ascending: false })
+        .limit(1);
 
-    if (!stockFetchError) {
-      const newQty = Math.max(0, (stockItem.current_quantity || 0) - record.quantity);
-      await supabase
-        .from('stock_items')
-        .update({ current_quantity: newQty })
-        .eq('id', record.stock_item_id);
+      if (latestEntry && latestEntry.length > 0) {
+        await supabase
+          .from('stock_items')
+          .update({ current_quantity: latestEntry[0].final_closing })
+          .eq('id', itemId);
+      }
     }
 
-    res.json({ success: true, message: 'Purchase record deleted successfully' });
+    res.json({ success: true, data, count: data.length });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
 };
 
-// Get all water deliveries (full log)
+// ============================================
+// WATER DELIVERIES
+// ============================================
+
 export const getWaterDeliveries = async (req, res) => {
   try {
     const { data, error } = await supabase
@@ -354,7 +357,6 @@ export const getWaterDeliveries = async (req, res) => {
 
     if (error) throw error;
 
-    // Group by month and compute monthly totals
     const monthMap = {};
     data.forEach(row => {
       const d = new Date(row.delivery_date);
@@ -381,7 +383,6 @@ export const getWaterDeliveries = async (req, res) => {
   }
 };
 
-// Add a water delivery
 export const addWaterDelivery = async (req, res) => {
   try {
     const { delivery_date, bottles_delivered, notes } = req.body;
@@ -397,7 +398,6 @@ export const addWaterDelivery = async (req, res) => {
   }
 };
 
-// Delete a water delivery
 export const deleteWaterDelivery = async (req, res) => {
   try {
     const { id } = req.params;
@@ -409,63 +409,27 @@ export const deleteWaterDelivery = async (req, res) => {
   }
 };
 
-// Get monthly purchase summary for a category (Excel-style grouped view)
-export const getMonthlyCategoryPurchases = async (req, res) => {
+export const updateWaterDelivery = async (req, res) => {
   try {
-    const { category } = req.params;
-
-    const { data: items, error: itemsError } = await supabase
-      .from('stock_items')
-      .select('id, item_name, unit, current_quantity, purchased_qty, total_qty, notes, is_durable')
-      .eq('category', category)
-      .order('item_name', { ascending: true });
-
-    if (itemsError) throw itemsError;
-
-    const { data: history, error: histError } = await supabase
-      .from('purchase_history')
-      .select('*')
-      .in('stock_item_id', items.map(i => i.id))
-      .order('purchase_date', { ascending: true });
-
-    if (histError) throw histError;
-
-    // Group purchase history by month
-    const monthMap = {};
-    history.forEach(row => {
-      const d = new Date(row.purchase_date);
-      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-      const label = d.toLocaleString('en-GB', { month: 'short', year: '2-digit' }).toUpperCase();
-      if (!monthMap[key]) monthMap[key] = { key, label, dates: {}, totals: {}, trends: {} };
-      const dateStr = row.purchase_date;
-      if (!monthMap[key].dates[dateStr]) monthMap[key].dates[dateStr] = {};
-      monthMap[key].dates[dateStr][row.stock_item_id] = row.quantity;
-      monthMap[key].totals[row.stock_item_id] = (monthMap[key].totals[row.stock_item_id] || 0) + row.quantity;
-    });
-
-    // Compute trends (current month total vs previous month total)
-    const monthKeys = Object.keys(monthMap).sort();
-    monthKeys.forEach((key, idx) => {
-      if (idx === 0) return;
-      const prev = monthMap[monthKeys[idx - 1]];
-      items.forEach(item => {
-        const curr = monthMap[key].totals[item.id] || 0;
-        const prevVal = prev.totals[item.id] || 0;
-        monthMap[key].trends[item.id] = curr - prevVal;
-      });
-    });
-
-    res.json({
-      success: true,
-      items,
-      months: monthKeys.map(k => monthMap[k]),
-    });
+    const { id } = req.params;
+    const { delivery_date, bottles_delivered } = req.body;
+    const { data, error } = await supabase
+      .from('water_deliveries')
+      .update({ delivery_date, bottles_delivered })
+      .eq('id', id)
+      .select()
+      .single();
+    if (error) throw error;
+    res.json({ success: true, data });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
 };
 
-// Get comments for a category
+// ============================================
+// COMMENTS
+// ============================================
+
 export const getCategoryComments = async (req, res) => {
   try {
     const { category } = req.params;
@@ -480,31 +444,12 @@ export const getCategoryComments = async (req, res) => {
   }
 };
 
-// Save/update comment for a date
 export const saveComment = async (req, res) => {
   try {
     const { category, purchase_date, comment } = req.body;
     const { data, error } = await supabase
       .from('purchase_date_comments')
       .upsert({ category, purchase_date, comment }, { onConflict: 'category,purchase_date' })
-      .select()
-      .single();
-    if (error) throw error;
-    res.json({ success: true, data });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-};
-
-// Update water delivery (for inline editing)
-export const updateWaterDelivery = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { delivery_date, bottles_delivered } = req.body;
-    const { data, error } = await supabase
-      .from('water_deliveries')
-      .update({ delivery_date, bottles_delivered })
-      .eq('id', id)
       .select()
       .single();
     if (error) throw error;
