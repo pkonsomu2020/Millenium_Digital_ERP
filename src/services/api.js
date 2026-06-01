@@ -1,8 +1,8 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+import { getApiBaseUrl } from '../config/env.js';
 
 class ApiService {
   async request(endpoint, options = {}) {
-    const url = `${API_BASE_URL}${endpoint}`;
+    const url = `${getApiBaseUrl()}${endpoint}`;
     
     const config = {
       headers: {
@@ -148,7 +148,7 @@ class ApiService {
   }
 
   async uploadDocument(formData) {
-    const url = `${API_BASE_URL}/documents`;
+    const url = `${getApiBaseUrl()}/documents`;
     const response = await fetch(url, {
       method: 'POST',
       body: formData,
@@ -174,7 +174,7 @@ class ApiService {
   }
 
   async replaceDocument(id, formData) {
-    const url = `${API_BASE_URL}/documents/${id}/replace`;
+    const url = `${getApiBaseUrl()}/documents/${id}/replace`;
     const response = await fetch(url, { method: 'PUT', body: formData });
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || 'Replace failed');
@@ -189,7 +189,7 @@ class ApiService {
   }
 
   async uploadMinutes(formData) {
-    const url = `${API_BASE_URL}/minutes`;
+    const url = `${getApiBaseUrl()}/minutes`;
     const response = await fetch(url, {
       method: 'POST',
       body: formData,
@@ -215,7 +215,7 @@ class ApiService {
   }
 
   async replaceMinutes(id, formData) {
-    const url = `${API_BASE_URL}/minutes/${id}/replace`;
+    const url = `${getApiBaseUrl()}/minutes/${id}/replace`;
     const response = await fetch(url, { method: 'PUT', body: formData });
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || 'Replace failed');

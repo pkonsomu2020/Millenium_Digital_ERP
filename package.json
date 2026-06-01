@@ -4,7 +4,8 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "build": "vite build",
+    "build": "vite build --mode production",
+    "build:dev": "vite build",
     "dev": "vite --port 5173",
     "preview": "vite preview --host --port 5173"
   },

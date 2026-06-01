@@ -25,7 +25,6 @@ const allowedOrigins = [
   'http://127.0.0.1:5174',
   'http://127.0.0.1:5175',
   'https://admin.millenium.co.ke',
-  'https://hr.millenium.co.ke',
   'https://millenium.co.ke',
 ].filter(Boolean);
 

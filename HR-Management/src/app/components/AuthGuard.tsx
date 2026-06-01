@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Outlet } from "react-router";
 
-const ADMIN_APP_URL = import.meta.env.VITE_ADMIN_URL || "http://localhost:5173";
+import { getHrLoginUrl } from "../../config/env.js";
 
 export function AuthGuard() {
   const [checked, setChecked] = useState(false);
@@ -34,7 +34,7 @@ export function AuthGuard() {
       setAuthed(true);
       setChecked(true);
     } else {
-      window.location.href = `${ADMIN_APP_URL}/login/hr`;
+      window.location.href = getHrLoginUrl();
     }
   }, []);
 

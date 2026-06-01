@@ -5,6 +5,7 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { api } from "../../services/api";
+import { getApiOrigin } from "../../config/env.js";
 
 export function AdminLogin() {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ export function AdminLogin() {
 
   // Ping backend on mount so it's warm when user submits
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL?.replace('/api', '')}/health`)
+    fetch(`${getApiOrigin()}/health`)
       .catch(() => {})
       .finally(() => setWarming(false));
   }, []);

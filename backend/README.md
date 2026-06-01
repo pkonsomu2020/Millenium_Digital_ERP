@@ -38,7 +38,7 @@ npm install
    SUPABASE_ANON_KEY=your_anon_key_here
    PORT=3000
    FRONTEND_URL=http://localhost:5173
-   HR_FRONTEND_URL=http://localhost:5174
+   HR_FRONTEND_URL=http://localhost:5173
    ```
 
 ### 5. Run the Server

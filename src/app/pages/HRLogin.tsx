@@ -5,6 +5,7 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { api } from "../../services/api";
+import { getApiOrigin } from "../../config/env.js";
 
 export function HRLogin() {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ export function HRLogin() {
 
   // Ping backend on mount so it's warm when user submits
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL?.replace('/api', '')}/health`)
+    fetch(`${getApiOrigin()}/health`)
       .catch(() => {})
       .finally(() => setWarming(false));
   }, []);
