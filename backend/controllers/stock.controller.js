@@ -192,6 +192,61 @@ export const createStockMonth = async (req, res) => {
   }
 };
 
+// Add a new month template with 0 values
+export const addStockMonthTemplate = async (req, res) => {
+  try {
+    const { category, month_key, month_label, period_1_label, period_2_label, sort_order } = req.body;
+
+    const { data: monthRow, error: monthError } = await supabase
+      .from('stock_months')
+      .insert([{ category, month_key, month_label, period_1_label, period_2_label, sort_order }])
+      .select()
+      .single();
+
+    if (monthError) {
+      if (monthError.code === '23505') {
+        return res.status(409).json({ success: false, error: `Month ${month_key} already exists for ${category}.` });
+      }
+      throw monthError;
+    }
+
+    const { data: items, error: itemsError } = await supabase
+      .from('stock_items')
+      .select('id, current_quantity')
+      .eq('category', category);
+
+    if (itemsError) throw itemsError;
+
+    const entriesToInsert = items.map(item => ({
+      stock_item_id: item.id,
+      month_id: monthRow.id,
+      p1_opening: 0,
+      p1_bought: 0,
+      p1_used: 0,
+      p1_closing: 0,
+      p2_opening: 0,
+      p2_bought: 0,
+      p2_used: 0,
+      p2_closing: 0,
+      total_bought: 0,
+      total_used: 0,
+      stock_movement: 0,
+      final_closing: 0
+    }));
+
+    if (entriesToInsert.length > 0) {
+      const { error: entriesError } = await supabase
+        .from('stock_entries')
+        .insert(entriesToInsert);
+      if (entriesError) throw entriesError;
+    }
+
+    res.status(201).json({ success: true, data: monthRow });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
 // ============================================
 // STOCK ENTRIES (dual-period data)
 // ============================================

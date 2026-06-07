@@ -80,6 +80,13 @@ class ApiService {
     });
   }
 
+  async addStockMonthTemplate(data) {
+    return this.request('/stock/months/template', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
   // ============================================
   // Stock Entries (dual-period data)
   // ============================================

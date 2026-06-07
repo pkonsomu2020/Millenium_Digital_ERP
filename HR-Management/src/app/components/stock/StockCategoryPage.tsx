@@ -7,69 +7,180 @@ import {
   MonthTabs,
   RegisterMonthTable,
   KitchenStockRegisterTable,
-  SavingOverlay,
+  EditableQtyCell,
   entryPayloadForUpsert,
   EntryField,
   REG,
+  SavingOverlay,
 } from "./StockRegisterUI";
+import React from "react";
 
-function WaterCountReadonly({ onBack }: { onBack: () => void }) {
+function WaterCountTable({ readOnly, onBack }: { readOnly: boolean; onBack: () => void }) {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  const loadData = () => {
+    setLoading(true);
+    api.getWaterDeliveries().then(setData).catch(console.error).finally(() => setLoading(false));
+  };
 
   useEffect(() => {
-    api.getWaterDeliveries().then(setData).catch(console.error).finally(() => setLoading(false));
+    loadData();
   }, []);
 
   if (loading) return <div className="flex justify-center p-16"><div className="animate-spin h-8 w-8 border-b-2 border-[#D1131B]" /></div>;
 
   const { months = [], stats = {} } = data || {};
 
+  const handleUpdate = async (id: string, updates: any) => {
+    try {
+      setSaving(true);
+      await api.updateWaterDelivery(id, updates);
+      const newData = await api.getWaterDeliveries();
+      setData(newData);
+      toast.success("Delivery updated");
+    } catch(err: any) {
+      toast.error(err.message || "Update failed");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this delivery?")) return;
+    try {
+      setSaving(true);
+      await api.deleteWaterDelivery(id);
+      const newData = await api.getWaterDeliveries();
+      setData(newData);
+      toast.success("Delivery deleted");
+    } catch(err: any) {
+      toast.error(err.message || "Delete failed");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleAdd = async () => {
+    const dStr = prompt("Enter delivery date (YYYY-MM-DD):", new Date().toISOString().split('T')[0]);
+    if (!dStr) return;
+    const bStr = prompt("Enter bottles delivered:");
+    if (!bStr) return;
+    const b = parseInt(bStr, 10);
+    if (isNaN(b) || b <= 0) return toast.error("Invalid bottles amount");
+    
+    try {
+      setSaving(true);
+      await api.addWaterDelivery({ delivery_date: dStr, bottles_delivered: b });
+      const newData = await api.getWaterDeliveries();
+      setData(newData);
+      toast.success("Delivery added");
+    } catch(err: any) {
+      toast.error(err.message || "Failed to add delivery");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const getMonthColors = (monthLabel: string) => {
+    const l = monthLabel.toLowerCase();
+    if (l.includes('sep')) return { bg: 'bg-[#d9e1f2] dark:bg-blue-900/20', text: 'text-[#29487d] dark:text-blue-300' };
+    if (l.includes('oct')) return { bg: 'bg-[#e2efda] dark:bg-emerald-900/20', text: 'text-[#385723] dark:text-emerald-400' };
+    if (l.includes('nov')) return { bg: 'bg-[#fce4d6] dark:bg-orange-900/20', text: 'text-[#c65911] dark:text-orange-400' };
+    if (l.includes('dec')) return { bg: 'bg-[#fff2cc] dark:bg-amber-900/20', text: 'text-[#bf8f00] dark:text-amber-400' };
+    if (l.includes('jan')) return { bg: 'bg-[#bdd7ee] dark:bg-blue-900/30', text: 'text-[#1f4e78] dark:text-blue-200' };
+    if (l.includes('feb')) return { bg: 'bg-[#e0eaf5] dark:bg-indigo-900/20', text: 'text-[#305496] dark:text-indigo-300' };
+    if (l.includes('mar')) return { bg: 'bg-[#e2efda] dark:bg-emerald-900/20', text: 'text-[#385723] dark:text-emerald-400' };
+    if (l.includes('apr')) return { bg: 'bg-[#e0eaf5] dark:bg-indigo-900/20', text: 'text-[#305496] dark:text-indigo-300' };
+    return { bg: 'bg-[#f2f2f2] dark:bg-gray-800', text: 'text-[#595959] dark:text-gray-300' };
+  };
+
+  let globalIndex = 1;
+
   return (
-    <div className="flex flex-col min-h-0 pb-4">
-      <DetailHeader title="Water Count" subtitle="Dispenser bottle delivery log" onBack={onBack} />
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 px-4 sm:px-6 py-4">
-        {[
-          { label: "Total Bottles", value: stats.grand_total || 0 },
-          { label: "Deliveries", value: stats.total_deliveries || 0 },
-          { label: "Avg/Delivery", value: stats.average_per_delivery || 0 },
-          { label: "Max", value: stats.max_delivery || 0 },
-          { label: "Min", value: stats.min_delivery || 0 },
-        ].map((s) => (
-          <div key={s.label} className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3 text-center shadow-sm">
-            <p className="text-[11px] uppercase text-gray-500 dark:text-gray-400">{s.label}</p>
-            <p className="text-xl font-bold text-[#D1131B]">{s.value}</p>
-          </div>
-        ))}
-      </div>
-      <div className="overflow-x-auto px-4 sm:px-6 pb-8">
-        <table className="w-full border-collapse min-w-[500px] text-xs">
-          <thead>
-            <tr>
-              <th className={REG.subHdr}>Month</th>
-              <th className={REG.subHdr}>Date</th>
-              <th className={REG.subHdr}>Bottles</th>
-              <th className={REG.subHdr}>Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            {months.map((m: any) => (
-              <tbody key={m.label}>
-                <tr>
-                  <td colSpan={4} className="px-4 py-2 text-sm font-bold uppercase bg-[#4a90e2] text-white">{m.label}</td>
-                </tr>
-                {m.deliveries?.map((d: any, i: number) => (
-                  <tr key={d.id}>
-                    <td className={REG.data} />
-                    <td className={REG.data}>{new Date(d.delivery_date).toLocaleDateString("en-GB")}</td>
-                    <td className={REG.data}>{d.bottles_delivered}</td>
-                    <td className={REG.data}>{i === m.deliveries.length - 1 ? m.total : ""}</td>
-                  </tr>
-                ))}
-              </tbody>
-            ))}
-          </tbody>
-        </table>
+    <div className="flex flex-col min-h-0 pb-4 relative">
+      <SavingOverlay show={saving} />
+      <DetailHeader 
+        title="Water Count" 
+        subtitle={readOnly ? "Dispenser bottle delivery log · Read-only" : "Dispenser bottle delivery log"} 
+        onBack={onBack}
+        onAdd={readOnly ? undefined : handleAdd}
+        addLabel="+ Add Delivery"
+      />
+      
+      {!readOnly && (
+        <p className="px-6 text-[11px] text-gray-500">
+          Click on a bottles number to edit it. To delete, hover over the row index number (#) and click the ✕.
+        </p>
+      )}
+
+      <div className="overflow-x-auto px-4 sm:px-6 pb-8 pt-4">
+        <div className="max-w-4xl mx-auto overflow-hidden bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 shadow-sm rounded-lg">
+          <table className="w-full border-collapse text-sm text-center font-sans">
+            <thead>
+              <tr className="bg-[#29487d] dark:bg-gray-700 text-white">
+                <th className="py-2.5 px-2 border border-gray-300 dark:border-gray-600 font-bold w-12 text-lg">#</th>
+                <th className="py-2.5 px-4 border border-gray-300 dark:border-gray-600 font-bold text-lg">Delivery Date</th>
+                <th className="py-2.5 px-4 border border-gray-300 dark:border-gray-600 font-bold text-lg">Bottles Delivered</th>
+                <th className="py-2.5 px-4 border border-gray-300 dark:border-gray-600 font-bold text-lg w-32">Month Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {months.map((m: any) => {
+                const monthName = m.label.split(' ')[0];
+                const niceMonthName = monthName.charAt(0).toUpperCase() + monthName.slice(1).toLowerCase();
+                const { bg, text } = getMonthColors(niceMonthName);
+                
+                return (
+                  <React.Fragment key={m.label}>
+                    {m.deliveries?.map((d: any, i: number) => {
+                      const isLast = i === m.deliveries.length - 1;
+                      return (
+                        <tr key={d.id} className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                          <td className="py-2 px-2 border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 text-gray-500 dark:text-gray-400 font-medium relative group">
+                            {globalIndex++}
+                            {!readOnly && (
+                              <button 
+                                onClick={() => handleDelete(d.id)} 
+                                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 text-red-500 hover:text-white hover:bg-red-500 bg-white dark:bg-gray-800 border border-red-200 dark:border-red-800 rounded-full w-5 h-5 flex items-center justify-center text-[10px] transition-all shadow-sm" 
+                                title="Delete"
+                              >✕</button>
+                            )}
+                          </td>
+                          <td className="py-2 px-4 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 font-medium">
+                            {new Date(d.delivery_date).toLocaleDateString("en-GB")}
+                          </td>
+                          <EditableQtyCell
+                            value={d.bottles_delivered}
+                            editable={!readOnly}
+                            onSave={(v) => handleUpdate(d.id, { bottles_delivered: v })}
+                            className="py-2 px-4 border border-gray-300 dark:border-gray-700 text-[#29487d] dark:text-blue-400 font-bold text-base bg-white dark:bg-gray-800"
+                          />
+                          <td className={`py-2 px-4 border border-gray-300 dark:border-gray-700 font-bold text-base ${isLast ? `${bg} ${text}` : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100'}`}>
+                            {isLast ? m.total : ""}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                    <tr className={`${bg}`}>
+                      <td colSpan={2} className={`py-2 px-4 border border-gray-300 dark:border-gray-700 font-bold text-left ${text} text-base`}>
+                        &nbsp;&nbsp;{niceMonthName} TOTAL <span className="font-normal mx-1 opacity-70">→</span> {m.total} bottles
+                      </td>
+                      <td className="py-2 px-4 border border-gray-300 dark:border-gray-700"></td>
+                      <td className={`py-2 px-4 border border-gray-300 dark:border-gray-700 font-bold text-base ${text}`}>{m.total}</td>
+                    </tr>
+                  </React.Fragment>
+                );
+              })}
+              <tr className="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
+                <td colSpan={2} className="py-3 px-4 border border-gray-300 dark:border-gray-700 font-extrabold text-left tracking-wider text-base pl-6 uppercase text-[#D1131B] dark:text-red-400">GRAND TOTAL</td>
+                <td className="py-3 px-4 border border-gray-300 dark:border-gray-700"></td>
+                <td className="py-3 px-4 border border-gray-300 dark:border-gray-700 font-extrabold text-xl text-[#D1131B] dark:text-red-400">{stats.grand_total}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
@@ -163,7 +274,7 @@ export function StockCategoryPage({ readOnly = false, listPath }: { readOnly?: b
     );
   }
 
-  if (decodedCategory === "Water Count") return <WaterCountReadonly onBack={back} />;
+  if (decodedCategory === "Water Count") return <WaterCountTable readOnly={readOnly} onBack={back} />;
 
   if (decodedCategory === "Kitchen Stock") {
     return (
@@ -232,7 +343,65 @@ export function StockCategoryPage({ readOnly = false, listPath }: { readOnly?: b
           }
         }}
       />
-      {months.length > 0 && <MonthTabs months={months} activeId={activeMonth?.id || ""} onChange={setActiveMonthId} />}
+      {months.length > 0 && (
+        <MonthTabs
+          months={months}
+          activeId={activeMonth?.id || ""}
+          onChange={setActiveMonthId}
+          onAddMonth={
+            readOnly
+              ? undefined
+              : async () => {
+                  const lastMonth = months[months.length - 1];
+                  if (!lastMonth) return;
+                  
+                  const [yearStr, monthStr] = lastMonth.month_key.split('-');
+                  let year = parseInt(yearStr, 10);
+                  let month = parseInt(monthStr, 10);
+                  month += 1;
+                  if (month > 12) {
+                    month = 1;
+                    year += 1;
+                  }
+                  
+                  const monthKey = `${year}-${month.toString().padStart(2, '0')}`;
+                  const dateObj = new Date(year, month - 1, 1);
+                  const monthLabelLong = dateObj.toLocaleString('en-US', { month: 'long' }) + " " + year;
+                  const monthLabelShort = dateObj.toLocaleString('en-US', { month: 'short' }).toUpperCase() + " " + year.toString().slice(-2);
+                  
+                  if (!window.confirm(`Create new empty template for ${monthLabelLong}?`)) return;
+                  
+                  const short = dateObj.toLocaleString('en-US', { month: 'short' });
+                  const p1 = `${short} 01-15`;
+                  const p2 = `${short} 16-31`;
+                  const sort_order = year * 100 + month;
+                  
+                  try {
+                    setSaving(true);
+                    const res = await api.addStockMonthTemplate({
+                      category: decodedCategory,
+                      month_key: monthKey,
+                      month_label: monthLabelShort,
+                      period_1_label: p1,
+                      period_2_label: p2,
+                      sort_order
+                    });
+                    
+                    const refreshRes = await api.getCategoryEntries(decodedCategory);
+                    setItems(refreshRes.items || []);
+                    setMonths(refreshRes.months || []);
+                    setEntries(refreshRes.entries || []);
+                    setActiveMonthId(res.data.id);
+                    toast.success(`Template for ${monthLabelLong} added successfully!`);
+                  } catch (err: any) {
+                    toast.error(err.message || "Failed to add month");
+                  } finally {
+                    setSaving(false);
+                  }
+                }
+          }
+        />
+      )}
       <div className="px-4 sm:px-6 pb-8">
         {activeMonth && (
           <RegisterMonthTable

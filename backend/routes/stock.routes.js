@@ -9,6 +9,7 @@ import {
   getStockStats,
   getStockMonths,
   createStockMonth,
+  addStockMonthTemplate,
   getCategoryEntries,
   upsertStockEntry,
   batchUpsertEntries,
@@ -35,6 +36,7 @@ router.delete('/:id', deleteStockItem);
 
 // Stock months
 router.post('/months', createStockMonth);
+router.post('/months/template', addStockMonthTemplate);
 
 // Stock entries (dual-period data)
 router.post('/entries', upsertStockEntry);

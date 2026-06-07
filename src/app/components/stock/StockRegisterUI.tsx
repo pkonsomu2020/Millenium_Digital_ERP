@@ -455,15 +455,17 @@ export function MonthTabs({
   months,
   activeId,
   onChange,
+  onAddMonth,
 }: {
   months: { id: string; month_label: string; month_key: string }[];
   activeId: string;
   onChange: (id: string) => void;
+  onAddMonth?: () => void;
 }) {
   return (
-    <div className="px-3 sm:px-6 pt-3 pb-1">
+    <div className="px-3 sm:px-6 pt-3 pb-1 flex items-start sm:items-center justify-between gap-3 flex-col sm:flex-row">
       <div
-        className="overflow-x-auto overscroll-x-contain [-webkit-overflow-scrolling:touch] scrollbar-thin pb-2"
+        className="overflow-x-auto overscroll-x-contain [-webkit-overflow-scrolling:touch] scrollbar-thin pb-2 flex-1 w-full"
         role="tablist"
         aria-label="Select month"
       >
@@ -491,7 +493,16 @@ export function MonthTabs({
           })}
         </div>
       </div>
-      {months.length > 4 && (
+      {onAddMonth && (
+        <button
+          onClick={onAddMonth}
+          className="shrink-0 px-3 py-2 rounded-lg text-[11px] font-bold uppercase tracking-wide border border-[#D1131B] text-[#D1131B] bg-red-50 hover:bg-[#D1131B] hover:text-white transition-colors flex items-center mb-2 sm:mb-0"
+          title="Add Future Month Template"
+        >
+          <Plus className="w-3 h-3 mr-1" /> Add Month
+        </button>
+      )}
+      {months.length > 4 && !onAddMonth && (
         <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-0.5 lg:hidden">Swipe horizontally for more months</p>
       )}
     </div>

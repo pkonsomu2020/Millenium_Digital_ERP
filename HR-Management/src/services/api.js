@@ -25,6 +25,20 @@ class ApiService {
   async getStockMonths(category) { return this.request(`/stock/category/${encodeURIComponent(category)}/months`); }
   async getCategoryEntries(category) { return this.request(`/stock/category/${encodeURIComponent(category)}/entries`); }
 
+  async createStockMonth(data) {
+    return this.request('/stock/months', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async addStockMonthTemplate(data) {
+    return this.request('/stock/months/template', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
   async createStockItem(itemData) {
     return this.request('/stock', { method: 'POST', body: JSON.stringify(itemData) });
   }
