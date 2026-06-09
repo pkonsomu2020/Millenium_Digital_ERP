@@ -226,10 +226,49 @@ export function StockCategoryPage({ readOnly = false, listPath }: { readOnly?: b
     const map: Record<string, Record<string, any>> = {};
     entries.forEach((e) => {
       if (!map[e.stock_item_id]) map[e.stock_item_id] = {};
-      map[e.stock_item_id][e.month_id] = e;
+      map[e.stock_item_id][e.month_id] = { ...e };
     });
+
+    items.forEach((item) => {
+      let prevClosing: number | undefined = undefined;
+      months.forEach((month) => {
+        let e = map[item.id]?.[month.id];
+        if (!e) {
+          e = {
+            stock_item_id: item.id,
+            month_id: month.id,
+            p1_opening: 0, p1_bought: 0, p1_used: 0, p1_closing: 0,
+            p2_opening: 0, p2_bought: 0, p2_used: 0, p2_closing: 0,
+            total_bought: 0, total_used: 0, stock_movement: 0, final_closing: 0
+          };
+          if (!map[item.id]) map[item.id] = {};
+          map[item.id][month.id] = e;
+        }
+
+        if (prevClosing !== undefined) {
+          e.p1_opening = prevClosing;
+          const p1o = Number(e.p1_opening) || 0;
+          const p1b = Number(e.p1_bought) || 0;
+          const p1u = Number(e.p1_used) || 0;
+          e.p1_closing = p1o + p1b - p1u;
+
+          e.p2_opening = Number(e.p1_closing) || 0;
+          const p2o = Number(e.p2_opening) || 0;
+          const p2b = Number(e.p2_bought) || 0;
+          const p2u = Number(e.p2_used) || 0;
+          e.p2_closing = p2o + p2b - p2u;
+
+          e.total_bought = p1b + p2b;
+          e.total_used = p1u + p2u;
+          e.stock_movement = e.total_bought - e.total_used;
+          e.final_closing = Number(e.p2_closing) || Number(e.p1_closing) || 0;
+        }
+        prevClosing = Number(e.final_closing) || 0;
+      });
+    });
+
     return map;
-  }, [entries]);
+  }, [entries, items, months]);
 
   const getEntry = (itemId: string, monthId: string) => entryMap[itemId]?.[monthId];
 
@@ -406,6 +445,7 @@ export function StockCategoryPage({ readOnly = false, listPath }: { readOnly?: b
         {activeMonth && (
           <RegisterMonthTable
             month={activeMonth}
+            isFirstMonth={months.length > 0 && months[0].id === activeMonth.id}
             categoryLabel={decodedCategory}
             items={items}
             entryMap={entryMap}

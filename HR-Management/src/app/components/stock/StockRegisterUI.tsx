@@ -161,10 +161,8 @@ export type EntryField = (typeof ENTRY_FIELDS)[number];
 
 /** Columns you type in (matches Excel input cells). */
 export const EDITABLE_ENTRY_FIELDS: ReadonlySet<EntryField> = new Set([
-  "p1_opening",
   "p1_bought",
   "p1_used",
-  "p2_opening",
   "p2_bought",
   "p2_used",
 ]);
@@ -175,7 +173,9 @@ export const COMPUTED_ENTRY_FIELDS: ReadonlySet<EntryField> = new Set(
 );
 
 const COMPUTED_FIELD_HINT: Partial<Record<EntryField, string>> = {
+  p1_opening: "Calculated: Opening stock is strictly linked to previous month's closing",
   p1_closing: "Calculated: Opening + Bought − Used (Period 1)",
+  p2_opening: "Calculated: Opening stock exactly matches Period 1 closing",
   p2_closing: "Calculated: Opening + Bought − Used (Period 2)",
   total_bought: "Calculated: Period 1 Bought + Period 2 Bought",
   total_used: "Calculated: Period 1 Used + Period 2 Used",
@@ -501,6 +501,7 @@ export function MonthTabs({
 
 export function RegisterMonthTable({
   month,
+  isFirstMonth,
   categoryLabel,
   items,
   entryMap,
@@ -508,6 +509,7 @@ export function RegisterMonthTable({
   onCellSave,
 }: {
   month: { id: string; month_label: string; period_1_label?: string; period_2_label?: string };
+  isFirstMonth?: boolean;
   categoryLabel: string;
   items: { id: string; item_name: string; unit: string }[];
   entryMap: Record<string, Record<string, unknown>>;
@@ -524,7 +526,7 @@ export function RegisterMonthTable({
   const renderRow = (item: { id: string; item_name: string; unit: string }) => {
     const e = (entryMap[item.id]?.[month.id] || {}) as Record<string, unknown>;
     const cell = (field: EntryField, accent: string) => {
-      const canEdit = editable && isEditableEntryField(field);
+      const canEdit = editable && (isEditableEntryField(field) || (field === "p1_opening" && isFirstMonth));
       return canEdit ? (
         <EditableQtyCell
           key={field}
