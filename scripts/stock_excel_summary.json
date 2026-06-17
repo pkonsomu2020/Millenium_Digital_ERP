@@ -1,0 +1,6023 @@
+{
+  "file": "D:\\backup\\Downloads\\ALX PROJECTS\\Millenium_Digital_ERP\\Stock Management 2025 final.xlsx",
+  "sheets": [
+    {
+      "name": "Sep",
+      "max_row": 41,
+      "max_column": 13,
+      "headers": [
+        "STOCK MANAGEMENT REGISTER \u2014 SEPTEMBER 2025",
+        "col_2",
+        "col_3",
+        "col_4",
+        "col_5",
+        "col_6",
+        "col_7",
+        "col_8",
+        "col_9",
+        "col_10",
+        "col_11",
+        "col_12",
+        "col_13"
+      ],
+      "rows_count": 39,
+      "sample_rows": [
+        [
+          "ITEM",
+          "PERIOD 1  (16/09/25)",
+          null,
+          null,
+          null,
+          "PERIOD 2  (30/09/25)",
+          null,
+          null,
+          null,
+          "MONTHLY SUMMARY \u2014 September",
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          "\u2190 Opening / Bought / Used / Closing \u2192",
+          null,
+          null,
+          null,
+          "\u2190 Opening / Bought / Used / Closing \u2192",
+          null,
+          null,
+          null,
+          "\u2190 Totals / Net / Final \u2192",
+          null,
+          null,
+          null
+        ],
+        [
+          "ITEM NAME",
+          "Opening\nStock",
+          "Bought",
+          "Used",
+          "Closing\nStock",
+          "Opening\nStock",
+          "Bought",
+          "Used",
+          "Closing\nStock",
+          "Total\nBought",
+          "Total\nUsed",
+          "Stock\nMovement",
+          "Final\nClosing"
+        ],
+        [
+          "\u2500\u2500 KITCHEN ESSENTIALS \u2500\u2500",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "Sugar (kg)",
+          null,
+          18,
+          null,
+          18,
+          18,
+          null,
+          null,
+          18,
+          18,
+          null,
+          18,
+          18
+        ],
+        [
+          "Milk (boxes)",
+          null,
+          16,
+          null,
+          16,
+          16,
+          8,
+          null,
+          24,
+          24,
+          null,
+          24,
+          24
+        ],
+        [
+          "Drinking Chocolate (tin)",
+          null,
+          1,
+          null,
+          1,
+          1,
+          1,
+          null,
+          2,
+          2,
+          null,
+          2,
+          2
+        ],
+        [
+          "Coffee (tin)",
+          null,
+          2,
+          null,
+          2,
+          2,
+          1,
+          null,
+          3,
+          3,
+          null,
+          3,
+          3
+        ],
+        [
+          "Tea Leaves (bags)",
+          null,
+          5,
+          null,
+          5,
+          5,
+          null,
+          null,
+          5,
+          5,
+          null,
+          5,
+          5
+        ],
+        [
+          "Matchbox (pkt)",
+          null,
+          1,
+          null,
+          1,
+          1,
+          null,
+          null,
+          1,
+          1,
+          null,
+          1,
+          1
+        ]
+      ],
+      "columns": {
+        "STOCK MANAGEMENT REGISTER \u2014 SEPTEMBER 2025": {
+          "non_empty": 38,
+          "types": {
+            "str": 38
+          },
+          "sample_values": [
+            "ITEM",
+            "ITEM NAME",
+            "\u2500\u2500 KITCHEN ESSENTIALS \u2500\u2500",
+            "Sugar (kg)",
+            "Milk (boxes)"
+          ]
+        },
+        "col_2": {
+          "non_empty": 3,
+          "types": {
+            "str": 3
+          },
+          "sample_values": [
+            "PERIOD 1  (16/09/25)",
+            "\u2190 Opening / Bought / Used / Closing \u2192",
+            "Opening\nStock"
+          ]
+        },
+        "col_3": {
+          "non_empty": 21,
+          "types": {
+            "str": 1,
+            "int": 20
+          },
+          "sample_values": [
+            "Bought",
+            18,
+            16,
+            1,
+            2
+          ]
+        },
+        "col_4": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Used",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_5": {
+          "non_empty": 17,
+          "types": {
+            "str": 1,
+            "int": 16
+          },
+          "sample_values": [
+            "Closing\nStock",
+            18,
+            16,
+            1,
+            2
+          ]
+        },
+        "col_6": {
+          "non_empty": 20,
+          "types": {
+            "str": 3,
+            "int": 17
+          },
+          "sample_values": [
+            "PERIOD 2  (30/09/25)",
+            "\u2190 Opening / Bought / Used / Closing \u2192",
+            "Opening\nStock",
+            18,
+            16
+          ]
+        },
+        "col_7": {
+          "non_empty": 16,
+          "types": {
+            "str": 1,
+            "int": 15
+          },
+          "sample_values": [
+            "Bought",
+            8,
+            1,
+            1,
+            2
+          ]
+        },
+        "col_8": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Used",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_9": {
+          "non_empty": 18,
+          "types": {
+            "str": 1,
+            "int": 17
+          },
+          "sample_values": [
+            "Closing\nStock",
+            18,
+            24,
+            2,
+            3
+          ]
+        },
+        "col_10": {
+          "non_empty": 24,
+          "types": {
+            "str": 3,
+            "int": 21
+          },
+          "sample_values": [
+            "MONTHLY SUMMARY \u2014 September",
+            "\u2190 Totals / Net / Final \u2192",
+            "Total\nBought",
+            18,
+            24
+          ]
+        },
+        "col_11": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Total\nUsed",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_12": {
+          "non_empty": 22,
+          "types": {
+            "str": 1,
+            "int": 21
+          },
+          "sample_values": [
+            "Stock\nMovement",
+            18,
+            24,
+            2,
+            3
+          ]
+        },
+        "col_13": {
+          "non_empty": 22,
+          "types": {
+            "str": 1,
+            "int": 21
+          },
+          "sample_values": [
+            "Final\nClosing",
+            18,
+            24,
+            2,
+            3
+          ]
+        }
+      }
+    },
+    {
+      "name": "Oct",
+      "max_row": 41,
+      "max_column": 13,
+      "headers": [
+        "STOCK MANAGEMENT REGISTER \u2014 OCTOBER 2025",
+        "col_2",
+        "col_3",
+        "col_4",
+        "col_5",
+        "col_6",
+        "col_7",
+        "col_8",
+        "col_9",
+        "col_10",
+        "col_11",
+        "col_12",
+        "col_13"
+      ],
+      "rows_count": 39,
+      "sample_rows": [
+        [
+          "ITEM",
+          "PERIOD 1  (22/10/25)",
+          null,
+          null,
+          null,
+          "PERIOD 2",
+          null,
+          null,
+          null,
+          "MONTHLY SUMMARY \u2014 October",
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          "\u2190 Opening / Bought / Used / Closing \u2192",
+          null,
+          null,
+          null,
+          "\u2190 Opening / Bought / Used / Closing \u2192",
+          null,
+          null,
+          null,
+          "\u2190 Totals / Net / Final \u2192",
+          null,
+          null,
+          null
+        ],
+        [
+          "ITEM NAME",
+          "Opening\nStock",
+          "Bought",
+          "Used",
+          "Closing\nStock",
+          "Opening\nStock",
+          "Bought",
+          "Used",
+          "Closing\nStock",
+          "Total\nBought",
+          "Total\nUsed",
+          "Stock\nMovement",
+          "Final\nClosing"
+        ],
+        [
+          "\u2500\u2500 KITCHEN ESSENTIALS \u2500\u2500",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "Sugar (kg)",
+          null,
+          10,
+          null,
+          10,
+          10,
+          null,
+          null,
+          10,
+          10,
+          null,
+          10,
+          10
+        ],
+        [
+          "Milk (boxes)",
+          null,
+          8,
+          null,
+          8,
+          8,
+          null,
+          null,
+          8,
+          8,
+          null,
+          8,
+          8
+        ],
+        [
+          "Drinking Chocolate (tin)",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "Coffee (tin)",
+          null,
+          1,
+          null,
+          1,
+          1,
+          null,
+          null,
+          1,
+          1,
+          null,
+          1,
+          1
+        ],
+        [
+          "Tea Leaves (bags)",
+          null,
+          2,
+          null,
+          2,
+          2,
+          null,
+          null,
+          2,
+          2,
+          null,
+          2,
+          2
+        ],
+        [
+          "Matchbox (pkt)",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      ],
+      "columns": {
+        "STOCK MANAGEMENT REGISTER \u2014 OCTOBER 2025": {
+          "non_empty": 38,
+          "types": {
+            "str": 38
+          },
+          "sample_values": [
+            "ITEM",
+            "ITEM NAME",
+            "\u2500\u2500 KITCHEN ESSENTIALS \u2500\u2500",
+            "Sugar (kg)",
+            "Milk (boxes)"
+          ]
+        },
+        "col_2": {
+          "non_empty": 3,
+          "types": {
+            "str": 3
+          },
+          "sample_values": [
+            "PERIOD 1  (22/10/25)",
+            "\u2190 Opening / Bought / Used / Closing \u2192",
+            "Opening\nStock"
+          ]
+        },
+        "col_3": {
+          "non_empty": 18,
+          "types": {
+            "str": 1,
+            "int": 17
+          },
+          "sample_values": [
+            "Bought",
+            10,
+            8,
+            1,
+            2
+          ]
+        },
+        "col_4": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Used",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_5": {
+          "non_empty": 14,
+          "types": {
+            "str": 1,
+            "int": 13
+          },
+          "sample_values": [
+            "Closing\nStock",
+            10,
+            8,
+            1,
+            2
+          ]
+        },
+        "col_6": {
+          "non_empty": 16,
+          "types": {
+            "str": 3,
+            "int": 13
+          },
+          "sample_values": [
+            "PERIOD 2",
+            "\u2190 Opening / Bought / Used / Closing \u2192",
+            "Opening\nStock",
+            10,
+            8
+          ]
+        },
+        "col_7": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Bought",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_8": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Used",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_9": {
+          "non_empty": 14,
+          "types": {
+            "str": 1,
+            "int": 13
+          },
+          "sample_values": [
+            "Closing\nStock",
+            10,
+            8,
+            1,
+            2
+          ]
+        },
+        "col_10": {
+          "non_empty": 20,
+          "types": {
+            "str": 3,
+            "int": 17
+          },
+          "sample_values": [
+            "MONTHLY SUMMARY \u2014 October",
+            "\u2190 Totals / Net / Final \u2192",
+            "Total\nBought",
+            10,
+            8
+          ]
+        },
+        "col_11": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Total\nUsed",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_12": {
+          "non_empty": 18,
+          "types": {
+            "str": 1,
+            "int": 17
+          },
+          "sample_values": [
+            "Stock\nMovement",
+            10,
+            8,
+            1,
+            2
+          ]
+        },
+        "col_13": {
+          "non_empty": 18,
+          "types": {
+            "str": 1,
+            "int": 17
+          },
+          "sample_values": [
+            "Final\nClosing",
+            10,
+            8,
+            1,
+            2
+          ]
+        }
+      }
+    },
+    {
+      "name": "Nov",
+      "max_row": 41,
+      "max_column": 13,
+      "headers": [
+        "STOCK MANAGEMENT REGISTER \u2014 NOVEMBER 2025",
+        "col_2",
+        "col_3",
+        "col_4",
+        "col_5",
+        "col_6",
+        "col_7",
+        "col_8",
+        "col_9",
+        "col_10",
+        "col_11",
+        "col_12",
+        "col_13"
+      ],
+      "rows_count": 39,
+      "sample_rows": [
+        [
+          "ITEM",
+          "PERIOD 1  (11/11/25)",
+          null,
+          null,
+          null,
+          "PERIOD 2  (27/11/25)",
+          null,
+          null,
+          null,
+          "MONTHLY SUMMARY \u2014 November",
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          "\u2190 Opening / Bought / Used / Closing \u2192",
+          null,
+          null,
+          null,
+          "\u2190 Opening / Bought / Used / Closing \u2192",
+          null,
+          null,
+          null,
+          "\u2190 Totals / Net / Final \u2192",
+          null,
+          null,
+          null
+        ],
+        [
+          "ITEM NAME",
+          "Opening\nStock",
+          "Bought",
+          "Used",
+          "Closing\nStock",
+          "Opening\nStock",
+          "Bought",
+          "Used",
+          "Closing\nStock",
+          "Total\nBought",
+          "Total\nUsed",
+          "Stock\nMovement",
+          "Final\nClosing"
+        ],
+        [
+          "\u2500\u2500 KITCHEN ESSENTIALS \u2500\u2500",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "Sugar (kg)",
+          null,
+          10,
+          null,
+          10,
+          10,
+          10,
+          null,
+          20,
+          20,
+          null,
+          20,
+          20
+        ],
+        [
+          "Milk (boxes)",
+          null,
+          8,
+          null,
+          8,
+          8,
+          8,
+          null,
+          16,
+          16,
+          null,
+          16,
+          16
+        ],
+        [
+          "Drinking Chocolate (tin)",
+          null,
+          1,
+          null,
+          1,
+          1,
+          null,
+          null,
+          1,
+          1,
+          null,
+          1,
+          1
+        ],
+        [
+          "Coffee (tin)",
+          null,
+          1,
+          null,
+          1,
+          1,
+          1,
+          null,
+          2,
+          2,
+          null,
+          2,
+          2
+        ],
+        [
+          "Tea Leaves (bags)",
+          null,
+          null,
+          null,
+          null,
+          0,
+          2,
+          null,
+          2,
+          2,
+          null,
+          2,
+          2
+        ],
+        [
+          "Matchbox (pkt)",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      ],
+      "columns": {
+        "STOCK MANAGEMENT REGISTER \u2014 NOVEMBER 2025": {
+          "non_empty": 38,
+          "types": {
+            "str": 38
+          },
+          "sample_values": [
+            "ITEM",
+            "ITEM NAME",
+            "\u2500\u2500 KITCHEN ESSENTIALS \u2500\u2500",
+            "Sugar (kg)",
+            "Milk (boxes)"
+          ]
+        },
+        "col_2": {
+          "non_empty": 3,
+          "types": {
+            "str": 3
+          },
+          "sample_values": [
+            "PERIOD 1  (11/11/25)",
+            "\u2190 Opening / Bought / Used / Closing \u2192",
+            "Opening\nStock"
+          ]
+        },
+        "col_3": {
+          "non_empty": 15,
+          "types": {
+            "str": 1,
+            "int": 14
+          },
+          "sample_values": [
+            "Bought",
+            10,
+            8,
+            1,
+            1
+          ]
+        },
+        "col_4": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Used",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_5": {
+          "non_empty": 11,
+          "types": {
+            "str": 1,
+            "int": 10
+          },
+          "sample_values": [
+            "Closing\nStock",
+            10,
+            8,
+            1,
+            1
+          ]
+        },
+        "col_6": {
+          "non_empty": 19,
+          "types": {
+            "str": 3,
+            "int": 16
+          },
+          "sample_values": [
+            "PERIOD 2  (27/11/25)",
+            "\u2190 Opening / Bought / Used / Closing \u2192",
+            "Opening\nStock",
+            10,
+            8
+          ]
+        },
+        "col_7": {
+          "non_empty": 18,
+          "types": {
+            "str": 1,
+            "int": 17
+          },
+          "sample_values": [
+            "Bought",
+            10,
+            8,
+            1,
+            2
+          ]
+        },
+        "col_8": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Used",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_9": {
+          "non_empty": 17,
+          "types": {
+            "str": 1,
+            "int": 16
+          },
+          "sample_values": [
+            "Closing\nStock",
+            20,
+            16,
+            1,
+            2
+          ]
+        },
+        "col_10": {
+          "non_empty": 23,
+          "types": {
+            "str": 3,
+            "int": 20
+          },
+          "sample_values": [
+            "MONTHLY SUMMARY \u2014 November",
+            "\u2190 Totals / Net / Final \u2192",
+            "Total\nBought",
+            20,
+            16
+          ]
+        },
+        "col_11": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Total\nUsed",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_12": {
+          "non_empty": 21,
+          "types": {
+            "str": 1,
+            "int": 20
+          },
+          "sample_values": [
+            "Stock\nMovement",
+            20,
+            16,
+            1,
+            2
+          ]
+        },
+        "col_13": {
+          "non_empty": 21,
+          "types": {
+            "str": 1,
+            "int": 20
+          },
+          "sample_values": [
+            "Final\nClosing",
+            20,
+            16,
+            1,
+            2
+          ]
+        }
+      }
+    },
+    {
+      "name": "Dec",
+      "max_row": 41,
+      "max_column": 13,
+      "headers": [
+        "STOCK MANAGEMENT REGISTER \u2014 DECEMBER 2025",
+        "col_2",
+        "col_3",
+        "col_4",
+        "col_5",
+        "col_6",
+        "col_7",
+        "col_8",
+        "col_9",
+        "col_10",
+        "col_11",
+        "col_12",
+        "col_13"
+      ],
+      "rows_count": 39,
+      "sample_rows": [
+        [
+          "ITEM",
+          "PERIOD 1  (15/12/25)",
+          null,
+          null,
+          null,
+          "PERIOD 2",
+          null,
+          null,
+          null,
+          "MONTHLY SUMMARY \u2014 December",
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          "\u2190 Opening / Bought / Used / Closing \u2192",
+          null,
+          null,
+          null,
+          "\u2190 Opening / Bought / Used / Closing \u2192",
+          null,
+          null,
+          null,
+          "\u2190 Totals / Net / Final \u2192",
+          null,
+          null,
+          null
+        ],
+        [
+          "ITEM NAME",
+          "Opening\nStock",
+          "Bought",
+          "Used",
+          "Closing\nStock",
+          "Opening\nStock",
+          "Bought",
+          "Used",
+          "Closing\nStock",
+          "Total\nBought",
+          "Total\nUsed",
+          "Stock\nMovement",
+          "Final\nClosing"
+        ],
+        [
+          "\u2500\u2500 KITCHEN ESSENTIALS \u2500\u2500",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "Sugar (kg)",
+          null,
+          6,
+          null,
+          6,
+          6,
+          null,
+          null,
+          6,
+          6,
+          null,
+          6,
+          6
+        ],
+        [
+          "Milk (boxes)",
+          null,
+          1,
+          null,
+          1,
+          1,
+          null,
+          null,
+          1,
+          1,
+          null,
+          1,
+          1
+        ],
+        [
+          "Drinking Chocolate (tin)",
+          null,
+          1,
+          null,
+          1,
+          1,
+          null,
+          null,
+          1,
+          1,
+          null,
+          1,
+          1
+        ],
+        [
+          "Coffee (tin)",
+          null,
+          1,
+          null,
+          1,
+          1,
+          null,
+          null,
+          1,
+          1,
+          null,
+          1,
+          1
+        ],
+        [
+          "Tea Leaves (bags)",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "Matchbox (pkt)",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      ],
+      "columns": {
+        "STOCK MANAGEMENT REGISTER \u2014 DECEMBER 2025": {
+          "non_empty": 38,
+          "types": {
+            "str": 38
+          },
+          "sample_values": [
+            "ITEM",
+            "ITEM NAME",
+            "\u2500\u2500 KITCHEN ESSENTIALS \u2500\u2500",
+            "Sugar (kg)",
+            "Milk (boxes)"
+          ]
+        },
+        "col_2": {
+          "non_empty": 3,
+          "types": {
+            "str": 3
+          },
+          "sample_values": [
+            "PERIOD 1  (15/12/25)",
+            "\u2190 Opening / Bought / Used / Closing \u2192",
+            "Opening\nStock"
+          ]
+        },
+        "col_3": {
+          "non_empty": 13,
+          "types": {
+            "str": 1,
+            "int": 12
+          },
+          "sample_values": [
+            "Bought",
+            6,
+            1,
+            1,
+            1
+          ]
+        },
+        "col_4": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Used",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_5": {
+          "non_empty": 9,
+          "types": {
+            "str": 1,
+            "int": 8
+          },
+          "sample_values": [
+            "Closing\nStock",
+            6,
+            1,
+            1,
+            1
+          ]
+        },
+        "col_6": {
+          "non_empty": 11,
+          "types": {
+            "str": 3,
+            "int": 8
+          },
+          "sample_values": [
+            "PERIOD 2",
+            "\u2190 Opening / Bought / Used / Closing \u2192",
+            "Opening\nStock",
+            6,
+            1
+          ]
+        },
+        "col_7": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Bought",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_8": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Used",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_9": {
+          "non_empty": 9,
+          "types": {
+            "str": 1,
+            "int": 8
+          },
+          "sample_values": [
+            "Closing\nStock",
+            6,
+            1,
+            1,
+            1
+          ]
+        },
+        "col_10": {
+          "non_empty": 15,
+          "types": {
+            "str": 3,
+            "int": 12
+          },
+          "sample_values": [
+            "MONTHLY SUMMARY \u2014 December",
+            "\u2190 Totals / Net / Final \u2192",
+            "Total\nBought",
+            6,
+            1
+          ]
+        },
+        "col_11": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Total\nUsed",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_12": {
+          "non_empty": 13,
+          "types": {
+            "str": 1,
+            "int": 12
+          },
+          "sample_values": [
+            "Stock\nMovement",
+            6,
+            1,
+            1,
+            1
+          ]
+        },
+        "col_13": {
+          "non_empty": 13,
+          "types": {
+            "str": 1,
+            "int": 12
+          },
+          "sample_values": [
+            "Final\nClosing",
+            6,
+            1,
+            1,
+            1
+          ]
+        }
+      }
+    },
+    {
+      "name": "Jan",
+      "max_row": 41,
+      "max_column": 13,
+      "headers": [
+        "STOCK MANAGEMENT REGISTER \u2014 JANUARY 2026",
+        "col_2",
+        "col_3",
+        "col_4",
+        "col_5",
+        "col_6",
+        "col_7",
+        "col_8",
+        "col_9",
+        "col_10",
+        "col_11",
+        "col_12",
+        "col_13"
+      ],
+      "rows_count": 39,
+      "sample_rows": [
+        [
+          "ITEM",
+          "PERIOD 1  (13/01/26)",
+          null,
+          null,
+          null,
+          "PERIOD 2  (27-28/01/26)",
+          null,
+          null,
+          null,
+          "MONTHLY SUMMARY \u2014 January",
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          "\u2190 Opening / Bought / Used / Closing \u2192",
+          null,
+          null,
+          null,
+          "\u2190 Opening / Bought / Used / Closing \u2192",
+          null,
+          null,
+          null,
+          "\u2190 Totals / Net / Final \u2192",
+          null,
+          null,
+          null
+        ],
+        [
+          "ITEM NAME",
+          "Opening\nStock",
+          "Bought",
+          "Used",
+          "Closing\nStock",
+          "Opening\nStock",
+          "Bought",
+          "Used",
+          "Closing\nStock",
+          "Total\nBought",
+          "Total\nUsed",
+          "Stock\nMovement",
+          "Final\nClosing"
+        ],
+        [
+          "\u2500\u2500 KITCHEN ESSENTIALS \u2500\u2500",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "Sugar (kg)",
+          null,
+          10,
+          null,
+          10,
+          10,
+          8,
+          null,
+          18,
+          18,
+          null,
+          18,
+          18
+        ],
+        [
+          "Milk (boxes)",
+          null,
+          8,
+          null,
+          8,
+          8,
+          2,
+          null,
+          10,
+          10,
+          null,
+          10,
+          10
+        ],
+        [
+          "Drinking Chocolate (tin)",
+          null,
+          1,
+          null,
+          1,
+          1,
+          2,
+          null,
+          3,
+          3,
+          null,
+          3,
+          3
+        ],
+        [
+          "Coffee (tin)",
+          null,
+          1,
+          null,
+          1,
+          1,
+          1,
+          null,
+          2,
+          2,
+          null,
+          2,
+          2
+        ],
+        [
+          "Tea Leaves (bags)",
+          null,
+          2,
+          null,
+          2,
+          2,
+          2,
+          null,
+          4,
+          4,
+          null,
+          4,
+          4
+        ],
+        [
+          "Matchbox (pkt)",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      ],
+      "columns": {
+        "STOCK MANAGEMENT REGISTER \u2014 JANUARY 2026": {
+          "non_empty": 38,
+          "types": {
+            "str": 38
+          },
+          "sample_values": [
+            "ITEM",
+            "ITEM NAME",
+            "\u2500\u2500 KITCHEN ESSENTIALS \u2500\u2500",
+            "Sugar (kg)",
+            "Milk (boxes)"
+          ]
+        },
+        "col_2": {
+          "non_empty": 3,
+          "types": {
+            "str": 3
+          },
+          "sample_values": [
+            "PERIOD 1  (13/01/26)",
+            "\u2190 Opening / Bought / Used / Closing \u2192",
+            "Opening\nStock"
+          ]
+        },
+        "col_3": {
+          "non_empty": 15,
+          "types": {
+            "str": 1,
+            "int": 14
+          },
+          "sample_values": [
+            "Bought",
+            10,
+            8,
+            1,
+            1
+          ]
+        },
+        "col_4": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Used",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_5": {
+          "non_empty": 11,
+          "types": {
+            "str": 1,
+            "int": 10
+          },
+          "sample_values": [
+            "Closing\nStock",
+            10,
+            8,
+            1,
+            1
+          ]
+        },
+        "col_6": {
+          "non_empty": 18,
+          "types": {
+            "str": 3,
+            "int": 15
+          },
+          "sample_values": [
+            "PERIOD 2  (27-28/01/26)",
+            "\u2190 Opening / Bought / Used / Closing \u2192",
+            "Opening\nStock",
+            10,
+            8
+          ]
+        },
+        "col_7": {
+          "non_empty": 18,
+          "types": {
+            "str": 1,
+            "int": 17
+          },
+          "sample_values": [
+            "Bought",
+            8,
+            2,
+            2,
+            1
+          ]
+        },
+        "col_8": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Used",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_9": {
+          "non_empty": 16,
+          "types": {
+            "str": 1,
+            "int": 15
+          },
+          "sample_values": [
+            "Closing\nStock",
+            18,
+            10,
+            3,
+            2
+          ]
+        },
+        "col_10": {
+          "non_empty": 22,
+          "types": {
+            "str": 3,
+            "int": 19
+          },
+          "sample_values": [
+            "MONTHLY SUMMARY \u2014 January",
+            "\u2190 Totals / Net / Final \u2192",
+            "Total\nBought",
+            18,
+            10
+          ]
+        },
+        "col_11": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Total\nUsed",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_12": {
+          "non_empty": 20,
+          "types": {
+            "str": 1,
+            "int": 19
+          },
+          "sample_values": [
+            "Stock\nMovement",
+            18,
+            10,
+            3,
+            2
+          ]
+        },
+        "col_13": {
+          "non_empty": 20,
+          "types": {
+            "str": 1,
+            "int": 19
+          },
+          "sample_values": [
+            "Final\nClosing",
+            18,
+            10,
+            3,
+            2
+          ]
+        }
+      }
+    },
+    {
+      "name": "Feb",
+      "max_row": 41,
+      "max_column": 13,
+      "headers": [
+        "STOCK MANAGEMENT REGISTER \u2014 FEBRUARY 2026",
+        "col_2",
+        "col_3",
+        "col_4",
+        "col_5",
+        "col_6",
+        "col_7",
+        "col_8",
+        "col_9",
+        "col_10",
+        "col_11",
+        "col_12",
+        "col_13"
+      ],
+      "rows_count": 39,
+      "sample_rows": [
+        [
+          "ITEM",
+          "PERIOD 1  (11/02/26)",
+          null,
+          null,
+          null,
+          "PERIOD 2  (26/02/26)",
+          null,
+          null,
+          null,
+          "MONTHLY SUMMARY \u2014 February",
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          "\u2190 Opening / Bought / Used / Closing \u2192",
+          null,
+          null,
+          null,
+          "\u2190 Opening / Bought / Used / Closing \u2192",
+          null,
+          null,
+          null,
+          "\u2190 Totals / Net / Final \u2192",
+          null,
+          null,
+          null
+        ],
+        [
+          "ITEM NAME",
+          "Opening\nStock",
+          "Bought",
+          "Used",
+          "Closing\nStock",
+          "Opening\nStock",
+          "Bought",
+          "Used",
+          "Closing\nStock",
+          "Total\nBought",
+          "Total\nUsed",
+          "Stock\nMovement",
+          "Final\nClosing"
+        ],
+        [
+          "\u2500\u2500 KITCHEN ESSENTIALS \u2500\u2500",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "Sugar (kg)",
+          null,
+          8,
+          null,
+          8,
+          8,
+          8,
+          null,
+          16,
+          16,
+          null,
+          16,
+          16
+        ],
+        [
+          "Milk (boxes)",
+          null,
+          9,
+          null,
+          9,
+          9,
+          9,
+          null,
+          18,
+          18,
+          null,
+          18,
+          18
+        ],
+        [
+          "Drinking Chocolate (tin)",
+          null,
+          1,
+          null,
+          1,
+          1,
+          1,
+          null,
+          2,
+          2,
+          null,
+          2,
+          2
+        ],
+        [
+          "Coffee (tin)",
+          null,
+          1,
+          null,
+          1,
+          1,
+          null,
+          null,
+          1,
+          1,
+          null,
+          1,
+          1
+        ],
+        [
+          "Tea Leaves (bags)",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "Matchbox (pkt)",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      ],
+      "columns": {
+        "STOCK MANAGEMENT REGISTER \u2014 FEBRUARY 2026": {
+          "non_empty": 38,
+          "types": {
+            "str": 38
+          },
+          "sample_values": [
+            "ITEM",
+            "ITEM NAME",
+            "\u2500\u2500 KITCHEN ESSENTIALS \u2500\u2500",
+            "Sugar (kg)",
+            "Milk (boxes)"
+          ]
+        },
+        "col_2": {
+          "non_empty": 3,
+          "types": {
+            "str": 3
+          },
+          "sample_values": [
+            "PERIOD 1  (11/02/26)",
+            "\u2190 Opening / Bought / Used / Closing \u2192",
+            "Opening\nStock"
+          ]
+        },
+        "col_3": {
+          "non_empty": 15,
+          "types": {
+            "str": 1,
+            "int": 14
+          },
+          "sample_values": [
+            "Bought",
+            8,
+            9,
+            1,
+            1
+          ]
+        },
+        "col_4": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Used",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_5": {
+          "non_empty": 11,
+          "types": {
+            "str": 1,
+            "int": 10
+          },
+          "sample_values": [
+            "Closing\nStock",
+            8,
+            9,
+            1,
+            1
+          ]
+        },
+        "col_6": {
+          "non_empty": 17,
+          "types": {
+            "str": 3,
+            "int": 14
+          },
+          "sample_values": [
+            "PERIOD 2  (26/02/26)",
+            "\u2190 Opening / Bought / Used / Closing \u2192",
+            "Opening\nStock",
+            8,
+            9
+          ]
+        },
+        "col_7": {
+          "non_empty": 14,
+          "types": {
+            "str": 1,
+            "int": 13
+          },
+          "sample_values": [
+            "Bought",
+            8,
+            9,
+            1,
+            18
+          ]
+        },
+        "col_8": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Used",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_9": {
+          "non_empty": 15,
+          "types": {
+            "str": 1,
+            "int": 14
+          },
+          "sample_values": [
+            "Closing\nStock",
+            16,
+            18,
+            2,
+            1
+          ]
+        },
+        "col_10": {
+          "non_empty": 21,
+          "types": {
+            "str": 3,
+            "int": 18
+          },
+          "sample_values": [
+            "MONTHLY SUMMARY \u2014 February",
+            "\u2190 Totals / Net / Final \u2192",
+            "Total\nBought",
+            16,
+            18
+          ]
+        },
+        "col_11": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Total\nUsed",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_12": {
+          "non_empty": 19,
+          "types": {
+            "str": 1,
+            "int": 18
+          },
+          "sample_values": [
+            "Stock\nMovement",
+            16,
+            18,
+            2,
+            1
+          ]
+        },
+        "col_13": {
+          "non_empty": 19,
+          "types": {
+            "str": 1,
+            "int": 18
+          },
+          "sample_values": [
+            "Final\nClosing",
+            16,
+            18,
+            2,
+            1
+          ]
+        }
+      }
+    },
+    {
+      "name": "Mar",
+      "max_row": 41,
+      "max_column": 13,
+      "headers": [
+        "STOCK MANAGEMENT REGISTER \u2014 MARCH 2026",
+        "col_2",
+        "col_3",
+        "col_4",
+        "col_5",
+        "col_6",
+        "col_7",
+        "col_8",
+        "col_9",
+        "col_10",
+        "col_11",
+        "col_12",
+        "col_13"
+      ],
+      "rows_count": 39,
+      "sample_rows": [
+        [
+          "ITEM",
+          "PERIOD 1  (13/03/26)",
+          null,
+          null,
+          null,
+          "PERIOD 2  (24-30/03/26)",
+          null,
+          null,
+          null,
+          "MONTHLY SUMMARY \u2014 March",
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          "\u2190 Opening / Bought / Used / Closing \u2192",
+          null,
+          null,
+          null,
+          "\u2190 Opening / Bought / Used / Closing \u2192",
+          null,
+          null,
+          null,
+          "\u2190 Totals / Net / Final \u2192",
+          null,
+          null,
+          null
+        ],
+        [
+          "ITEM NAME",
+          "Opening\nStock",
+          "Bought",
+          "Used",
+          "Closing\nStock",
+          "Opening\nStock",
+          "Bought",
+          "Used",
+          "Closing\nStock",
+          "Total\nBought",
+          "Total\nUsed",
+          "Stock\nMovement",
+          "Final\nClosing"
+        ],
+        [
+          "\u2500\u2500 KITCHEN ESSENTIALS \u2500\u2500",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "Sugar (kg)",
+          0,
+          8,
+          null,
+          8,
+          8,
+          8,
+          13,
+          3,
+          16,
+          13,
+          3,
+          3
+        ],
+        [
+          "Milk (boxes)",
+          0,
+          9,
+          null,
+          9,
+          9,
+          9,
+          null,
+          18,
+          18,
+          0,
+          18,
+          18
+        ],
+        [
+          "Drinking Chocolate (tin)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          1,
+          null,
+          1,
+          1,
+          0,
+          1,
+          1
+        ],
+        [
+          "Coffee (tin)",
+          0,
+          1,
+          null,
+          1,
+          1,
+          1,
+          null,
+          2,
+          2,
+          0,
+          2,
+          2
+        ],
+        [
+          "Tea Leaves (bags)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Matchbox (pkt)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "columns": {
+        "STOCK MANAGEMENT REGISTER \u2014 MARCH 2026": {
+          "non_empty": 38,
+          "types": {
+            "str": 38
+          },
+          "sample_values": [
+            "ITEM",
+            "ITEM NAME",
+            "\u2500\u2500 KITCHEN ESSENTIALS \u2500\u2500",
+            "Sugar (kg)",
+            "Milk (boxes)"
+          ]
+        },
+        "col_2": {
+          "non_empty": 31,
+          "types": {
+            "str": 3,
+            "int": 28
+          },
+          "sample_values": [
+            "PERIOD 1  (13/03/26)",
+            "\u2190 Opening / Bought / Used / Closing \u2192",
+            "Opening\nStock",
+            0,
+            0
+          ]
+        },
+        "col_3": {
+          "non_empty": 15,
+          "types": {
+            "str": 1,
+            "int": 14
+          },
+          "sample_values": [
+            "Bought",
+            8,
+            9,
+            1,
+            18
+          ]
+        },
+        "col_4": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Used",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_5": {
+          "non_empty": 29,
+          "types": {
+            "str": 1,
+            "int": 28
+          },
+          "sample_values": [
+            "Closing\nStock",
+            8,
+            9,
+            0,
+            1
+          ]
+        },
+        "col_6": {
+          "non_empty": 31,
+          "types": {
+            "str": 3,
+            "int": 28
+          },
+          "sample_values": [
+            "PERIOD 2  (24-30/03/26)",
+            "\u2190 Opening / Bought / Used / Closing \u2192",
+            "Opening\nStock",
+            8,
+            9
+          ]
+        },
+        "col_7": {
+          "non_empty": 14,
+          "types": {
+            "str": 1,
+            "int": 13
+          },
+          "sample_values": [
+            "Bought",
+            8,
+            9,
+            1,
+            1
+          ]
+        },
+        "col_8": {
+          "non_empty": 8,
+          "types": {
+            "str": 1,
+            "int": 7
+          },
+          "sample_values": [
+            "Used",
+            13,
+            13,
+            9,
+            16
+          ]
+        },
+        "col_9": {
+          "non_empty": 29,
+          "types": {
+            "str": 1,
+            "int": 28
+          },
+          "sample_values": [
+            "Closing\nStock",
+            3,
+            18,
+            1,
+            2
+          ]
+        },
+        "col_10": {
+          "non_empty": 35,
+          "types": {
+            "str": 3,
+            "int": 32
+          },
+          "sample_values": [
+            "MONTHLY SUMMARY \u2014 March",
+            "\u2190 Totals / Net / Final \u2192",
+            "Total\nBought",
+            16,
+            18
+          ]
+        },
+        "col_11": {
+          "non_empty": 33,
+          "types": {
+            "str": 1,
+            "int": 32
+          },
+          "sample_values": [
+            "Total\nUsed",
+            13,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_12": {
+          "non_empty": 33,
+          "types": {
+            "str": 1,
+            "int": 32
+          },
+          "sample_values": [
+            "Stock\nMovement",
+            3,
+            18,
+            1,
+            2
+          ]
+        },
+        "col_13": {
+          "non_empty": 33,
+          "types": {
+            "str": 1,
+            "int": 32
+          },
+          "sample_values": [
+            "Final\nClosing",
+            3,
+            18,
+            1,
+            2
+          ]
+        }
+      }
+    },
+    {
+      "name": "Apr",
+      "max_row": 41,
+      "max_column": 13,
+      "headers": [
+        "STOCK MANAGEMENT REGISTER \u2014 APRIL 2026",
+        "col_2",
+        "col_3",
+        "col_4",
+        "col_5",
+        "col_6",
+        "col_7",
+        "col_8",
+        "col_9",
+        "col_10",
+        "col_11",
+        "col_12",
+        "col_13"
+      ],
+      "rows_count": 39,
+      "sample_rows": [
+        [
+          "ITEM",
+          "PERIOD 1  (15/04/26)",
+          null,
+          null,
+          null,
+          "PERIOD 2  (30/04/26)",
+          null,
+          null,
+          null,
+          "MONTHLY SUMMARY \u2014 April",
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          "\u2190 Opening / Bought / Used / Closing \u2192",
+          null,
+          null,
+          null,
+          "\u2190 Opening / Bought / Used / Closing \u2192",
+          null,
+          null,
+          null,
+          "\u2190 Totals / Net / Final \u2192",
+          null,
+          null,
+          null
+        ],
+        [
+          "ITEM NAME",
+          "Opening\nStock",
+          "Bought",
+          "Used",
+          "Closing\nStock",
+          "Opening\nStock",
+          "Bought",
+          "Used",
+          "Closing\nStock",
+          "Total\nBought",
+          "Total\nUsed",
+          "Stock\nMovement",
+          "Final\nClosing"
+        ],
+        [
+          "\u2500\u2500 KITCHEN ESSENTIALS \u2500\u2500",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "Sugar (kg)",
+          0,
+          8,
+          null,
+          8,
+          8,
+          10,
+          17,
+          1,
+          18,
+          17,
+          1,
+          1
+        ],
+        [
+          "Milk (boxes)",
+          0,
+          10,
+          null,
+          10,
+          10,
+          10,
+          20,
+          0,
+          20,
+          20,
+          0,
+          0
+        ],
+        [
+          "Drinking Chocolate (tin)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          1,
+          0.5,
+          0.5,
+          1,
+          0.5,
+          0.5,
+          0.5
+        ],
+        [
+          "Coffee (tin)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          2,
+          1.5,
+          0.5,
+          2,
+          1.5,
+          0.5,
+          0.5
+        ],
+        [
+          "Tea Leaves (bags)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Matchbox (pkt)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "columns": {
+        "STOCK MANAGEMENT REGISTER \u2014 APRIL 2026": {
+          "non_empty": 38,
+          "types": {
+            "str": 38
+          },
+          "sample_values": [
+            "ITEM",
+            "ITEM NAME",
+            "\u2500\u2500 KITCHEN ESSENTIALS \u2500\u2500",
+            "Sugar (kg)",
+            "Milk (boxes)"
+          ]
+        },
+        "col_2": {
+          "non_empty": 31,
+          "types": {
+            "str": 3,
+            "int": 28
+          },
+          "sample_values": [
+            "PERIOD 1  (15/04/26)",
+            "\u2190 Opening / Bought / Used / Closing \u2192",
+            "Opening\nStock",
+            0,
+            0
+          ]
+        },
+        "col_3": {
+          "non_empty": 12,
+          "types": {
+            "str": 1,
+            "int": 11
+          },
+          "sample_values": [
+            "Bought",
+            8,
+            10,
+            4,
+            1
+          ]
+        },
+        "col_4": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Used",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_5": {
+          "non_empty": 29,
+          "types": {
+            "str": 1,
+            "int": 28
+          },
+          "sample_values": [
+            "Closing\nStock",
+            8,
+            10,
+            0,
+            0
+          ]
+        },
+        "col_6": {
+          "non_empty": 31,
+          "types": {
+            "str": 3,
+            "int": 28
+          },
+          "sample_values": [
+            "PERIOD 2  (30/04/26)",
+            "\u2190 Opening / Bought / Used / Closing \u2192",
+            "Opening\nStock",
+            8,
+            10
+          ]
+        },
+        "col_7": {
+          "non_empty": 16,
+          "types": {
+            "str": 1,
+            "int": 15
+          },
+          "sample_values": [
+            "Bought",
+            10,
+            10,
+            1,
+            2
+          ]
+        },
+        "col_8": {
+          "non_empty": 11,
+          "types": {
+            "str": 1,
+            "int": 8,
+            "float": 2
+          },
+          "sample_values": [
+            "Used",
+            17,
+            20,
+            0.5,
+            1.5
+          ]
+        },
+        "col_9": {
+          "non_empty": 29,
+          "types": {
+            "str": 1,
+            "int": 26,
+            "float": 2
+          },
+          "sample_values": [
+            "Closing\nStock",
+            1,
+            0,
+            0.5,
+            0.5
+          ]
+        },
+        "col_10": {
+          "non_empty": 35,
+          "types": {
+            "str": 3,
+            "int": 32
+          },
+          "sample_values": [
+            "MONTHLY SUMMARY \u2014 April",
+            "\u2190 Totals / Net / Final \u2192",
+            "Total\nBought",
+            18,
+            20
+          ]
+        },
+        "col_11": {
+          "non_empty": 33,
+          "types": {
+            "str": 1,
+            "int": 30,
+            "float": 2
+          },
+          "sample_values": [
+            "Total\nUsed",
+            17,
+            20,
+            0.5,
+            1.5
+          ]
+        },
+        "col_12": {
+          "non_empty": 33,
+          "types": {
+            "str": 1,
+            "int": 30,
+            "float": 2
+          },
+          "sample_values": [
+            "Stock\nMovement",
+            1,
+            0,
+            0.5,
+            0.5
+          ]
+        },
+        "col_13": {
+          "non_empty": 33,
+          "types": {
+            "str": 1,
+            "int": 30,
+            "float": 2
+          },
+          "sample_values": [
+            "Final\nClosing",
+            1,
+            0,
+            0.5,
+            0.5
+          ]
+        }
+      }
+    },
+    {
+      "name": "Kitchen Stock",
+      "max_row": 28,
+      "max_column": 7,
+      "headers": [
+        "KITCHEN STOCK INVENTORY",
+        "col_2",
+        "col_3",
+        "col_4",
+        "col_5",
+        "col_6",
+        "col_7"
+      ],
+      "rows_count": 26,
+      "sample_rows": [
+        [
+          "Durable equipment inventory \u2014 update as items are added or retired",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "#",
+          "ITEM NAME",
+          "Current Qty",
+          "Purchased",
+          "Broken/Lost",
+          "Total",
+          "Notes / Brand"
+        ],
+        [
+          1,
+          "Plates",
+          6,
+          12,
+          null,
+          18,
+          "SIGNVRSE"
+        ],
+        [
+          2,
+          "Side Plates",
+          8,
+          6,
+          null,
+          14,
+          "AFOSI"
+        ],
+        [
+          3,
+          "Spoons",
+          13,
+          6,
+          null,
+          19,
+          "AFOSI"
+        ],
+        [
+          4,
+          "Tea Spoons",
+          4,
+          6,
+          null,
+          10,
+          "MILLENIUM"
+        ],
+        [
+          5,
+          "Forks",
+          5,
+          12,
+          null,
+          17,
+          "AFOSI"
+        ],
+        [
+          6,
+          "Glasses",
+          22,
+          6,
+          3,
+          25,
+          "MILLENIUM"
+        ],
+        [
+          7,
+          "Cups",
+          18,
+          12,
+          4,
+          24,
+          "MILLENIUM"
+        ],
+        [
+          8,
+          "Thermos",
+          10,
+          1,
+          null,
+          11,
+          "AFOSI"
+        ]
+      ],
+      "columns": {
+        "KITCHEN STOCK INVENTORY": {
+          "non_empty": 24,
+          "types": {
+            "str": 3,
+            "int": 21
+          },
+          "sample_values": [
+            "Durable equipment inventory \u2014 update as items are added or retired",
+            "#",
+            1,
+            2,
+            3
+          ]
+        },
+        "col_2": {
+          "non_empty": 24,
+          "types": {
+            "str": 24
+          },
+          "sample_values": [
+            "ITEM NAME",
+            "Plates",
+            "Side Plates",
+            "Spoons",
+            "Tea Spoons"
+          ]
+        },
+        "col_3": {
+          "non_empty": 24,
+          "types": {
+            "str": 1,
+            "int": 23
+          },
+          "sample_values": [
+            "Current Qty",
+            6,
+            8,
+            13,
+            4
+          ]
+        },
+        "col_4": {
+          "non_empty": 24,
+          "types": {
+            "str": 1,
+            "int": 23
+          },
+          "sample_values": [
+            "Purchased",
+            12,
+            6,
+            6,
+            6
+          ]
+        },
+        "col_5": {
+          "non_empty": 4,
+          "types": {
+            "str": 1,
+            "int": 3
+          },
+          "sample_values": [
+            "Broken/Lost",
+            3,
+            4,
+            2
+          ]
+        },
+        "col_6": {
+          "non_empty": 24,
+          "types": {
+            "str": 1,
+            "int": 23
+          },
+          "sample_values": [
+            "Total",
+            18,
+            14,
+            19,
+            10
+          ]
+        },
+        "col_7": {
+          "non_empty": 10,
+          "types": {
+            "str": 10
+          },
+          "sample_values": [
+            "Notes / Brand",
+            "SIGNVRSE",
+            "AFOSI",
+            "AFOSI",
+            "MILLENIUM"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Water",
+      "max_row": 46,
+      "max_column": 4,
+      "headers": [
+        "WATER BOTTLE DELIVERY LOG",
+        "col_2",
+        "col_3",
+        "col_4"
+      ],
+      "rows_count": 44,
+      "sample_rows": [
+        [
+          "Record of all water bottle deliveries by month",
+          null,
+          null,
+          null
+        ],
+        [
+          "#",
+          "Delivery Date",
+          "Bottles Delivered",
+          "Month Total"
+        ],
+        [
+          1,
+          "17/09/2025",
+          7,
+          null
+        ],
+        [
+          2,
+          "23/09/2025",
+          7,
+          14
+        ],
+        [
+          "  Sep TOTAL  \u2192  14 bottles",
+          null,
+          null,
+          14
+        ],
+        [
+          3,
+          "07/10/2025",
+          7,
+          null
+        ],
+        [
+          4,
+          "10/10/2025",
+          9,
+          null
+        ],
+        [
+          5,
+          "14/10/2025",
+          4,
+          null
+        ],
+        [
+          6,
+          "23/10/2025",
+          7,
+          null
+        ],
+        [
+          7,
+          "29/10/2025",
+          6,
+          33
+        ]
+      ],
+      "columns": {
+        "WATER BOTTLE DELIVERY LOG": {
+          "non_empty": 44,
+          "types": {
+            "str": 16,
+            "int": 28
+          },
+          "sample_values": [
+            "Record of all water bottle deliveries by month",
+            "#",
+            1,
+            2,
+            "  Sep TOTAL  \u2192  14 bottles"
+          ]
+        },
+        "col_2": {
+          "non_empty": 29,
+          "types": {
+            "str": 29
+          },
+          "sample_values": [
+            "Delivery Date",
+            "17/09/2025",
+            "23/09/2025",
+            "07/10/2025",
+            "10/10/2025"
+          ]
+        },
+        "col_3": {
+          "non_empty": 34,
+          "types": {
+            "str": 1,
+            "int": 33
+          },
+          "sample_values": [
+            "Bottles Delivered",
+            7,
+            7,
+            7,
+            9
+          ]
+        },
+        "col_4": {
+          "non_empty": 18,
+          "types": {
+            "str": 1,
+            "int": 17
+          },
+          "sample_values": [
+            "Month Total",
+            14,
+            14,
+            33,
+            33
+          ]
+        }
+      }
+    },
+    {
+      "name": "May",
+      "max_row": 41,
+      "max_column": 13,
+      "headers": [
+        "STOCK MANAGEMENT REGISTER \u2014 MAY 2026",
+        "col_2",
+        "col_3",
+        "col_4",
+        "col_5",
+        "col_6",
+        "col_7",
+        "col_8",
+        "col_9",
+        "col_10",
+        "col_11",
+        "col_12",
+        "col_13"
+      ],
+      "rows_count": 39,
+      "sample_rows": [
+        [
+          "ITEM",
+          "PERIOD 1  (May 01\u201315)",
+          null,
+          null,
+          null,
+          "PERIOD 2  (May 16\u201331)",
+          null,
+          null,
+          null,
+          "MONTHLY SUMMARY \u2014 May",
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          "\u2190 Opening / Bought / Used / Closing \u2192",
+          null,
+          null,
+          null,
+          "\u2190 Opening / Bought / Used / Closing \u2192",
+          null,
+          null,
+          null,
+          "\u2190 Totals / Movement / Final \u2192",
+          null,
+          null,
+          null
+        ],
+        [
+          "ITEM NAME",
+          "Opening\nStock",
+          "Bought",
+          "Used",
+          "Closing\nStock",
+          "Opening\nStock",
+          "Bought",
+          "Used",
+          "Closing\nStock",
+          "Total\nBought",
+          "Total\nUsed",
+          "Stock\nMovement",
+          "Final\nClosing"
+        ],
+        [
+          "\u2500\u2500 KITCHEN ESSENTIALS \u2500\u2500",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "Sugar (kg)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Milk (boxes)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Drinking Chocolate (tin)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Coffee (tin)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Tea Leaves (bags)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Matchbox (pkt)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "columns": {
+        "STOCK MANAGEMENT REGISTER \u2014 MAY 2026": {
+          "non_empty": 38,
+          "types": {
+            "str": 38
+          },
+          "sample_values": [
+            "ITEM",
+            "ITEM NAME",
+            "\u2500\u2500 KITCHEN ESSENTIALS \u2500\u2500",
+            "Sugar (kg)",
+            "Milk (boxes)"
+          ]
+        },
+        "col_2": {
+          "non_empty": 31,
+          "types": {
+            "str": 3,
+            "int": 28
+          },
+          "sample_values": [
+            "PERIOD 1  (May 01\u201315)",
+            "\u2190 Opening / Bought / Used / Closing \u2192",
+            "Opening\nStock",
+            0,
+            0
+          ]
+        },
+        "col_3": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Bought",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_4": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Used",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_5": {
+          "non_empty": 29,
+          "types": {
+            "str": 1,
+            "int": 28
+          },
+          "sample_values": [
+            "Closing\nStock",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_6": {
+          "non_empty": 31,
+          "types": {
+            "str": 3,
+            "int": 28
+          },
+          "sample_values": [
+            "PERIOD 2  (May 16\u201331)",
+            "\u2190 Opening / Bought / Used / Closing \u2192",
+            "Opening\nStock",
+            0,
+            0
+          ]
+        },
+        "col_7": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Bought",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_8": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Used",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_9": {
+          "non_empty": 29,
+          "types": {
+            "str": 1,
+            "int": 28
+          },
+          "sample_values": [
+            "Closing\nStock",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_10": {
+          "non_empty": 35,
+          "types": {
+            "str": 3,
+            "int": 32
+          },
+          "sample_values": [
+            "MONTHLY SUMMARY \u2014 May",
+            "\u2190 Totals / Movement / Final \u2192",
+            "Total\nBought",
+            0,
+            0
+          ]
+        },
+        "col_11": {
+          "non_empty": 33,
+          "types": {
+            "str": 1,
+            "int": 32
+          },
+          "sample_values": [
+            "Total\nUsed",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_12": {
+          "non_empty": 33,
+          "types": {
+            "str": 1,
+            "int": 32
+          },
+          "sample_values": [
+            "Stock\nMovement",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_13": {
+          "non_empty": 33,
+          "types": {
+            "str": 1,
+            "int": 32
+          },
+          "sample_values": [
+            "Final\nClosing",
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "name": "Jun",
+      "max_row": 41,
+      "max_column": 13,
+      "headers": [
+        "STOCK MANAGEMENT REGISTER \u2014 JUNE 2026",
+        "col_2",
+        "col_3",
+        "col_4",
+        "col_5",
+        "col_6",
+        "col_7",
+        "col_8",
+        "col_9",
+        "col_10",
+        "col_11",
+        "col_12",
+        "col_13"
+      ],
+      "rows_count": 39,
+      "sample_rows": [
+        [
+          "ITEM",
+          "PERIOD 1  (Jun 01\u201315)",
+          null,
+          null,
+          null,
+          "PERIOD 2  (Jun 16\u201330)",
+          null,
+          null,
+          null,
+          "MONTHLY SUMMARY \u2014 June",
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          "\u2190 Opening / Bought / Used / Closing \u2192",
+          null,
+          null,
+          null,
+          "\u2190 Opening / Bought / Used / Closing \u2192",
+          null,
+          null,
+          null,
+          "\u2190 Totals / Movement / Final \u2192",
+          null,
+          null,
+          null
+        ],
+        [
+          "ITEM NAME",
+          "Opening\nStock",
+          "Bought",
+          "Used",
+          "Closing\nStock",
+          "Opening\nStock",
+          "Bought",
+          "Used",
+          "Closing\nStock",
+          "Total\nBought",
+          "Total\nUsed",
+          "Stock\nMovement",
+          "Final\nClosing"
+        ],
+        [
+          "\u2500\u2500 KITCHEN ESSENTIALS \u2500\u2500",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "Sugar (kg)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Milk (boxes)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Drinking Chocolate (tin)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Coffee (tin)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Tea Leaves (bags)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Matchbox (pkt)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "columns": {
+        "STOCK MANAGEMENT REGISTER \u2014 JUNE 2026": {
+          "non_empty": 38,
+          "types": {
+            "str": 38
+          },
+          "sample_values": [
+            "ITEM",
+            "ITEM NAME",
+            "\u2500\u2500 KITCHEN ESSENTIALS \u2500\u2500",
+            "Sugar (kg)",
+            "Milk (boxes)"
+          ]
+        },
+        "col_2": {
+          "non_empty": 31,
+          "types": {
+            "str": 3,
+            "int": 28
+          },
+          "sample_values": [
+            "PERIOD 1  (Jun 01\u201315)",
+            "\u2190 Opening / Bought / Used / Closing \u2192",
+            "Opening\nStock",
+            0,
+            0
+          ]
+        },
+        "col_3": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Bought",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_4": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Used",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_5": {
+          "non_empty": 29,
+          "types": {
+            "str": 1,
+            "int": 28
+          },
+          "sample_values": [
+            "Closing\nStock",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_6": {
+          "non_empty": 31,
+          "types": {
+            "str": 3,
+            "int": 28
+          },
+          "sample_values": [
+            "PERIOD 2  (Jun 16\u201330)",
+            "\u2190 Opening / Bought / Used / Closing \u2192",
+            "Opening\nStock",
+            0,
+            0
+          ]
+        },
+        "col_7": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Bought",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_8": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Used",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_9": {
+          "non_empty": 29,
+          "types": {
+            "str": 1,
+            "int": 28
+          },
+          "sample_values": [
+            "Closing\nStock",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_10": {
+          "non_empty": 35,
+          "types": {
+            "str": 3,
+            "int": 32
+          },
+          "sample_values": [
+            "MONTHLY SUMMARY \u2014 June",
+            "\u2190 Totals / Movement / Final \u2192",
+            "Total\nBought",
+            0,
+            0
+          ]
+        },
+        "col_11": {
+          "non_empty": 33,
+          "types": {
+            "str": 1,
+            "int": 32
+          },
+          "sample_values": [
+            "Total\nUsed",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_12": {
+          "non_empty": 33,
+          "types": {
+            "str": 1,
+            "int": 32
+          },
+          "sample_values": [
+            "Stock\nMovement",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_13": {
+          "non_empty": 33,
+          "types": {
+            "str": 1,
+            "int": 32
+          },
+          "sample_values": [
+            "Final\nClosing",
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "name": "Jul",
+      "max_row": 41,
+      "max_column": 13,
+      "headers": [
+        "STOCK MANAGEMENT REGISTER \u2014 JULY 2026",
+        "col_2",
+        "col_3",
+        "col_4",
+        "col_5",
+        "col_6",
+        "col_7",
+        "col_8",
+        "col_9",
+        "col_10",
+        "col_11",
+        "col_12",
+        "col_13"
+      ],
+      "rows_count": 39,
+      "sample_rows": [
+        [
+          "ITEM",
+          "PERIOD 1  (Jul 01\u201315)",
+          null,
+          null,
+          null,
+          "PERIOD 2  (Jul 16\u201331)",
+          null,
+          null,
+          null,
+          "MONTHLY SUMMARY \u2014 July",
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          "\u2190 Opening / Bought / Used / Closing \u2192",
+          null,
+          null,
+          null,
+          "\u2190 Opening / Bought / Used / Closing \u2192",
+          null,
+          null,
+          null,
+          "\u2190 Totals / Movement / Final \u2192",
+          null,
+          null,
+          null
+        ],
+        [
+          "ITEM NAME",
+          "Opening\nStock",
+          "Bought",
+          "Used",
+          "Closing\nStock",
+          "Opening\nStock",
+          "Bought",
+          "Used",
+          "Closing\nStock",
+          "Total\nBought",
+          "Total\nUsed",
+          "Stock\nMovement",
+          "Final\nClosing"
+        ],
+        [
+          "\u2500\u2500 KITCHEN ESSENTIALS \u2500\u2500",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "Sugar (kg)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Milk (boxes)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Drinking Chocolate (tin)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Coffee (tin)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Tea Leaves (bags)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Matchbox (pkt)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "columns": {
+        "STOCK MANAGEMENT REGISTER \u2014 JULY 2026": {
+          "non_empty": 38,
+          "types": {
+            "str": 38
+          },
+          "sample_values": [
+            "ITEM",
+            "ITEM NAME",
+            "\u2500\u2500 KITCHEN ESSENTIALS \u2500\u2500",
+            "Sugar (kg)",
+            "Milk (boxes)"
+          ]
+        },
+        "col_2": {
+          "non_empty": 31,
+          "types": {
+            "str": 3,
+            "int": 28
+          },
+          "sample_values": [
+            "PERIOD 1  (Jul 01\u201315)",
+            "\u2190 Opening / Bought / Used / Closing \u2192",
+            "Opening\nStock",
+            0,
+            0
+          ]
+        },
+        "col_3": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Bought",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_4": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Used",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_5": {
+          "non_empty": 29,
+          "types": {
+            "str": 1,
+            "int": 28
+          },
+          "sample_values": [
+            "Closing\nStock",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_6": {
+          "non_empty": 31,
+          "types": {
+            "str": 3,
+            "int": 28
+          },
+          "sample_values": [
+            "PERIOD 2  (Jul 16\u201331)",
+            "\u2190 Opening / Bought / Used / Closing \u2192",
+            "Opening\nStock",
+            0,
+            0
+          ]
+        },
+        "col_7": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Bought",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_8": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Used",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_9": {
+          "non_empty": 29,
+          "types": {
+            "str": 1,
+            "int": 28
+          },
+          "sample_values": [
+            "Closing\nStock",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_10": {
+          "non_empty": 35,
+          "types": {
+            "str": 3,
+            "int": 32
+          },
+          "sample_values": [
+            "MONTHLY SUMMARY \u2014 July",
+            "\u2190 Totals / Movement / Final \u2192",
+            "Total\nBought",
+            0,
+            0
+          ]
+        },
+        "col_11": {
+          "non_empty": 33,
+          "types": {
+            "str": 1,
+            "int": 32
+          },
+          "sample_values": [
+            "Total\nUsed",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_12": {
+          "non_empty": 33,
+          "types": {
+            "str": 1,
+            "int": 32
+          },
+          "sample_values": [
+            "Stock\nMovement",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_13": {
+          "non_empty": 33,
+          "types": {
+            "str": 1,
+            "int": 32
+          },
+          "sample_values": [
+            "Final\nClosing",
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "name": "Aug",
+      "max_row": 41,
+      "max_column": 13,
+      "headers": [
+        "STOCK MANAGEMENT REGISTER \u2014 AUGUST 2026",
+        "col_2",
+        "col_3",
+        "col_4",
+        "col_5",
+        "col_6",
+        "col_7",
+        "col_8",
+        "col_9",
+        "col_10",
+        "col_11",
+        "col_12",
+        "col_13"
+      ],
+      "rows_count": 39,
+      "sample_rows": [
+        [
+          "ITEM",
+          "PERIOD 1  (Aug 01\u201315)",
+          null,
+          null,
+          null,
+          "PERIOD 2  (Aug 16\u201331)",
+          null,
+          null,
+          null,
+          "MONTHLY SUMMARY \u2014 August",
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          "\u2190 Opening / Bought / Used / Closing \u2192",
+          null,
+          null,
+          null,
+          "\u2190 Opening / Bought / Used / Closing \u2192",
+          null,
+          null,
+          null,
+          "\u2190 Totals / Movement / Final \u2192",
+          null,
+          null,
+          null
+        ],
+        [
+          "ITEM NAME",
+          "Opening\nStock",
+          "Bought",
+          "Used",
+          "Closing\nStock",
+          "Opening\nStock",
+          "Bought",
+          "Used",
+          "Closing\nStock",
+          "Total\nBought",
+          "Total\nUsed",
+          "Stock\nMovement",
+          "Final\nClosing"
+        ],
+        [
+          "\u2500\u2500 KITCHEN ESSENTIALS \u2500\u2500",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "Sugar (kg)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Milk (boxes)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Drinking Chocolate (tin)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Coffee (tin)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Tea Leaves (bags)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Matchbox (pkt)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "columns": {
+        "STOCK MANAGEMENT REGISTER \u2014 AUGUST 2026": {
+          "non_empty": 38,
+          "types": {
+            "str": 38
+          },
+          "sample_values": [
+            "ITEM",
+            "ITEM NAME",
+            "\u2500\u2500 KITCHEN ESSENTIALS \u2500\u2500",
+            "Sugar (kg)",
+            "Milk (boxes)"
+          ]
+        },
+        "col_2": {
+          "non_empty": 31,
+          "types": {
+            "str": 3,
+            "int": 28
+          },
+          "sample_values": [
+            "PERIOD 1  (Aug 01\u201315)",
+            "\u2190 Opening / Bought / Used / Closing \u2192",
+            "Opening\nStock",
+            0,
+            0
+          ]
+        },
+        "col_3": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Bought",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_4": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Used",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_5": {
+          "non_empty": 29,
+          "types": {
+            "str": 1,
+            "int": 28
+          },
+          "sample_values": [
+            "Closing\nStock",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_6": {
+          "non_empty": 31,
+          "types": {
+            "str": 3,
+            "int": 28
+          },
+          "sample_values": [
+            "PERIOD 2  (Aug 16\u201331)",
+            "\u2190 Opening / Bought / Used / Closing \u2192",
+            "Opening\nStock",
+            0,
+            0
+          ]
+        },
+        "col_7": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Bought",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_8": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Used",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_9": {
+          "non_empty": 29,
+          "types": {
+            "str": 1,
+            "int": 28
+          },
+          "sample_values": [
+            "Closing\nStock",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_10": {
+          "non_empty": 35,
+          "types": {
+            "str": 3,
+            "int": 32
+          },
+          "sample_values": [
+            "MONTHLY SUMMARY \u2014 August",
+            "\u2190 Totals / Movement / Final \u2192",
+            "Total\nBought",
+            0,
+            0
+          ]
+        },
+        "col_11": {
+          "non_empty": 33,
+          "types": {
+            "str": 1,
+            "int": 32
+          },
+          "sample_values": [
+            "Total\nUsed",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_12": {
+          "non_empty": 33,
+          "types": {
+            "str": 1,
+            "int": 32
+          },
+          "sample_values": [
+            "Stock\nMovement",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_13": {
+          "non_empty": 33,
+          "types": {
+            "str": 1,
+            "int": 32
+          },
+          "sample_values": [
+            "Final\nClosing",
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "name": "Sep26",
+      "max_row": 41,
+      "max_column": 13,
+      "headers": [
+        "STOCK MANAGEMENT REGISTER \u2014 SEPTEMBER 2026",
+        "col_2",
+        "col_3",
+        "col_4",
+        "col_5",
+        "col_6",
+        "col_7",
+        "col_8",
+        "col_9",
+        "col_10",
+        "col_11",
+        "col_12",
+        "col_13"
+      ],
+      "rows_count": 39,
+      "sample_rows": [
+        [
+          "ITEM",
+          "PERIOD 1  (Sep 01\u201315)",
+          null,
+          null,
+          null,
+          "PERIOD 2  (Sep 16\u201330)",
+          null,
+          null,
+          null,
+          "MONTHLY SUMMARY \u2014 September",
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          "\u2190 Opening / Bought / Used / Closing \u2192",
+          null,
+          null,
+          null,
+          "\u2190 Opening / Bought / Used / Closing \u2192",
+          null,
+          null,
+          null,
+          "\u2190 Totals / Movement / Final \u2192",
+          null,
+          null,
+          null
+        ],
+        [
+          "ITEM NAME",
+          "Opening\nStock",
+          "Bought",
+          "Used",
+          "Closing\nStock",
+          "Opening\nStock",
+          "Bought",
+          "Used",
+          "Closing\nStock",
+          "Total\nBought",
+          "Total\nUsed",
+          "Stock\nMovement",
+          "Final\nClosing"
+        ],
+        [
+          "\u2500\u2500 KITCHEN ESSENTIALS \u2500\u2500",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "Sugar (kg)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Milk (boxes)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Drinking Chocolate (tin)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Coffee (tin)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Tea Leaves (bags)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Matchbox (pkt)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "columns": {
+        "STOCK MANAGEMENT REGISTER \u2014 SEPTEMBER 2026": {
+          "non_empty": 38,
+          "types": {
+            "str": 38
+          },
+          "sample_values": [
+            "ITEM",
+            "ITEM NAME",
+            "\u2500\u2500 KITCHEN ESSENTIALS \u2500\u2500",
+            "Sugar (kg)",
+            "Milk (boxes)"
+          ]
+        },
+        "col_2": {
+          "non_empty": 31,
+          "types": {
+            "str": 3,
+            "int": 28
+          },
+          "sample_values": [
+            "PERIOD 1  (Sep 01\u201315)",
+            "\u2190 Opening / Bought / Used / Closing \u2192",
+            "Opening\nStock",
+            0,
+            0
+          ]
+        },
+        "col_3": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Bought",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_4": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Used",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_5": {
+          "non_empty": 29,
+          "types": {
+            "str": 1,
+            "int": 28
+          },
+          "sample_values": [
+            "Closing\nStock",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_6": {
+          "non_empty": 31,
+          "types": {
+            "str": 3,
+            "int": 28
+          },
+          "sample_values": [
+            "PERIOD 2  (Sep 16\u201330)",
+            "\u2190 Opening / Bought / Used / Closing \u2192",
+            "Opening\nStock",
+            0,
+            0
+          ]
+        },
+        "col_7": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Bought",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_8": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Used",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_9": {
+          "non_empty": 29,
+          "types": {
+            "str": 1,
+            "int": 28
+          },
+          "sample_values": [
+            "Closing\nStock",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_10": {
+          "non_empty": 35,
+          "types": {
+            "str": 3,
+            "int": 32
+          },
+          "sample_values": [
+            "MONTHLY SUMMARY \u2014 September",
+            "\u2190 Totals / Movement / Final \u2192",
+            "Total\nBought",
+            0,
+            0
+          ]
+        },
+        "col_11": {
+          "non_empty": 33,
+          "types": {
+            "str": 1,
+            "int": 32
+          },
+          "sample_values": [
+            "Total\nUsed",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_12": {
+          "non_empty": 33,
+          "types": {
+            "str": 1,
+            "int": 32
+          },
+          "sample_values": [
+            "Stock\nMovement",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_13": {
+          "non_empty": 33,
+          "types": {
+            "str": 1,
+            "int": 32
+          },
+          "sample_values": [
+            "Final\nClosing",
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "name": "Oct26",
+      "max_row": 41,
+      "max_column": 13,
+      "headers": [
+        "STOCK MANAGEMENT REGISTER \u2014 OCTOBER 2026",
+        "col_2",
+        "col_3",
+        "col_4",
+        "col_5",
+        "col_6",
+        "col_7",
+        "col_8",
+        "col_9",
+        "col_10",
+        "col_11",
+        "col_12",
+        "col_13"
+      ],
+      "rows_count": 39,
+      "sample_rows": [
+        [
+          "ITEM",
+          "PERIOD 1  (Oct 01\u201315)",
+          null,
+          null,
+          null,
+          "PERIOD 2  (Oct 16\u201331)",
+          null,
+          null,
+          null,
+          "MONTHLY SUMMARY \u2014 October",
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          "\u2190 Opening / Bought / Used / Closing \u2192",
+          null,
+          null,
+          null,
+          "\u2190 Opening / Bought / Used / Closing \u2192",
+          null,
+          null,
+          null,
+          "\u2190 Totals / Movement / Final \u2192",
+          null,
+          null,
+          null
+        ],
+        [
+          "ITEM NAME",
+          "Opening\nStock",
+          "Bought",
+          "Used",
+          "Closing\nStock",
+          "Opening\nStock",
+          "Bought",
+          "Used",
+          "Closing\nStock",
+          "Total\nBought",
+          "Total\nUsed",
+          "Stock\nMovement",
+          "Final\nClosing"
+        ],
+        [
+          "\u2500\u2500 KITCHEN ESSENTIALS \u2500\u2500",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "Sugar (kg)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Milk (boxes)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Drinking Chocolate (tin)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Coffee (tin)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Tea Leaves (bags)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Matchbox (pkt)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "columns": {
+        "STOCK MANAGEMENT REGISTER \u2014 OCTOBER 2026": {
+          "non_empty": 38,
+          "types": {
+            "str": 38
+          },
+          "sample_values": [
+            "ITEM",
+            "ITEM NAME",
+            "\u2500\u2500 KITCHEN ESSENTIALS \u2500\u2500",
+            "Sugar (kg)",
+            "Milk (boxes)"
+          ]
+        },
+        "col_2": {
+          "non_empty": 31,
+          "types": {
+            "str": 3,
+            "int": 28
+          },
+          "sample_values": [
+            "PERIOD 1  (Oct 01\u201315)",
+            "\u2190 Opening / Bought / Used / Closing \u2192",
+            "Opening\nStock",
+            0,
+            0
+          ]
+        },
+        "col_3": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Bought",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_4": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Used",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_5": {
+          "non_empty": 29,
+          "types": {
+            "str": 1,
+            "int": 28
+          },
+          "sample_values": [
+            "Closing\nStock",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_6": {
+          "non_empty": 31,
+          "types": {
+            "str": 3,
+            "int": 28
+          },
+          "sample_values": [
+            "PERIOD 2  (Oct 16\u201331)",
+            "\u2190 Opening / Bought / Used / Closing \u2192",
+            "Opening\nStock",
+            0,
+            0
+          ]
+        },
+        "col_7": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Bought",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_8": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Used",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_9": {
+          "non_empty": 29,
+          "types": {
+            "str": 1,
+            "int": 28
+          },
+          "sample_values": [
+            "Closing\nStock",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_10": {
+          "non_empty": 35,
+          "types": {
+            "str": 3,
+            "int": 32
+          },
+          "sample_values": [
+            "MONTHLY SUMMARY \u2014 October",
+            "\u2190 Totals / Movement / Final \u2192",
+            "Total\nBought",
+            0,
+            0
+          ]
+        },
+        "col_11": {
+          "non_empty": 33,
+          "types": {
+            "str": 1,
+            "int": 32
+          },
+          "sample_values": [
+            "Total\nUsed",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_12": {
+          "non_empty": 33,
+          "types": {
+            "str": 1,
+            "int": 32
+          },
+          "sample_values": [
+            "Stock\nMovement",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_13": {
+          "non_empty": 33,
+          "types": {
+            "str": 1,
+            "int": 32
+          },
+          "sample_values": [
+            "Final\nClosing",
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "name": "Nov26",
+      "max_row": 41,
+      "max_column": 13,
+      "headers": [
+        "STOCK MANAGEMENT REGISTER \u2014 NOVEMBER 2026",
+        "col_2",
+        "col_3",
+        "col_4",
+        "col_5",
+        "col_6",
+        "col_7",
+        "col_8",
+        "col_9",
+        "col_10",
+        "col_11",
+        "col_12",
+        "col_13"
+      ],
+      "rows_count": 39,
+      "sample_rows": [
+        [
+          "ITEM",
+          "PERIOD 1  (Nov 01\u201315)",
+          null,
+          null,
+          null,
+          "PERIOD 2  (Nov 16\u201330)",
+          null,
+          null,
+          null,
+          "MONTHLY SUMMARY \u2014 November",
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          "\u2190 Opening / Bought / Used / Closing \u2192",
+          null,
+          null,
+          null,
+          "\u2190 Opening / Bought / Used / Closing \u2192",
+          null,
+          null,
+          null,
+          "\u2190 Totals / Movement / Final \u2192",
+          null,
+          null,
+          null
+        ],
+        [
+          "ITEM NAME",
+          "Opening\nStock",
+          "Bought",
+          "Used",
+          "Closing\nStock",
+          "Opening\nStock",
+          "Bought",
+          "Used",
+          "Closing\nStock",
+          "Total\nBought",
+          "Total\nUsed",
+          "Stock\nMovement",
+          "Final\nClosing"
+        ],
+        [
+          "\u2500\u2500 KITCHEN ESSENTIALS \u2500\u2500",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "Sugar (kg)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Milk (boxes)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Drinking Chocolate (tin)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Coffee (tin)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Tea Leaves (bags)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Matchbox (pkt)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "columns": {
+        "STOCK MANAGEMENT REGISTER \u2014 NOVEMBER 2026": {
+          "non_empty": 38,
+          "types": {
+            "str": 38
+          },
+          "sample_values": [
+            "ITEM",
+            "ITEM NAME",
+            "\u2500\u2500 KITCHEN ESSENTIALS \u2500\u2500",
+            "Sugar (kg)",
+            "Milk (boxes)"
+          ]
+        },
+        "col_2": {
+          "non_empty": 31,
+          "types": {
+            "str": 3,
+            "int": 28
+          },
+          "sample_values": [
+            "PERIOD 1  (Nov 01\u201315)",
+            "\u2190 Opening / Bought / Used / Closing \u2192",
+            "Opening\nStock",
+            0,
+            0
+          ]
+        },
+        "col_3": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Bought",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_4": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Used",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_5": {
+          "non_empty": 29,
+          "types": {
+            "str": 1,
+            "int": 28
+          },
+          "sample_values": [
+            "Closing\nStock",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_6": {
+          "non_empty": 31,
+          "types": {
+            "str": 3,
+            "int": 28
+          },
+          "sample_values": [
+            "PERIOD 2  (Nov 16\u201330)",
+            "\u2190 Opening / Bought / Used / Closing \u2192",
+            "Opening\nStock",
+            0,
+            0
+          ]
+        },
+        "col_7": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Bought",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_8": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Used",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_9": {
+          "non_empty": 29,
+          "types": {
+            "str": 1,
+            "int": 28
+          },
+          "sample_values": [
+            "Closing\nStock",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_10": {
+          "non_empty": 35,
+          "types": {
+            "str": 3,
+            "int": 32
+          },
+          "sample_values": [
+            "MONTHLY SUMMARY \u2014 November",
+            "\u2190 Totals / Movement / Final \u2192",
+            "Total\nBought",
+            0,
+            0
+          ]
+        },
+        "col_11": {
+          "non_empty": 33,
+          "types": {
+            "str": 1,
+            "int": 32
+          },
+          "sample_values": [
+            "Total\nUsed",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_12": {
+          "non_empty": 33,
+          "types": {
+            "str": 1,
+            "int": 32
+          },
+          "sample_values": [
+            "Stock\nMovement",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_13": {
+          "non_empty": 33,
+          "types": {
+            "str": 1,
+            "int": 32
+          },
+          "sample_values": [
+            "Final\nClosing",
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "name": "Dec26",
+      "max_row": 41,
+      "max_column": 13,
+      "headers": [
+        "STOCK MANAGEMENT REGISTER \u2014 DECEMBER 2026",
+        "col_2",
+        "col_3",
+        "col_4",
+        "col_5",
+        "col_6",
+        "col_7",
+        "col_8",
+        "col_9",
+        "col_10",
+        "col_11",
+        "col_12",
+        "col_13"
+      ],
+      "rows_count": 39,
+      "sample_rows": [
+        [
+          "ITEM",
+          "PERIOD 1  (Dec 01\u201315)",
+          null,
+          null,
+          null,
+          "PERIOD 2  (Dec 16\u201331)",
+          null,
+          null,
+          null,
+          "MONTHLY SUMMARY \u2014 December",
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          "\u2190 Opening / Bought / Used / Closing \u2192",
+          null,
+          null,
+          null,
+          "\u2190 Opening / Bought / Used / Closing \u2192",
+          null,
+          null,
+          null,
+          "\u2190 Totals / Movement / Final \u2192",
+          null,
+          null,
+          null
+        ],
+        [
+          "ITEM NAME",
+          "Opening\nStock",
+          "Bought",
+          "Used",
+          "Closing\nStock",
+          "Opening\nStock",
+          "Bought",
+          "Used",
+          "Closing\nStock",
+          "Total\nBought",
+          "Total\nUsed",
+          "Stock\nMovement",
+          "Final\nClosing"
+        ],
+        [
+          "\u2500\u2500 KITCHEN ESSENTIALS \u2500\u2500",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "Sugar (kg)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Milk (boxes)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Drinking Chocolate (tin)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Coffee (tin)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Tea Leaves (bags)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "Matchbox (pkt)",
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "columns": {
+        "STOCK MANAGEMENT REGISTER \u2014 DECEMBER 2026": {
+          "non_empty": 38,
+          "types": {
+            "str": 38
+          },
+          "sample_values": [
+            "ITEM",
+            "ITEM NAME",
+            "\u2500\u2500 KITCHEN ESSENTIALS \u2500\u2500",
+            "Sugar (kg)",
+            "Milk (boxes)"
+          ]
+        },
+        "col_2": {
+          "non_empty": 31,
+          "types": {
+            "str": 3,
+            "int": 28
+          },
+          "sample_values": [
+            "PERIOD 1  (Dec 01\u201315)",
+            "\u2190 Opening / Bought / Used / Closing \u2192",
+            "Opening\nStock",
+            0,
+            0
+          ]
+        },
+        "col_3": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Bought",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_4": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Used",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_5": {
+          "non_empty": 29,
+          "types": {
+            "str": 1,
+            "int": 28
+          },
+          "sample_values": [
+            "Closing\nStock",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_6": {
+          "non_empty": 31,
+          "types": {
+            "str": 3,
+            "int": 28
+          },
+          "sample_values": [
+            "PERIOD 2  (Dec 16\u201331)",
+            "\u2190 Opening / Bought / Used / Closing \u2192",
+            "Opening\nStock",
+            0,
+            0
+          ]
+        },
+        "col_7": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Bought",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_8": {
+          "non_empty": 5,
+          "types": {
+            "str": 1,
+            "int": 4
+          },
+          "sample_values": [
+            "Used",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_9": {
+          "non_empty": 29,
+          "types": {
+            "str": 1,
+            "int": 28
+          },
+          "sample_values": [
+            "Closing\nStock",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_10": {
+          "non_empty": 35,
+          "types": {
+            "str": 3,
+            "int": 32
+          },
+          "sample_values": [
+            "MONTHLY SUMMARY \u2014 December",
+            "\u2190 Totals / Movement / Final \u2192",
+            "Total\nBought",
+            0,
+            0
+          ]
+        },
+        "col_11": {
+          "non_empty": 33,
+          "types": {
+            "str": 1,
+            "int": 32
+          },
+          "sample_values": [
+            "Total\nUsed",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_12": {
+          "non_empty": 33,
+          "types": {
+            "str": 1,
+            "int": 32
+          },
+          "sample_values": [
+            "Stock\nMovement",
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "col_13": {
+          "non_empty": 33,
+          "types": {
+            "str": 1,
+            "int": 32
+          },
+          "sample_values": [
+            "Final\nClosing",
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    }
+  ]
+}

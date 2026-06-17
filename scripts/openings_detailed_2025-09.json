@@ -1,0 +1,68 @@
+{
+  "Kitchen Essentials": {
+    "only_in_db": [
+      "Batteries",
+      "Coffee",
+      "Drinking Chocolate",
+      "Matchbox",
+      "Milk",
+      "Sugar",
+      "Super Brite",
+      "Tea Leaves"
+    ],
+    "only_in_excel": [
+      "Batteries (pairs)",
+      "Coffee (tin)",
+      "Drinking Chocolate (tin)",
+      "Matchbox (pkt)",
+      "Milk (boxes)",
+      "Sugar (kg)",
+      "Super Brite (pcs)",
+      "Tea Leaves (bags)"
+    ],
+    "mismatches": [],
+    "db_count": 10,
+    "excel_count": 10
+  },
+  "Washroom Essentials": {
+    "only_in_db": [
+      "Glass Cleaner",
+      "Gloves",
+      "Hand Towels",
+      "Hand Wash",
+      "Liquid Washing Soap",
+      "Serviettes",
+      "Tissue",
+      "Toilet Balls",
+      "Washroom Soap"
+    ],
+    "only_in_excel": [
+      "Glass Cleaner (pcs)",
+      "Gloves (pairs)",
+      "Hand Towels (pkts)",
+      "Hand Wash (pcs)",
+      "Liquid Washing Soap (L)",
+      "Serviettes (pkts)",
+      "Tissue (pkts)",
+      "Toilet Balls (pkts)"
+    ],
+    "mismatches": [],
+    "db_count": 14,
+    "excel_count": 13
+  },
+  "Snacks": {
+    "only_in_db": [
+      "Biscuits",
+      "Peanuts"
+    ],
+    "only_in_excel": [
+      "Biscuits (tins)",
+      "GRAND TOTAL",
+      "Peanuts (pkts)",
+      "\ud83d\udccb  HOW TO USE:  Enter Opening Stock (col B) manually. Bought quantities are pre-filled from records \u2014 verify & adjust as needed. Fill in Used quantities (cols D & H). Period 2 Opening auto-carries from Period 1 Closing. All Closing Stock & Summary columns calculate automatically."
+    ],
+    "mismatches": [],
+    "db_count": 4,
+    "excel_count": 6
+  }
+}

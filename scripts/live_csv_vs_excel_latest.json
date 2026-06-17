@@ -1,0 +1,108 @@
+{
+  "Kitchen Essentials": {
+    "only_in_csv": [],
+    "only_in_excel": [],
+    "differences": [
+      {
+        "item": "Bar Soap",
+        "csv_qty": 1.0,
+        "excel_latest_final_closing": 0.0,
+        "csv_raw_name": "Bar Soap"
+      },
+      {
+        "item": "Batteries",
+        "csv_qty": 2.0,
+        "excel_latest_final_closing": 0.0,
+        "csv_raw_name": "Batteries"
+      },
+      {
+        "item": "Coffee",
+        "csv_qty": 0.5,
+        "excel_latest_final_closing": 0.0,
+        "csv_raw_name": "Coffee"
+      },
+      {
+        "item": "Drinking Chocolate",
+        "csv_qty": 0.5,
+        "excel_latest_final_closing": 0.0,
+        "csv_raw_name": "Drinking Chocolate"
+      },
+      {
+        "item": "Morning Fresh",
+        "csv_qty": 4.0,
+        "excel_latest_final_closing": 0.0,
+        "csv_raw_name": "Morning Fresh"
+      },
+      {
+        "item": "Sugar",
+        "csv_qty": 1.0,
+        "excel_latest_final_closing": 0.0,
+        "csv_raw_name": "Sugar"
+      },
+      {
+        "item": "Super Brite",
+        "csv_qty": 3.0,
+        "excel_latest_final_closing": 0.0,
+        "csv_raw_name": "Super Brite"
+      }
+    ],
+    "csv_count": 10,
+    "excel_count": 10
+  },
+  "Washroom Essentials": {
+    "only_in_csv": [],
+    "only_in_excel": [],
+    "differences": [
+      {
+        "item": "Furniture Polish",
+        "csv_qty": 2.0,
+        "excel_latest_final_closing": 0.0,
+        "csv_raw_name": "Furniture Polish"
+      },
+      {
+        "item": "Glass Cleaner",
+        "csv_qty": 2.0,
+        "excel_latest_final_closing": 0.0,
+        "csv_raw_name": "Glass Cleaner"
+      },
+      {
+        "item": "Serviettes",
+        "csv_qty": 1.0,
+        "excel_latest_final_closing": 0.0,
+        "csv_raw_name": "Serviettes"
+      },
+      {
+        "item": "Tissue",
+        "csv_qty": 3.0,
+        "excel_latest_final_closing": 0.0,
+        "csv_raw_name": "Tissue"
+      }
+    ],
+    "csv_count": 14,
+    "excel_count": 14
+  },
+  "Snacks": {
+    "only_in_csv": [],
+    "only_in_excel": [
+      "GRAND TOTAL",
+      "\ud83d\udccb  HOW TO USE:  Enter Opening Stock (col B) for Period 1. Enter Bought (cols C & G) and Used (cols D & H) for each period. Period 2 Opening auto-carries from Period 1 Closing. All Closing Stock & Summary columns calculate automatically.",
+      "\ud83d\udccb  HOW TO USE:  Enter Opening Stock (col B) manually. Bought quantities are pre-filled from records \u2014 verify & adjust as needed. Fill in Used quantities (cols D & H). Period 2 Opening auto-carries from Period 1 Closing. All Closing Stock & Summary columns calculate automatically."
+    ],
+    "differences": [
+      {
+        "item": "Biscuits",
+        "csv_qty": 2.0,
+        "excel_latest_final_closing": 0.0,
+        "csv_raw_name": "Biscuits"
+      },
+      {
+        "item": "Peanuts",
+        "csv_qty": 2.0,
+        "excel_latest_final_closing": 0.0,
+        "csv_raw_name": "Peanuts"
+      }
+    ],
+    "csv_count": 4,
+    "excel_count": 7
+  }
+}

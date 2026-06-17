@@ -12,6 +12,12 @@ import { Separator } from "../components/ui/separator";
 import { api } from "../../services/api";
 import { toast } from "sonner";
 
+const ADMIN_EMPLOYEES = [
+  { name: "Grace Wanjiru", email: "grace.wanjiru@millenium.co.ke", balance_bf: 0 },
+  { name: "Mildred Aoko", email: "mildredondego61@gmail.com", balance_bf: 0 },
+  { name: "Lilian Akinyi", email: "lilianakinyi852@gmail.com", balance_bf: 0 }
+];
+
 interface LeaveRequest {
   id: string;
   employee_name: string;
@@ -50,6 +56,7 @@ export function LeaveRequests() {
   const [reviewAction, setReviewAction] = useState<"Approved" | "Rejected" | "Deferred">("Approved");
   const [reviewData, setReviewData] = useState({ hr_remarks: "", hr_signature: "", deferred_date: "" });
   const [submitting, setSubmitting] = useState(false);
+  const [activeEmployee, setActiveEmployee] = useState(ADMIN_EMPLOYEES[0]);
 
   useEffect(() => { fetchLeaveRequests(); }, []);
 
@@ -97,31 +104,103 @@ export function LeaveRequests() {
     return <Badge className={`${map[s] || "bg-gray-500"} hover:opacity-90 text-xs`}>{s}</Badge>;
   };
 
-  const filtered = leaveRequests.filter(r =>
-    r.employee_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    r.leave_type.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filtered = leaveRequests
+    .filter(r => r.employee_email === activeEmployee.email)
+    .filter(r =>
+      r.employee_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      r.leave_type.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
+  const activeEmployeeRequests = leaveRequests.filter(r => r.employee_email === activeEmployee.email);
   const counts = {
-    pending: leaveRequests.filter(r => r.status === "Pending").length,
-    approved: leaveRequests.filter(r => r.status === "Approved").length,
-    rejected: leaveRequests.filter(r => r.status === "Rejected").length,
+    pending: activeEmployeeRequests.filter(r => r.status === "Pending").length,
+    approved: activeEmployeeRequests.filter(r => r.status === "Approved").length,
+    rejected: activeEmployeeRequests.filter(r => r.status === "Rejected").length,
   };
+
+  const getStartingBfForYear = (employee: typeof ADMIN_EMPLOYEES[0], targetYear: number) => {
+    let currentYear = 2025;
+    let runningBalance = employee.balance_bf;
+
+    while (currentYear < targetYear) {
+      const accrued = 21;
+      const taken = leaveRequests
+        .filter(r => 
+          r.employee_email === employee.email &&
+          r.status !== "Rejected" &&
+          (r.leave_type === "ANNUAL" || r.leave_type === "Annual Leave") &&
+          new Date(r.start_date).getFullYear() === currentYear
+        )
+        .reduce((sum, r) => sum + r.days_applied, 0);
+
+      runningBalance = runningBalance + accrued - taken;
+      currentYear++;
+    }
+
+    return runningBalance;
+  };
+
+  const currentYear = new Date().getFullYear();
+  const liveAccrued = (new Date().getMonth() + 1) * 1.75;
+  const startBfForCurrentYear = getStartingBfForYear(activeEmployee, currentYear);
+
+  const totalAnnualDaysTaken = activeEmployeeRequests
+    .filter(r => (r.leave_type === "ANNUAL" || r.leave_type === "Annual Leave") && r.status !== "Rejected" && new Date(r.start_date).getFullYear() === currentYear)
+    .reduce((sum, r) => sum + r.days_applied, 0);
+  const annualBalance = startBfForCurrentYear + liveAccrued - totalAnnualDaysTaken;
+
+
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 pt-4 sm:pt-6">
+      {/* Employee Tabs */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6 bg-white dark:bg-gray-850 p-2 rounded-xl border dark:border-gray-700 shadow-sm">
+        {ADMIN_EMPLOYEES.map(emp => (
+          <button
+            key={emp.email}
+            onClick={() => setActiveEmployee(emp)}
+            className={`py-3 px-4 rounded-lg text-left transition-all duration-200 border ${
+              activeEmployee.email === emp.email
+                ? "bg-[#D1131B] text-white border-[#D1131B] shadow-md transform scale-[1.01]"
+                : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800"
+            }`}
+          >
+            <div className="font-bold text-sm">{emp.name}</div>
+            <div className="text-xs opacity-80 mt-0.5">{emp.email}</div>
+          </button>
+        ))}
+      </div>
+
+      {/* Selected Employee Leave Balance Summary */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <Card className="shadow-md border-t-4 border-t-[#D1131B] dark:bg-gray-800 dark:border-gray-700 md:col-span-2">
+          <CardHeader className="pb-2"><CardTitle className="text-sm font-semibold text-gray-500 uppercase">Annual Leave Summary</CardTitle></CardHeader>
+          <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+            <div className="space-y-1.5 flex flex-col justify-center">
+              <div className="flex justify-between text-sm"><span>Balance B/F:</span><span className="font-semibold">{startBfForCurrentYear} Days</span></div>
+              <div className="flex justify-between text-sm"><span>Accrued YTD:</span><span className="font-semibold">{liveAccrued} Days</span></div>
+              <div className="flex justify-between text-sm text-red-600 dark:text-red-400"><span>Taken/Pending:</span><span className="font-semibold">{totalAnnualDaysTaken} Days</span></div>
+            </div>
+            <div className="flex flex-col justify-center items-center p-4 bg-green-50/50 dark:bg-green-950/10 rounded-xl border border-green-200/50 dark:border-green-900/50">
+              <span className="text-xs text-green-700 dark:text-green-400 font-semibold uppercase">Available Balance</span>
+              <span className="text-3xl font-bold text-green-700 dark:text-green-400 mt-1">{annualBalance} Days</span>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         <Card className="shadow-md dark:bg-gray-800 dark:border-gray-700">
-          <CardHeader className="pb-3"><div className="flex items-center gap-2"><Clock className="w-5 h-5 text-yellow-500" /><CardTitle className="text-yellow-600 dark:text-yellow-400">Pending</CardTitle></div></CardHeader>
+          <CardHeader className="pb-3"><div className="flex items-center gap-2"><Clock className="w-5 h-5 text-yellow-500" /><CardTitle className="text-yellow-600 dark:text-yellow-400">Pending Requests</CardTitle></div></CardHeader>
           <CardContent><p className="text-3xl font-bold text-yellow-600 dark:text-yellow-400">{counts.pending}</p></CardContent>
         </Card>
         <Card className="shadow-md dark:bg-gray-800 dark:border-gray-700">
-          <CardHeader className="pb-3"><div className="flex items-center gap-2"><CheckCircle className="w-5 h-5 text-green-500" /><CardTitle className="text-green-600 dark:text-green-400">Approved</CardTitle></div></CardHeader>
+          <CardHeader className="pb-3"><div className="flex items-center gap-2"><CheckCircle className="w-5 h-5 text-green-500" /><CardTitle className="text-green-600 dark:text-green-400">Approved Requests</CardTitle></div></CardHeader>
           <CardContent><p className="text-3xl font-bold text-green-600 dark:text-green-400">{counts.approved}</p></CardContent>
         </Card>
         <Card className="shadow-md dark:bg-gray-800 dark:border-gray-700">
-          <CardHeader className="pb-3"><div className="flex items-center gap-2"><XCircle className="w-5 h-5 text-[#D1131B]" /><CardTitle className="text-[#D1131B]">Rejected</CardTitle></div></CardHeader>
+          <CardHeader className="pb-3"><div className="flex items-center gap-2"><XCircle className="w-5 h-5 text-[#D1131B]" /><CardTitle className="text-[#D1131B]">Rejected Requests</CardTitle></div></CardHeader>
           <CardContent><p className="text-3xl font-bold text-[#D1131B]">{counts.rejected}</p></CardContent>
         </Card>
       </div>

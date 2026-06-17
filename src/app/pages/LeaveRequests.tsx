@@ -12,9 +12,12 @@ import { Separator } from "../components/ui/separator";
 import { api } from "../../services/api";
 import { toast } from "sonner";
 
-const LEAVE_TYPES = [
-  "Annual Leave", "Emergency Leave", "Maternity Leave", "Compassionate Leave",
-  "Compulsory Leave", "Sick Leave", "Study/Unpaid Leave", "Time Off", "Others"
+const LEAVE_TYPES = ["ANNUAL", "COMPASSIONATE", "SICKLEAVE", "MATERNITY"];
+
+const ADMIN_EMPLOYEES = [
+  { name: "Grace Wanjiru", email: "grace.wanjiru@millenium.co.ke", balance_bf: 0 },
+  { name: "Mildred Aoko", email: "mildredondego61@gmail.com", balance_bf: 0 },
+  { name: "Lilian Akinyi", email: "lilianakinyi852@gmail.com", balance_bf: 0 }
 ];
 
 interface LeaveRequest {
@@ -65,6 +68,7 @@ export function LeaveRequests() {
   const [selectedRequest, setSelectedRequest] = useState<LeaveRequest | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState(emptyForm);
+  const [activeEmployee, setActiveEmployee] = useState(ADMIN_EMPLOYEES[0]);
 
   useEffect(() => { fetchLeaveRequests(); }, []);
 
@@ -77,13 +81,154 @@ export function LeaveRequests() {
     finally { setLoading(false); }
   };
 
-  const calcDays = (s: string, e: string) => {
+  const isWeekendOrHoliday = (date: Date) => {
+    const day = date.getDay();
+    if (day === 0 || day === 6) return true; // Sunday or Saturday
+
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, "0");
+    const d = String(date.getDate()).padStart(2, "0");
+    const dateStr = `${y}-${m}-${d}`;
+
+    const fixedHolidays = [
+      `01-01`, // New Year
+      `05-01`, // Labour Day
+      `06-01`, // Madaraka Day
+      `10-10`, // Huduma Day
+      `10-20`, // Mashujaa Day
+      `12-12`, // Jamhuri Day
+      `12-25`, // Christmas Day
+      `12-26`  // Boxing Day
+    ];
+    const md = `${m}-${d}`;
+    if (fixedHolidays.includes(md)) return true;
+
+    const variableHolidays = [
+      "2025-04-18", "2025-04-21", "2025-03-31", "2025-06-07",
+      "2026-04-03", "2026-04-06", "2026-03-20", "2026-05-27",
+      "2027-03-26", "2027-03-29", "2027-03-10", "2027-05-17"
+    ];
+
+    if (variableHolidays.includes(dateStr)) return true;
+    return false;
+  };
+
+  const calcDays = (s: string, e: string, leaveType: string) => {
     if (!s || !e) return 0;
-    const diff = new Date(e).getTime() - new Date(s).getTime();
-    return Math.ceil(diff / 86400000) + 1;
+    const start = new Date(s);
+    const end = new Date(e);
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) return 0;
+    if (start > end) return 0;
+
+    const normalizedType = leaveType ? leaveType.toUpperCase() : "";
+    if (normalizedType === "ANNUAL" || normalizedType === "ANNUAL LEAVE") {
+      let workingDays = 0;
+      let current = new Date(start);
+      while (current <= end) {
+        if (!isWeekendOrHoliday(current)) {
+          workingDays++;
+        }
+        current.setDate(current.getDate() + 1);
+      }
+      return workingDays;
+    } else {
+      const diff = end.getTime() - start.getTime();
+      return Math.ceil(diff / 86400000) + 1;
+    }
   };
 
   const setF = (k: string, v: unknown) => setForm(p => ({ ...p, [k]: v }));
+
+  const getStartingBfForYear = (employee: typeof ADMIN_EMPLOYEES[0], targetYear: number) => {
+    let currentYear = 2025;
+    let runningBalance = employee.balance_bf;
+
+    while (currentYear < targetYear) {
+      const accrued = 21;
+      const taken = leaveRequests
+        .filter(r => 
+          r.employee_email === employee.email &&
+          r.status !== "Rejected" &&
+          (r.leave_type === "ANNUAL" || r.leave_type === "Annual Leave") &&
+          new Date(r.start_date).getFullYear() === currentYear
+        )
+        .reduce((sum, r) => sum + r.days_applied, 0);
+
+      runningBalance = runningBalance + accrued - taken;
+      currentYear++;
+    }
+
+    return runningBalance;
+  };
+
+  const calculateLeaveBalances = (
+    employee: typeof ADMIN_EMPLOYEES[0],
+    leaveType: string,
+    startDate: string,
+    daysApplied: number,
+    requestId: string | null = null
+  ) => {
+    const year = startDate ? new Date(startDate).getFullYear() : new Date().getFullYear();
+    const normalizedType = leaveType ? leaveType.toUpperCase() : "";
+
+    if (normalizedType !== "ANNUAL" && normalizedType !== "ANNUAL LEAVE") {
+      return { calculatedAccrued: 0, calculatedBf: 0, calculatedBalance: 0 };
+    }
+
+    const empRequests = leaveRequests.filter(r => 
+      r.employee_email === employee.email &&
+      r.id !== requestId &&
+      r.status !== "Rejected" &&
+      new Date(r.start_date).getFullYear() === year
+    );
+
+    const startBfForYear = getStartingBfForYear(employee, year);
+    let calculatedAccrued = 0;
+    if (startDate) {
+      const month = new Date(startDate).getMonth() + 1;
+      calculatedAccrued = month * 1.75;
+    }
+    const prevAnnualDays = empRequests
+      .filter(r => r.leave_type === "ANNUAL" || r.leave_type === "Annual Leave")
+      .reduce((sum, r) => sum + r.days_applied, 0);
+
+    const calculatedBf = startBfForYear - prevAnnualDays;
+    const calculatedBalance = calculatedBf + calculatedAccrued - daysApplied;
+
+    return { calculatedAccrued, calculatedBf, calculatedBalance };
+  };
+
+  useEffect(() => {
+    if (createDialogOpen || editDialogOpen) {
+      const days = calcDays(form.start_date, form.end_date, form.leave_type);
+      const employee = ADMIN_EMPLOYEES.find(e => e.email === form.employee_email) || activeEmployee;
+      const metrics = calculateLeaveBalances(employee, form.leave_type, form.start_date, days, selectedRequest?.id);
+
+      setForm(p => {
+        const isAnnual = form.leave_type === "ANNUAL";
+        const newDaysAccrued = isAnnual ? String(metrics.calculatedAccrued) : "";
+        const newBf = isAnnual ? String(metrics.calculatedBf) : "";
+        const newBalance = isAnnual ? String(metrics.calculatedBalance) : "";
+        const newDaysApplied = String(days);
+
+        if (
+          p.days_applied !== newDaysApplied ||
+          p.days_accrued !== newDaysAccrued ||
+          p.balance_bf !== newBf ||
+          p.leave_balance !== newBalance
+        ) {
+          return {
+            ...p,
+            days_applied: newDaysApplied,
+            days_accrued: newDaysAccrued,
+            balance_bf: newBf,
+            leave_balance: newBalance
+          };
+        }
+        return p;
+      });
+    }
+  }, [form.start_date, form.end_date, form.leave_type, form.employee_email, createDialogOpen, editDialogOpen, leaveRequests, selectedRequest]);
 
   const handleCreate = async () => {
     if (!form.employee_name.trim()) { toast.error("Please fill in Employee Name"); return; }
@@ -101,10 +246,10 @@ export function LeaveRequests() {
         reason: "",
         handover_reviewed: false,
         handover_notes: null,
-        days_applied: calcDays(form.start_date, form.end_date),
-        days_accrued: form.days_accrued ? parseInt(form.days_accrued) : null,
-        leave_balance: form.leave_balance ? parseInt(form.leave_balance) : null,
-        balance_bf: form.balance_bf ? parseInt(form.balance_bf) : null,
+        days_applied: calcDays(form.start_date, form.end_date, form.leave_type),
+        days_accrued: form.days_accrued ? parseFloat(form.days_accrued) : null,
+        leave_balance: form.leave_balance ? parseFloat(form.leave_balance) : null,
+        balance_bf: form.balance_bf ? parseFloat(form.balance_bf) : null,
         custom_leave_type: form.leave_type === "Others" ? form.custom_leave_type : null,
       });
       toast.success("Leave request submitted successfully");
@@ -116,13 +261,21 @@ export function LeaveRequests() {
   };
 
   const openEditDialog = (r: LeaveRequest) => {
+    const normalizeLeaveType = (type: string) => {
+      const u = type ? type.toUpperCase() : "";
+      if (u.includes("ANNUAL")) return "ANNUAL";
+      if (u.includes("COMPASSIONATE")) return "COMPASSIONATE";
+      if (u.includes("SICK")) return "SICKLEAVE";
+      if (u.includes("MATERNITY")) return "MATERNITY";
+      return type;
+    };
     setSelectedRequest(r);
     setForm({
       employee_name: r.employee_name,
       employee_email: r.employee_email,
       manager: r.manager || DEFAULT_MANAGER,
       contact_while_on_leave: r.contact_while_on_leave || "",
-      leave_type: r.leave_type,
+      leave_type: normalizeLeaveType(r.leave_type),
       custom_leave_type: r.custom_leave_type || "",
       start_date: r.start_date.split("T")[0],
       end_date: r.end_date.split("T")[0],
@@ -153,10 +306,10 @@ export function LeaveRequests() {
         reason: "",
         handover_reviewed: false,
         handover_notes: null,
-        days_applied: calcDays(form.start_date, form.end_date),
-        days_accrued: form.days_accrued ? parseInt(form.days_accrued) : null,
-        leave_balance: form.leave_balance ? parseInt(form.leave_balance) : null,
-        balance_bf: form.balance_bf ? parseInt(form.balance_bf) : null,
+        days_applied: calcDays(form.start_date, form.end_date, form.leave_type),
+        days_accrued: form.days_accrued ? parseFloat(form.days_accrued) : null,
+        leave_balance: form.leave_balance ? parseFloat(form.leave_balance) : null,
+        balance_bf: form.balance_bf ? parseFloat(form.balance_bf) : null,
         custom_leave_type: form.leave_type === "Others" ? form.custom_leave_type : null,
       });
       toast.success("Leave request updated successfully");
@@ -187,19 +340,67 @@ export function LeaveRequests() {
     return <Badge className={`${map[s] || "bg-gray-500"} hover:opacity-90 text-xs`}>{s}</Badge>;
   };
 
-  const filtered = leaveRequests.filter(r =>
-    r.employee_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    r.leave_type.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filtered = leaveRequests
+    .filter(r => r.employee_email === activeEmployee.email)
+    .filter(r =>
+      r.employee_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      r.leave_type.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
+  const activeEmployeeRequests = leaveRequests.filter(r => r.employee_email === activeEmployee.email);
   const counts = {
-    pending: leaveRequests.filter(r => r.status === "Pending").length,
-    approved: leaveRequests.filter(r => r.status === "Approved").length,
-    rejected: leaveRequests.filter(r => r.status === "Rejected").length,
+    pending: activeEmployeeRequests.filter(r => r.status === "Pending").length,
+    approved: activeEmployeeRequests.filter(r => r.status === "Approved").length,
+    rejected: activeEmployeeRequests.filter(r => r.status === "Rejected").length,
   };
+
+  const totalAnnualDaysTaken = activeEmployeeRequests
+    .filter(r => (r.leave_type === "ANNUAL" || r.leave_type === "Annual Leave") && r.status !== "Rejected")
+    .reduce((sum, r) => sum + r.days_applied, 0);
+
+  const liveAccrued = (new Date().getMonth() + 1) * 1.75;
+  const annualBalance = activeEmployee.balance_bf + liveAccrued - totalAnnualDaysTaken;
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 pt-4 sm:pt-6">
+      {/* Employee Tabs */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6 bg-white dark:bg-gray-850 p-2 rounded-xl border dark:border-gray-700 shadow-sm">
+        {ADMIN_EMPLOYEES.map(emp => (
+          <button
+            key={emp.email}
+            onClick={() => setActiveEmployee(emp)}
+            className={`py-3 px-4 rounded-lg text-left transition-all duration-200 border ${
+              activeEmployee.email === emp.email
+                ? "bg-[#D1131B] text-white border-[#D1131B] shadow-md transform scale-[1.01]"
+                : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800"
+            }`}
+          >
+            <div className="font-bold text-sm">{emp.name}</div>
+            <div className="text-xs opacity-80 mt-0.5">{emp.email}</div>
+          </button>
+        ))}
+      </div>
+
+      {/* Selected Employee Live Stats Card */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <Card className="shadow-md dark:bg-gray-800 dark:border-gray-700">
+          <CardHeader className="pb-2"><CardTitle className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Balance B/F</CardTitle></CardHeader>
+          <CardContent><p className="text-2xl font-bold text-gray-800 dark:text-white">{activeEmployee.balance_bf} Days</p></CardContent>
+        </Card>
+        <Card className="shadow-md dark:bg-gray-800 dark:border-gray-700">
+          <CardHeader className="pb-2"><CardTitle className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Accrued YTD (1.75/mo)</CardTitle></CardHeader>
+          <CardContent><p className="text-2xl font-bold text-gray-800 dark:text-white">{liveAccrued} Days</p></CardContent>
+        </Card>
+        <Card className="shadow-md dark:bg-gray-800 dark:border-gray-700">
+          <CardHeader className="pb-2"><CardTitle className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Approved/Pending</CardTitle></CardHeader>
+          <CardContent><p className="text-2xl font-bold text-red-600 dark:text-red-400">{totalAnnualDaysTaken} Days</p></CardContent>
+        </Card>
+        <Card className="shadow-md dark:bg-gray-800 dark:border-gray-700 bg-green-50/30 dark:bg-green-950/10 border-green-200 dark:border-green-900">
+          <CardHeader className="pb-2"><CardTitle className="text-xs font-semibold text-green-700 dark:text-green-400 uppercase">Available Balance</CardTitle></CardHeader>
+          <CardContent><p className="text-2xl font-bold text-green-700 dark:text-green-400">{annualBalance} Days</p></CardContent>
+        </Card>
+      </div>
+
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         <Card className="shadow-md dark:bg-gray-800 dark:border-gray-700">
@@ -222,7 +423,14 @@ export function LeaveRequests() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <Input placeholder="Search by employee name or leave type..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="pl-10 dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
         </div>
-        <Button className="bg-[#D1131B] hover:bg-[#B01018] text-white whitespace-nowrap" onClick={() => setCreateDialogOpen(true)}>
+        <Button className="bg-[#D1131B] hover:bg-[#B01018] text-white whitespace-nowrap" onClick={() => {
+          setForm({
+            ...emptyForm,
+            employee_name: activeEmployee.name,
+            employee_email: activeEmployee.email,
+          });
+          setCreateDialogOpen(true);
+        }}>
           <Plus className="w-4 h-4 mr-2" /> New Leave Request
         </Button>
       </div>
@@ -282,8 +490,8 @@ export function LeaveRequests() {
           <div className="grid gap-4 py-4">
             {/* Employee Info */}
             <div className="grid grid-cols-2 gap-4">
-              <div className="grid gap-2"><Label>Employee Name *</Label><Input value={form.employee_name} onChange={e => setF("employee_name", e.target.value)} placeholder="Full name" className="dark:bg-gray-700 dark:border-gray-600" /></div>
-              <div className="grid gap-2"><Label>Employee Email *</Label><Input type="email" value={form.employee_email} onChange={e => setF("employee_email", e.target.value)} placeholder="email@company.com" className="dark:bg-gray-700 dark:border-gray-600" /></div>
+              <div className="grid gap-2"><Label>Employee Name *</Label><Input readOnly value={form.employee_name} className="dark:bg-gray-600 dark:border-gray-700 bg-gray-100 dark:text-gray-300 text-gray-500 cursor-not-allowed" /></div>
+              <div className="grid gap-2"><Label>Employee Email *</Label><Input readOnly type="email" value={form.employee_email} className="dark:bg-gray-600 dark:border-gray-700 bg-gray-100 dark:text-gray-300 text-gray-500 cursor-not-allowed" /></div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2"><Label>Contact While on Leave</Label><Input value={form.contact_while_on_leave} onChange={e => setF("contact_while_on_leave", e.target.value)} placeholder="Phone number" className="dark:bg-gray-700 dark:border-gray-600" /></div>
@@ -307,14 +515,14 @@ export function LeaveRequests() {
             <div className="grid grid-cols-3 gap-4">
               <div className="grid gap-2"><Label>Start Date *</Label><Input type="date" value={form.start_date} onChange={e => setF("start_date", e.target.value)} className="dark:bg-gray-700 dark:border-gray-600" /></div>
               <div className="grid gap-2"><Label>End Date *</Label><Input type="date" value={form.end_date} min={form.start_date} onChange={e => setF("end_date", e.target.value)} className="dark:bg-gray-700 dark:border-gray-600" /></div>
-              <div className="grid gap-2"><Label>Days Applied</Label><Input readOnly value={form.start_date && form.end_date ? calcDays(form.start_date, form.end_date) : ""} className="dark:bg-gray-700 dark:border-gray-600 bg-gray-100 dark:bg-gray-600" /></div>
+              <div className="grid gap-2"><Label>Days Applied</Label><Input readOnly value={form.start_date && form.end_date ? calcDays(form.start_date, form.end_date, form.leave_type) : ""} className="dark:bg-gray-600 dark:border-gray-700 bg-gray-100 dark:text-gray-300 text-gray-500 cursor-not-allowed" /></div>
             </div>
 
             {/* Leave Balances */}
             <div className="grid grid-cols-3 gap-4">
-              <div className="grid gap-2"><Label>Days Accrued</Label><Input type="number" value={form.days_accrued} onChange={e => setF("days_accrued", e.target.value)} placeholder="0" className="dark:bg-gray-700 dark:border-gray-600" /></div>
-              <div className="grid gap-2"><Label>Leave Balance</Label><Input type="number" value={form.leave_balance} onChange={e => setF("leave_balance", e.target.value)} placeholder="0" className="dark:bg-gray-700 dark:border-gray-600" /></div>
-              <div className="grid gap-2"><Label>Balance B/F</Label><Input type="number" value={form.balance_bf} onChange={e => setF("balance_bf", e.target.value)} placeholder="0" className="dark:bg-gray-700 dark:border-gray-600" /></div>
+              <div className="grid gap-2"><Label>Days Accrued</Label><Input readOnly value={form.days_accrued} className="dark:bg-gray-600 dark:border-gray-700 bg-gray-100 dark:text-gray-300 text-gray-500 cursor-not-allowed" /></div>
+              <div className="grid gap-2"><Label>Leave Balance</Label><Input readOnly value={form.leave_balance} className="dark:bg-gray-600 dark:border-gray-700 bg-gray-100 dark:text-gray-300 text-gray-500 cursor-not-allowed" /></div>
+              <div className="grid gap-2"><Label>Balance B/F</Label><Input readOnly value={form.balance_bf} className="dark:bg-gray-600 dark:border-gray-700 bg-gray-100 dark:text-gray-300 text-gray-500 cursor-not-allowed" /></div>
             </div>
 
             <Separator />
@@ -383,8 +591,8 @@ export function LeaveRequests() {
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-2 gap-4">
-              <div className="grid gap-2"><Label>Employee Name *</Label><Input value={form.employee_name} onChange={e => setF("employee_name", e.target.value)} className="dark:bg-gray-700 dark:border-gray-600" /></div>
-              <div className="grid gap-2"><Label>Employee Email *</Label><Input type="email" value={form.employee_email} onChange={e => setF("employee_email", e.target.value)} className="dark:bg-gray-700 dark:border-gray-600" /></div>
+              <div className="grid gap-2"><Label>Employee Name *</Label><Input readOnly value={form.employee_name} className="dark:bg-gray-600 dark:border-gray-700 bg-gray-100 dark:text-gray-300 text-gray-500 cursor-not-allowed" /></div>
+              <div className="grid gap-2"><Label>Employee Email *</Label><Input readOnly type="email" value={form.employee_email} className="dark:bg-gray-600 dark:border-gray-700 bg-gray-100 dark:text-gray-300 text-gray-500 cursor-not-allowed" /></div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2"><Label>Contact While on Leave</Label><Input value={form.contact_while_on_leave} onChange={e => setF("contact_while_on_leave", e.target.value)} className="dark:bg-gray-700 dark:border-gray-600" /></div>
@@ -403,12 +611,12 @@ export function LeaveRequests() {
             <div className="grid grid-cols-3 gap-4">
               <div className="grid gap-2"><Label>Start Date *</Label><Input type="date" value={form.start_date} onChange={e => setF("start_date", e.target.value)} className="dark:bg-gray-700 dark:border-gray-600" /></div>
               <div className="grid gap-2"><Label>End Date *</Label><Input type="date" value={form.end_date} min={form.start_date} onChange={e => setF("end_date", e.target.value)} className="dark:bg-gray-700 dark:border-gray-600" /></div>
-              <div className="grid gap-2"><Label>Days Applied</Label><Input readOnly value={form.start_date && form.end_date ? calcDays(form.start_date, form.end_date) : ""} className="dark:bg-gray-600 bg-gray-100" /></div>
+              <div className="grid gap-2"><Label>Days Applied</Label><Input readOnly value={form.start_date && form.end_date ? calcDays(form.start_date, form.end_date, form.leave_type) : ""} className="dark:bg-gray-600 dark:border-gray-700 bg-gray-100 dark:text-gray-300 text-gray-500 cursor-not-allowed" /></div>
             </div>
             <div className="grid grid-cols-3 gap-4">
-              <div className="grid gap-2"><Label>Days Accrued</Label><Input type="number" value={form.days_accrued} onChange={e => setF("days_accrued", e.target.value)} className="dark:bg-gray-700 dark:border-gray-600" /></div>
-              <div className="grid gap-2"><Label>Leave Balance</Label><Input type="number" value={form.leave_balance} onChange={e => setF("leave_balance", e.target.value)} className="dark:bg-gray-700 dark:border-gray-600" /></div>
-              <div className="grid gap-2"><Label>Balance B/F</Label><Input type="number" value={form.balance_bf} onChange={e => setF("balance_bf", e.target.value)} className="dark:bg-gray-700 dark:border-gray-600" /></div>
+              <div className="grid gap-2"><Label>Days Accrued</Label><Input readOnly value={form.days_accrued} className="dark:bg-gray-600 dark:border-gray-700 bg-gray-100 dark:text-gray-300 text-gray-500 cursor-not-allowed" /></div>
+              <div className="grid gap-2"><Label>Leave Balance</Label><Input readOnly value={form.leave_balance} className="dark:bg-gray-600 dark:border-gray-700 bg-gray-100 dark:text-gray-300 text-gray-500 cursor-not-allowed" /></div>
+              <div className="grid gap-2"><Label>Balance B/F</Label><Input readOnly value={form.balance_bf} className="dark:bg-gray-600 dark:border-gray-700 bg-gray-100 dark:text-gray-300 text-gray-500 cursor-not-allowed" /></div>
             </div>
             <Separator />
             <div className="grid grid-cols-2 gap-4">

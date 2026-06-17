@@ -1,0 +1,20 @@
+[
+  {
+    "category": "Kitchen Essentials",
+    "differences": [],
+    "db_count": 10,
+    "excel_count": 10
+  },
+  {
+    "category": "Washroom Essentials",
+    "differences": [],
+    "db_count": 14,
+    "excel_count": 14
+  },
+  {
+    "category": "Snacks",
+    "differences": [],
+    "db_count": 4,
+    "excel_count": 6
+  }
+]

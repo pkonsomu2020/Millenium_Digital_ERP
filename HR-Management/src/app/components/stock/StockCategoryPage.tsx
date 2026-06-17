@@ -245,7 +245,14 @@ export function StockCategoryPage({ readOnly = false, listPath }: { readOnly?: b
           map[item.id][month.id] = e;
         }
 
-        if (prevClosing !== undefined) {
+        // APPROACH B: Historical months (Sep 2025 – Apr 2026) display the exact
+        // values from the database, which match the original Excel file perfectly.
+        // Cascading carry-over is only applied from May 2026 onwards, seeding
+        // from April 2026's final closing stock.
+        const monthKey = (month.month_key as string) || "";
+        const shouldCascade = monthKey >= "2026-05" && prevClosing !== undefined;
+
+        if (shouldCascade) {
           e.p1_opening = prevClosing;
           const p1o = Number(e.p1_opening) || 0;
           const p1b = Number(e.p1_bought) || 0;
@@ -263,6 +270,7 @@ export function StockCategoryPage({ readOnly = false, listPath }: { readOnly?: b
           e.stock_movement = e.total_bought - e.total_used;
           e.final_closing = Number(e.p2_closing) || Number(e.p1_closing) || 0;
         }
+        // Always track prevClosing so May 2026 can seed from April 2026's real value
         prevClosing = Number(e.final_closing) || 0;
       });
     });
