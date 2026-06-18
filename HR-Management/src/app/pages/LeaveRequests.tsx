@@ -119,7 +119,7 @@ export function LeaveRequests() {
   };
 
   const getStartingBfForYear = (employee: typeof ADMIN_EMPLOYEES[0], targetYear: number) => {
-    let currentYear = 2025;
+    let currentYear = 2026;
     let runningBalance = employee.balance_bf;
 
     while (currentYear < targetYear) {
