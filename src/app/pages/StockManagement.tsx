@@ -10,7 +10,6 @@ const CATS = [
   "Washroom Essentials",
   "Water Count",
   "Kitchen Stock",
-  "Snacks",
 ];
 
 const CAT_META: Record<string, { emoji: string; hasDetail: boolean }> = {
@@ -18,7 +17,6 @@ const CAT_META: Record<string, { emoji: string; hasDetail: boolean }> = {
   "Washroom Essentials": { emoji: "🧹", hasDetail: true },
   "Water Count": { emoji: "💧", hasDetail: true },
   "Kitchen Stock": { emoji: "🍽", hasDetail: true },
-  Snacks: { emoji: "🍪", hasDetail: true },
 };
 
 function AddCategoryModal({ onClose, onSave }: { onClose: () => void; onSave: () => void }) {

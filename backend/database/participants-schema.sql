@@ -15,10 +15,12 @@ CREATE POLICY "Allow all operations on meeting_participants" ON meeting_particip
   FOR ALL USING (true) WITH CHECK (true);
 
 -- Seed participants
-INSERT INTO meeting_participants (name, email, role) VALUES
-  ('Grace Wanjiru', 'grace.wanjiru@millenium.co.ke', 'Admin'),
-  ('Rose Kirwa',    'rosekirwa@millenium.co.ke',     'HR'),
-  ('Ekiilu',        'ekiilu@afosi.org',               'HR'),
-  ('Winnie',        'winnie@signvrse.com',             'HR'),
-  ('Muthoni',       'muthoni@signvrse.com',            'HR')
-ON CONFLICT (email) DO NOTHING;
+INSERT INTO meeting_participants (name, email, role, is_active) VALUES
+  ('Grace Wanjiru', 'grace.wanjiru@millenium.co.ke', 'Admin', TRUE),
+  ('Rose Kirwa',    'rosekirwa@millenium.co.ke',     'HR',    FALSE),
+  ('Ekiilu',        'ekiilu@afosi.org',               'HR',    FALSE),
+  ('Winnie',        'winnie@signvrse.com',             'HR',    FALSE),
+  ('Muthoni',       'muthoni@signvrse.com',            'HR',    FALSE)
+ON CONFLICT (email) DO UPDATE
+  SET is_active = EXCLUDED.is_active,
+      role = EXCLUDED.role;

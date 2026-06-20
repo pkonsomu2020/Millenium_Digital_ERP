@@ -15,7 +15,6 @@ CREATE TABLE stock_items (
   category VARCHAR(50) NOT NULL CHECK (category IN (
     'Kitchen Essentials',
     'Washroom Essentials', 
-    'Snacks',
     'Water Count',
     'Kitchen Stock',
     'Other Purchases'
@@ -110,13 +109,6 @@ INSERT INTO stock_items (category, item_name, current_quantity, unit, is_durable
 ('Washroom Essentials', 'Furniture Polish', 1, 'bottle', FALSE),
 ('Washroom Essentials', 'Washing Powder', 2, 'pkts', FALSE),
 ('Washroom Essentials', 'Sufuria', 1, 'pcs', FALSE);
-
--- Snacks (Consumables)
-INSERT INTO stock_items (category, item_name, current_quantity, unit, is_durable) VALUES
-('Snacks', 'Biscuits', 2, 'tins', FALSE),
-('Snacks', 'Peanuts', 2, 'pkts', FALSE),
-('Snacks', 'Honey', 2, 'tins', FALSE),
-('Snacks', 'Hibiscus', 2, 'pkts', FALSE);
 
 -- Kitchen Stock (Durable Items)
 INSERT INTO stock_items (category, item_name, current_quantity, unit, is_durable, notes) VALUES
