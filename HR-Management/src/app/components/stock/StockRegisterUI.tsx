@@ -48,7 +48,6 @@ export const EXCEL_ITEM_ORDER: Record<string, string[]> = {
     "Mop", "Hand Wash", "Washroom Soap", "Glass Cleaner", "Jik White", "Jik Coloured",
     "Furniture Polish", "Washing Powder",
   ],
-  Snacks: ["Biscuits", "Peanuts", "Honey", "Hibiscus"],
   "Kitchen Stock": [
     "Plates", "Side Plates", "Spoons", "Tea Spoons", "Forks", "Glasses", "Cups", "Thermos",
     "Glass Jugs", "Plastic Jugs", "Serving Trays", "Tumblers", "Sufurias (Pots)", "Buckets",
@@ -108,16 +107,31 @@ export function itemHasKitchenData(item: {
 }
 
 export function sortKitchenItemsDataFirst<
-  T extends { id: string; item_name: string; current_quantity?: number; purchased_qty?: number; broken_lost_qty?: number; total_qty?: number }
+  T extends { id: string; item_name: string; current_quantity?: number; purchased_qty?: number; broken_lost_qty?: number; total_qty?: number; created_at?: string }
 >(items: T[], category = "Kitchen Stock"): T[] {
   return items
     .map((item) => ({
       item,
       hasData: itemHasKitchenData(item),
       order: excelItemIndex(category, item.item_name),
+      isNew: excelItemIndex(category, item.item_name) === 9999,
     }))
     .sort((a, b) => {
+      // 1. New/custom items always go to the top
+      if (a.isNew !== b.isNew) return a.isNew ? -1 : 1;
+
+      // 2. If both are new, sort by created_at descending (newest first)
+      if (a.isNew) {
+        const timeA = a.item.created_at ? new Date(a.item.created_at).getTime() : 0;
+        const timeB = b.item.created_at ? new Date(b.item.created_at).getTime() : 0;
+        if (timeA !== timeB) return timeB - timeA;
+        return a.item.item_name.localeCompare(b.item.item_name);
+      }
+
+      // 3. For predefined items, sort by hasData first (as originally done)
       if (a.hasData !== b.hasData) return a.hasData ? -1 : 1;
+
+      // 4. Then by their original Excel order
       return a.order - b.order;
     })
     .map((x) => x.item);
@@ -659,7 +673,10 @@ export function KitchenStockRegisterTable({
   editable: boolean;
   onUpdate?: (id: string, updates: Record<string, number>) => void | Promise<void>;
 }) {
-  const status = (closing: number) => {
+  const status = (item: (typeof items)[0], closing: number) => {
+    if (!itemHasKitchenData(item)) {
+      return { label: "", className: "" };
+    }
     if (closing <= 1) return { label: "CRITICAL", className: "text-[#D1131B] font-semibold text-[11px]" };
     if (closing <= 3) return { label: "LOW", className: "text-amber-600 dark:text-amber-400 font-semibold text-[11px]" };
     return { label: "OK", className: "text-emerald-600 dark:text-emerald-400 font-semibold text-[11px]" };
@@ -706,7 +723,7 @@ export function KitchenStockRegisterTable({
         <tbody>
           {sortedItems.map((item) => {
             const closing = item.total_qty ?? (item.current_quantity || 0) + (item.purchased_qty || 0) - (item.broken_lost_qty || 0);
-            const st = status(closing);
+            const st = status(item, closing);
             return (
               <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                 <td className={REG.dataLeft}>{item.item_name}</td>

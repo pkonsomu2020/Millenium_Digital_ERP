@@ -358,7 +358,6 @@ export function HRCategoryDetails() {
           )}
           {(cat === "Kitchen Essentials" ||
             cat === "Washroom Essentials" ||
-            cat === "Snacks" ||
             cat === "Other Purchases") &&
             monthlyData && (
               <MonthlyPurchaseTable items={monthlyData.items} months={monthlyData.months} />

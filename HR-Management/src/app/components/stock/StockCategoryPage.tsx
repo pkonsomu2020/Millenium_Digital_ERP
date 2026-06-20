@@ -330,6 +330,30 @@ export function StockCategoryPage({ readOnly = false, listPath }: { readOnly?: b
           title="Kitchen Stock"
           subtitle={readOnly ? "Equipment register · Read-only" : "Equipment register"}
           onBack={back}
+          onAdd={
+            readOnly
+              ? undefined
+              : async () => {
+                  const name = prompt("Item name:")?.trim();
+                  if (!name) return;
+                  const unit = prompt("Unit (e.g. pcs, pkts):", "pcs")?.trim() || "pcs";
+                  try {
+                    setSaving(true);
+                    const res = await api.createStockItem({
+                      category: "Kitchen Stock",
+                      item_name: name,
+                      unit,
+                      is_durable: true,
+                    });
+                    setItems((p) => [...p, res.data]);
+                    toast.success(`Added "${name}"`);
+                  } catch (err: any) {
+                    toast.error(err.message || "Failed to add item");
+                  } finally {
+                    setSaving(false);
+                  }
+                }
+          }
         />
         <KitchenStockRegisterTable
           items={items}

@@ -4,14 +4,13 @@ import { Plus } from "lucide-react";
 import { api } from "../../services/api";
 import { StatCards, CategoryOverviewBlock } from "../components/stock/StockRegisterUI";
 
-const CATS = ["Kitchen Essentials", "Washroom Essentials", "Water Count", "Kitchen Stock", "Snacks"];
+const CATS = ["Kitchen Essentials", "Washroom Essentials", "Water Count", "Kitchen Stock"];
 
 const CAT_META: Record<string, { emoji: string }> = {
   "Kitchen Essentials": { emoji: "🍳" },
   "Washroom Essentials": { emoji: "🧹" },
   "Water Count": { emoji: "💧" },
   "Kitchen Stock": { emoji: "🍽" },
-  Snacks: { emoji: "🍪" },
 };
 
 export function StockManagement() {
