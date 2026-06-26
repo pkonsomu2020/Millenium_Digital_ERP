@@ -6,7 +6,7 @@ import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { Textarea } from "../../components/ui/textarea";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "../../components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "../../components/ui/dialog";
 import { Badge } from "../../components/ui/badge";
 import { Separator } from "../../components/ui/separator";
 import { api } from "../../../services/api";
@@ -245,7 +245,10 @@ export function LeaveRequests() {
       {/* View Dialog */}
       <Dialog open={viewDialogOpen} onOpenChange={setViewDialogOpen}>
         <DialogContent className="sm:max-w-[600px] dark:bg-gray-800 max-h-[90vh] overflow-y-auto">
-          <DialogHeader><DialogTitle className="dark:text-white">Leave Application Details</DialogTitle></DialogHeader>
+          <DialogHeader>
+            <DialogTitle className="dark:text-white">Leave Application Details</DialogTitle>
+            <DialogDescription className="sr-only">Detailed view of the selected leave request</DialogDescription>
+          </DialogHeader>
           {selectedRequest && (
             <div className="grid gap-3 py-4 text-sm">
               <div className="grid grid-cols-2 gap-3">
@@ -292,6 +295,7 @@ export function LeaveRequests() {
             <DialogTitle className="dark:text-white">
               {reviewAction === "Approved" ? "Approve" : reviewAction === "Deferred" ? "Defer" : "Reject"} Leave — {selectedRequest?.employee_name}
             </DialogTitle>
+            <DialogDescription className="sr-only">Form to approve, defer or reject a leave request</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             {reviewAction === "Deferred" && (

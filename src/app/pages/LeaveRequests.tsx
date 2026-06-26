@@ -5,7 +5,7 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "../components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "../components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import { Badge } from "../components/ui/badge";
 import { Separator } from "../components/ui/separator";
@@ -475,6 +475,7 @@ export function LeaveRequests() {
         <DialogContent className="sm:max-w-[680px] dark:bg-gray-800 max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold dark:text-white">Leave Application Form</DialogTitle>
+            <DialogDescription className="sr-only">Form to submit a new leave request</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             {/* Employee Info */}
@@ -532,7 +533,10 @@ export function LeaveRequests() {
       {/* View Dialog */}
       <Dialog open={viewDialogOpen} onOpenChange={setViewDialogOpen}>
         <DialogContent className="sm:max-w-[600px] dark:bg-gray-800 max-h-[90vh] overflow-y-auto">
-          <DialogHeader><DialogTitle className="dark:text-white">Leave Application Details</DialogTitle></DialogHeader>
+          <DialogHeader>
+            <DialogTitle className="dark:text-white">Leave Application Details</DialogTitle>
+            <DialogDescription className="sr-only">Detailed view of the selected leave request</DialogDescription>
+          </DialogHeader>
           {selectedRequest && (
             <div className="grid gap-3 py-4 text-sm">
               <div className="grid grid-cols-2 gap-3">
@@ -577,6 +581,7 @@ export function LeaveRequests() {
         <DialogContent className="sm:max-w-[680px] dark:bg-gray-800 max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold dark:text-white">Edit Leave Application</DialogTitle>
+            <DialogDescription className="sr-only">Form to modify an existing leave request</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-2 gap-4">

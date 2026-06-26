@@ -14,9 +14,9 @@ CREATE TABLE IF NOT EXISTS leave_requests (
   start_date DATE NOT NULL,
   end_date DATE NOT NULL,
   days_applied INTEGER NOT NULL,
-  days_accrued INTEGER,
-  leave_balance INTEGER,
-  balance_bf INTEGER,
+  days_accrued NUMERIC(5,2),
+  leave_balance NUMERIC(5,2),
+  balance_bf NUMERIC(5,2),
 
   -- Reason
   reason TEXT NOT NULL,

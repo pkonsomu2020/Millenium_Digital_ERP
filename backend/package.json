@@ -23,6 +23,7 @@
     "migrate:verify": "node scripts/verify-migration.js",
     "verify:stock": "node scripts/verify_stock_import.js",
     "apply:migration:007": "node scripts/apply-migration-007.js",
+    "apply:migration:009": "node scripts/apply-migration-009.js",
     "seed:stock:007": "python scripts/export_stock_seed_json.py && node scripts/import_stock_seed_007.js"
   },
   "dependencies": {
