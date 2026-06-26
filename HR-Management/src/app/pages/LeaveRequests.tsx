@@ -118,36 +118,14 @@ export function LeaveRequests() {
     rejected: activeEmployeeRequests.filter(r => r.status === "Rejected").length,
   };
 
-  const getStartingBfForYear = (employee: typeof ADMIN_EMPLOYEES[0], targetYear: number) => {
-    let currentYear = 2026;
-    let runningBalance = employee.balance_bf;
-
-    while (currentYear < targetYear) {
-      const accrued = 21;
-      const taken = leaveRequests
-        .filter(r => 
-          r.employee_email === employee.email &&
-          r.status !== "Rejected" &&
-          (r.leave_type === "ANNUAL" || r.leave_type === "Annual Leave") &&
-          new Date(r.start_date).getFullYear() === currentYear
-        )
-        .reduce((sum, r) => sum + r.days_applied, 0);
-
-      runningBalance = runningBalance + accrued - taken;
-      currentYear++;
-    }
-
-    return runningBalance;
-  };
-
   const currentYear = new Date().getFullYear();
   const liveAccrued = (new Date().getMonth() + 1) * 1.75;
-  const startBfForCurrentYear = getStartingBfForYear(activeEmployee, currentYear);
+  const startBfForCurrentYear = 0;
 
   const totalAnnualDaysTaken = activeEmployeeRequests
     .filter(r => (r.leave_type === "ANNUAL" || r.leave_type === "Annual Leave") && r.status !== "Rejected" && new Date(r.start_date).getFullYear() === currentYear)
     .reduce((sum, r) => sum + r.days_applied, 0);
-  const annualBalance = startBfForCurrentYear + liveAccrued - totalAnnualDaysTaken;
+  const annualBalance = 21 - totalAnnualDaysTaken;
 
 
 

@@ -139,27 +139,7 @@ export function LeaveRequests() {
 
   const setF = (k: string, v: unknown) => setForm(p => ({ ...p, [k]: v }));
 
-  const getStartingBfForYear = (employee: typeof ADMIN_EMPLOYEES[0], targetYear: number) => {
-    let currentYear = 2026;
-    let runningBalance = employee.balance_bf;
 
-    while (currentYear < targetYear) {
-      const accrued = 21;
-      const taken = leaveRequests
-        .filter(r => 
-          r.employee_email === employee.email &&
-          r.status !== "Rejected" &&
-          (r.leave_type === "ANNUAL" || r.leave_type === "Annual Leave") &&
-          new Date(r.start_date).getFullYear() === currentYear
-        )
-        .reduce((sum, r) => sum + r.days_applied, 0);
-
-      runningBalance = runningBalance + accrued - taken;
-      currentYear++;
-    }
-
-    return runningBalance;
-  };
 
   const calculateLeaveBalances = (
     employee: typeof ADMIN_EMPLOYEES[0],
@@ -175,25 +155,29 @@ export function LeaveRequests() {
       return { calculatedAccrued: 0, calculatedBf: 0, calculatedBalance: 0 };
     }
 
-    const empRequests = leaveRequests.filter(r => 
-      r.employee_email === employee.email &&
-      r.id !== requestId &&
-      r.status !== "Rejected" &&
-      new Date(r.start_date).getFullYear() === year
-    );
+    // Total annual entitlement is always 21 days per year
+    const ANNUAL_ENTITLEMENT = 21;
 
-    const startBfForYear = getStartingBfForYear(employee, year);
-    let calculatedAccrued = 0;
-    if (startDate) {
-      const month = new Date(startDate).getMonth() + 1;
-      calculatedAccrued = month * 1.75;
-    }
-    const prevAnnualDays = empRequests
-      .filter(r => r.leave_type === "ANNUAL" || r.leave_type === "Annual Leave")
+    // Days Accrued = month number × 1.75 (pro-rata accrual)
+    const month = startDate ? new Date(startDate).getMonth() + 1 : new Date().getMonth() + 1;
+    const calculatedAccrued = month * 1.75;
+
+    // Balance B/F = 0 in the current year (resets each year)
+    const calculatedBf = 0;
+
+    // Sum days from all OTHER approved/pending annual leave requests this year
+    const prevAnnualDaysTaken = leaveRequests
+      .filter(r =>
+        r.employee_email === employee.email &&
+        r.id !== requestId &&
+        r.status !== "Rejected" &&
+        (r.leave_type === "ANNUAL" || r.leave_type === "Annual Leave") &&
+        new Date(r.start_date).getFullYear() === year
+      )
       .reduce((sum, r) => sum + r.days_applied, 0);
 
-    const calculatedBf = startBfForYear - prevAnnualDays;
-    const calculatedBalance = calculatedBf + calculatedAccrued - daysApplied;
+    // Leave Balance = 21 - total annual days taken this year (including this request)
+    const calculatedBalance = ANNUAL_ENTITLEMENT - prevAnnualDaysTaken - daysApplied;
 
     return { calculatedAccrued, calculatedBf, calculatedBalance };
   };
@@ -354,12 +338,17 @@ export function LeaveRequests() {
     rejected: activeEmployeeRequests.filter(r => r.status === "Rejected").length,
   };
 
+  const currentYear = new Date().getFullYear();
   const totalAnnualDaysTaken = activeEmployeeRequests
-    .filter(r => (r.leave_type === "ANNUAL" || r.leave_type === "Annual Leave") && r.status !== "Rejected")
+    .filter(r => (r.leave_type === "ANNUAL" || r.leave_type === "Annual Leave") && r.status !== "Rejected" && new Date(r.start_date).getFullYear() === currentYear)
     .reduce((sum, r) => sum + r.days_applied, 0);
 
+  // Accrued YTD = current month × 1.75
   const liveAccrued = (new Date().getMonth() + 1) * 1.75;
-  const annualBalance = activeEmployee.balance_bf + liveAccrued - totalAnnualDaysTaken;
+
+  // Total annual entitlement is 21 days; Available Balance = 21 - days taken
+  const ANNUAL_ENTITLEMENT = 21;
+  const annualBalance = ANNUAL_ENTITLEMENT - totalAnnualDaysTaken;
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 pt-4 sm:pt-6">
@@ -384,15 +373,15 @@ export function LeaveRequests() {
       {/* Selected Employee Live Stats Card */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <Card className="shadow-md dark:bg-gray-800 dark:border-gray-700">
-          <CardHeader className="pb-2"><CardTitle className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Balance B/F</CardTitle></CardHeader>
-          <CardContent><p className="text-2xl font-bold text-gray-800 dark:text-white">{activeEmployee.balance_bf} Days</p></CardContent>
+          <CardHeader className="pb-2"><CardTitle className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Annual Entitlement</CardTitle></CardHeader>
+          <CardContent><p className="text-2xl font-bold text-gray-800 dark:text-white">{ANNUAL_ENTITLEMENT} Days</p></CardContent>
         </Card>
         <Card className="shadow-md dark:bg-gray-800 dark:border-gray-700">
           <CardHeader className="pb-2"><CardTitle className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Accrued YTD (1.75/mo)</CardTitle></CardHeader>
           <CardContent><p className="text-2xl font-bold text-gray-800 dark:text-white">{liveAccrued} Days</p></CardContent>
         </Card>
         <Card className="shadow-md dark:bg-gray-800 dark:border-gray-700">
-          <CardHeader className="pb-2"><CardTitle className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Approved/Pending</CardTitle></CardHeader>
+          <CardHeader className="pb-2"><CardTitle className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Days Taken</CardTitle></CardHeader>
           <CardContent><p className="text-2xl font-bold text-red-600 dark:text-red-400">{totalAnnualDaysTaken} Days</p></CardContent>
         </Card>
         <Card className="shadow-md dark:bg-gray-800 dark:border-gray-700 bg-green-50/30 dark:bg-green-950/10 border-green-200 dark:border-green-900">
