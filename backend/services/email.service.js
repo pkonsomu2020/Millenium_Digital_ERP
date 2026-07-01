@@ -366,7 +366,13 @@ const leaveNotificationHtml = (leave) => `
 </body>
 </html>`;
 
-const HR_EMAILS = ['pkonsomu2021@gmail.com'];
+const HR_EMAILS = [
+  'pkonsomu2021@gmail.com',    // Peter Onsomu
+  'rosekirwa@millenium.co.ke', // Rose Kirwa
+  'ekiilu@afosi.org',           // Ekiilu
+  'winnie@signvrse.com',         // Winnie
+  'muthoni@signvrse.com',        // Muthoni
+];
 const HR_DASHBOARD_URL = process.env.HR_FRONTEND_URL || 'https://admin.millenium.co.ke';
 const HR_LEAVE_URL = 'https://admin.millenium.co.ke/hr/dashboard/leave-requests';
 
