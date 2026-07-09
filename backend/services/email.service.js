@@ -318,13 +318,24 @@ const leaveNotificationHtml = (leave) => `
                       </td>
                     </tr>
                     <tr>
-                      <td width="50%" style="padding:16px 24px;border-right:1px solid #e5e7eb;">
+                      <td width="50%" style="padding:16px 24px;border-right:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb;">
                         <p style="margin:0 0 4px;color:#6b7280;font-size:11px;text-transform:uppercase;">📅 Start Date</p>
                         <p style="margin:0;color:#374151;font-size:14px;font-weight:600;">${formatDate(leave.start_date)}</p>
                       </td>
-                      <td width="50%" style="padding:16px 24px;">
+                      <td width="50%" style="padding:16px 24px;border-bottom:1px solid #e5e7eb;">
                         <p style="margin:0 0 4px;color:#6b7280;font-size:11px;text-transform:uppercase;">📅 End Date</p>
                         <p style="margin:0;color:#374151;font-size:14px;font-weight:600;">${formatDate(leave.end_date)}</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="2" style="padding:16px 24px;">
+                        <p style="margin:0 0 4px;color:#6b7280;font-size:11px;text-transform:uppercase;">📅 Date Applied</p>
+                        <p style="margin:0;color:#374151;font-size:14px;font-weight:600;">${(() => {
+                          const dateVal = leave.submitted_on || leave.created_at || new Date();
+                          const d = new Date(dateVal);
+                          if (isNaN(d.getTime())) return '—';
+                          return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) + ' ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: true });
+                        })()}</p>
                       </td>
                     </tr>
                   </table>

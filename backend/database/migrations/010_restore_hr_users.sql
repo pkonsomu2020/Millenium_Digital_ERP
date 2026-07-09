@@ -1,24 +1,28 @@
 -- ================================================================
--- RESTORE HR USERS + FIX PETER
--- Run this in Supabase Dashboard → SQL Editor
+-- FIX: Drop the stray trigger on the users table, then
+--      activate all HR users.
+--
+-- Paste this entire block into Supabase Dashboard → SQL Editor
+-- and click Run.
 -- ================================================================
 
--- 1. Activate all HR users (Rose, Ekiilu, Winnie, Muthoni)
---    These were already activated by the script, but run for safety.
+-- STEP 1: Drop the broken trigger that references updated_at
+--         (the users table has no updated_at column)
+DROP TRIGGER IF EXISTS update_users_updated_at ON users;
+
+-- STEP 2: Now safely activate all HR/Admin users
 UPDATE users SET is_active = TRUE
 WHERE email IN (
+  'pkonsomu2021@gmail.com',
   'rosekirwa@millenium.co.ke',
   'ekiilu@afosi.org',
   'winnie@signvrse.com',
-  'muthoni@signvrse.com'
+  'muthoni@signvrse.com',
+  'grace.wanjiru@millenium.co.ke',
+  'pachieng@afosi.org'
 );
 
--- 2. Fix Peter — his record may have a trigger issue.
---    Directly update via SQL to bypass any trigger problems.
-UPDATE users SET is_active = TRUE
-WHERE email = 'pkonsomu2021@gmail.com';
-
--- 3. Verify
-SELECT id, name, email, role, is_active, created_at
+-- STEP 3: Verify all users are now active
+SELECT id, name, email, role, is_active
 FROM users
-ORDER BY created_at;
+ORDER BY role, name;

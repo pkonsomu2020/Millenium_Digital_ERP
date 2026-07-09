@@ -207,6 +207,7 @@ export function LeaveRequests() {
                   <TableRow className="bg-gray-50 dark:bg-gray-700/50">
                     <TableHead className="whitespace-nowrap text-sm">Employee</TableHead>
                     <TableHead className="whitespace-nowrap text-sm hidden sm:table-cell">Leave Type</TableHead>
+                    <TableHead className="whitespace-nowrap text-sm hidden md:table-cell">Date Applied</TableHead>
                     <TableHead className="whitespace-nowrap text-sm hidden md:table-cell">Start Date</TableHead>
                     <TableHead className="whitespace-nowrap text-sm hidden md:table-cell">End Date</TableHead>
                     <TableHead className="text-center whitespace-nowrap text-sm hidden lg:table-cell">Days</TableHead>
@@ -219,6 +220,9 @@ export function LeaveRequests() {
                     <TableRow key={r.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                       <TableCell className="font-medium text-xs sm:text-sm whitespace-nowrap">{r.employee_name}</TableCell>
                       <TableCell className="text-xs sm:text-sm whitespace-nowrap hidden sm:table-cell">{getDisplayType(r)}</TableCell>
+                      <TableCell className="text-xs sm:text-sm whitespace-nowrap hidden md:table-cell">
+                        {r.submitted_on ? new Date(r.submitted_on).toLocaleDateString("en-GB") : "—"}
+                      </TableCell>
                       <TableCell className="text-xs sm:text-sm whitespace-nowrap hidden md:table-cell">{new Date(r.start_date).toLocaleDateString("en-GB")}</TableCell>
                       <TableCell className="text-xs sm:text-sm whitespace-nowrap hidden md:table-cell">{new Date(r.end_date).toLocaleDateString("en-GB")}</TableCell>
                       <TableCell className="text-center text-xs sm:text-sm hidden lg:table-cell">{r.days_applied}</TableCell>
@@ -261,6 +265,7 @@ export function LeaveRequests() {
               <div className="grid grid-cols-2 gap-3">
                 <div><p className="text-gray-500 dark:text-gray-400 text-xs">Leave Type</p><p className="font-medium dark:text-white">{getDisplayType(selectedRequest)}</p></div>
                 <div><p className="text-gray-500 dark:text-gray-400 text-xs">Days Applied</p><p className="font-medium dark:text-white">{selectedRequest.days_applied}</p></div>
+                <div><p className="text-gray-500 dark:text-gray-400 text-xs">Date Applied</p><p className="font-medium dark:text-white">{selectedRequest.submitted_on ? new Date(selectedRequest.submitted_on).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit", hour12: true }) : "—"}</p></div>
                 <div><p className="text-gray-500 dark:text-gray-400 text-xs">Start Date</p><p className="font-medium dark:text-white">{new Date(selectedRequest.start_date).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}</p></div>
                 <div><p className="text-gray-500 dark:text-gray-400 text-xs">End Date</p><p className="font-medium dark:text-white">{new Date(selectedRequest.end_date).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}</p></div>
                 <div><p className="text-gray-500 dark:text-gray-400 text-xs">Days Accrued</p><p className="font-medium dark:text-white">{selectedRequest.days_accrued ?? "—"}</p></div>
