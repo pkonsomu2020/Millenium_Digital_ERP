@@ -96,10 +96,15 @@ export function HRLogin() {
                 </button>
               </div>
             </div>
-            <Button type="submit" disabled={loading || warming}
+            <Button type="submit" disabled={loading}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold h-11 mt-2">
-              {warming ? "Connecting..." : loading ? "Signing in..." : "Sign In"}
+              {loading ? "Signing in..." : "Sign In"}
             </Button>
+            {warming && (
+              <p className="text-xs text-yellow-500/80 text-center animate-pulse mt-2">
+                ℹ️ Wake-up request sent to the server. First sign-in might take a moment.
+              </p>
+            )}
           </form>
 
           <p className="text-center text-gray-600 text-xs mt-5">
