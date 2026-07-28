@@ -44,7 +44,20 @@ interface LeaveRequest {
   hr_signature: string | null;
   hr_remarks: string | null;
   deferred_date: string | null;
+  stage1_status: string | null;
+  stage1_reviewed_by: string | null;
+  stage1_reviewed_on: string | null;
+  stage1_remarks: string | null;
+  stage1_signature: string | null;
+  stage2_status: string | null;
+  stage2_reviewed_by: string | null;
+  stage2_reviewed_on: string | null;
+  stage2_remarks: string | null;
+  stage2_signature: string | null;
 }
+
+const ESTHER_EMAIL = "ekiilu@afosi.org";
+const ROSE_EMAIL = "rosekirwa@millenium.co.ke";
 
 export function LeaveRequests() {
   const [leaveRequests, setLeaveRequests] = useState<LeaveRequest[]>([]);
@@ -54,9 +67,29 @@ export function LeaveRequests() {
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<LeaveRequest | null>(null);
   const [reviewAction, setReviewAction] = useState<"Approved" | "Rejected" | "Deferred">("Approved");
-  const [reviewData, setReviewData] = useState({ hr_remarks: "", hr_signature: "", deferred_date: "" });
+  const [reviewStage, setReviewStage] = useState<1 | 2>(1);
+  const [reviewData, setReviewData] = useState({ hr_remarks: "", deferred_date: "" });
   const [submitting, setSubmitting] = useState(false);
   const [activeEmployee, setActiveEmployee] = useState(ADMIN_EMPLOYEES[0]);
+
+  const currentUser = JSON.parse(sessionStorage.getItem("auth_user") || "{}");
+  const isEsther = (currentUser.email || "").toLowerCase() === ESTHER_EMAIL;
+  const isRose = (currentUser.email || "").toLowerCase() === ROSE_EMAIL;
+
+  const canAct = (r: LeaveRequest) => {
+    if (r.status !== "Pending") return false;
+    if (isEsther) return !r.stage1_status || r.stage1_status === "Pending";
+    if (isRose) return !!r.stage1_status && r.stage1_status !== "Pending" && (!r.stage2_status || r.stage2_status === "Pending");
+    return false;
+  };
+
+  const openReview = (r: LeaveRequest, action: "Approved" | "Rejected" | "Deferred") => {
+    setSelectedRequest(r);
+    setReviewAction(action);
+    setReviewStage(isEsther ? 1 : 2);
+    setReviewData({ hr_remarks: "", deferred_date: "" });
+    setReviewDialogOpen(true);
+  };
 
   useEffect(() => {
     fetchLeaveRequests();
@@ -85,25 +118,36 @@ export function LeaveRequests() {
       setSubmitting(true);
       await api.updateLeaveStatus(selectedRequest.id, {
         status: reviewAction,
-        reviewed_by: "HR Manager",
+        reviewer_email: currentUser.email,
+        reviewer_name: currentUser.name,
         hr_remarks: reviewData.hr_remarks || null,
-        hr_signature: reviewData.hr_signature || null,
         deferred_date: reviewData.deferred_date || null,
       });
-      toast.success(`Leave request ${reviewAction.toLowerCase()} successfully`);
+      toast.success(
+        reviewStage === 1
+          ? "Your review has been recorded — awaiting Rose's final approval"
+          : `Leave request ${reviewAction.toLowerCase()} successfully`
+      );
       setReviewDialogOpen(false);
       fetchLeaveRequests();
-    } catch { toast.error("Failed to update leave request"); }
+    } catch (err: any) { toast.error(err.message || "Failed to update leave request"); }
     finally { setSubmitting(false); }
   };
 
   const getDisplayType = (r: LeaveRequest) =>
     r.leave_type === "Others" && r.custom_leave_type ? r.custom_leave_type : r.leave_type;
 
+  const getDisplayStatus = (r: LeaveRequest) => {
+    if (r.status !== "Pending") return r.status;
+    if (r.stage1_status && r.stage1_status !== "Pending") return "Awaiting Rose";
+    return "Pending";
+  };
+
   const getStatusBadge = (s: string) => {
     const map: Record<string, string> = {
       Pending: "bg-yellow-500", Approved: "bg-green-500",
-      Rejected: "bg-red-500", Deferred: "bg-blue-500"
+      Rejected: "bg-red-500", Deferred: "bg-blue-500",
+      "Awaiting Rose": "bg-indigo-500",
     };
     return <Badge className={`${map[s] || "bg-gray-500"} hover:opacity-90 text-xs`}>{s}</Badge>;
   };
@@ -226,15 +270,18 @@ export function LeaveRequests() {
                       <TableCell className="text-xs sm:text-sm whitespace-nowrap hidden md:table-cell">{new Date(r.start_date).toLocaleDateString("en-GB")}</TableCell>
                       <TableCell className="text-xs sm:text-sm whitespace-nowrap hidden md:table-cell">{new Date(r.end_date).toLocaleDateString("en-GB")}</TableCell>
                       <TableCell className="text-center text-xs sm:text-sm hidden lg:table-cell">{r.days_applied}</TableCell>
-                      <TableCell className="text-center">{getStatusBadge(r.status)}</TableCell>
+                      <TableCell className="text-center">{getStatusBadge(getDisplayStatus(r))}</TableCell>
                       <TableCell className="text-right">
-                        <div className="flex gap-1 justify-end">
+                        <div className="flex gap-1 justify-end items-center">
                           <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-blue-600 dark:text-blue-400" onClick={() => { setSelectedRequest(r); setViewDialogOpen(true); }}><Eye className="w-4 h-4" /></Button>
-                          {r.status === "Pending" && (<>
-                            <Button size="sm" className="bg-green-500 hover:bg-green-600 text-white text-xs h-8 px-2" onClick={() => { setSelectedRequest(r); setReviewAction("Approved"); setReviewData({ hr_remarks: "", hr_signature: "", deferred_date: "" }); setReviewDialogOpen(true); }}><CheckCircle className="w-3 h-3 sm:mr-1" /><span className="hidden sm:inline">Approve</span></Button>
-                            <Button size="sm" className="bg-blue-500 hover:bg-blue-600 text-white text-xs h-8 px-2" onClick={() => { setSelectedRequest(r); setReviewAction("Deferred"); setReviewData({ hr_remarks: "", hr_signature: "", deferred_date: "" }); setReviewDialogOpen(true); }}><span className="hidden sm:inline">Defer</span><span className="sm:hidden">D</span></Button>
-                            <Button size="sm" className="bg-[#D1131B] hover:bg-[#B01018] text-white text-xs h-8 px-2" onClick={() => { setSelectedRequest(r); setReviewAction("Rejected"); setReviewData({ hr_remarks: "", hr_signature: "", deferred_date: "" }); setReviewDialogOpen(true); }}><XCircle className="w-3 h-3 sm:mr-1" /><span className="hidden sm:inline">Reject</span></Button>
+                          {canAct(r) && (<>
+                            <Button size="sm" className="bg-green-500 hover:bg-green-600 text-white text-xs h-8 px-2" onClick={() => openReview(r, "Approved")}><CheckCircle className="w-3 h-3 sm:mr-1" /><span className="hidden sm:inline">Approve</span></Button>
+                            <Button size="sm" className="bg-blue-500 hover:bg-blue-600 text-white text-xs h-8 px-2" onClick={() => openReview(r, "Deferred")}><span className="hidden sm:inline">Defer</span><span className="sm:hidden">D</span></Button>
+                            <Button size="sm" className="bg-[#D1131B] hover:bg-[#B01018] text-white text-xs h-8 px-2" onClick={() => openReview(r, "Rejected")}><XCircle className="w-3 h-3 sm:mr-1" /><span className="hidden sm:inline">Reject</span></Button>
                           </>)}
+                          {r.status === "Pending" && !canAct(r) && isRose && (!r.stage1_status || r.stage1_status === "Pending") && (
+                            <span className="text-[10px] text-gray-400 italic whitespace-nowrap">Awaiting Esther</span>
+                          )}
                         </div>
                       </TableCell>
                     </TableRow>
@@ -271,21 +318,33 @@ export function LeaveRequests() {
                 <div><p className="text-gray-500 dark:text-gray-400 text-xs">Days Accrued</p><p className="font-medium dark:text-white">{selectedRequest.days_accrued ?? "—"}</p></div>
                 <div><p className="text-gray-500 dark:text-gray-400 text-xs">Leave Balance</p><p className="font-medium dark:text-white">{selectedRequest.leave_balance ?? "—"}</p></div>
                 <div><p className="text-gray-500 dark:text-gray-400 text-xs">Balance B/F</p><p className="font-medium dark:text-white">{selectedRequest.balance_bf ?? "—"}</p></div>
-                <div><p className="text-gray-500 dark:text-gray-400 text-xs">Status</p><div className="mt-1">{getStatusBadge(selectedRequest.status)}</div></div>
+                <div><p className="text-gray-500 dark:text-gray-400 text-xs">Status</p><div className="mt-1">{getStatusBadge(getDisplayStatus(selectedRequest))}</div></div>
               </div>
               <Separator />
-              <div><p className="text-gray-500 dark:text-gray-400 text-xs">Status</p><div className="mt-1">{getStatusBadge(selectedRequest.status)}</div></div>
               <div className="grid grid-cols-2 gap-3">
                 <div><p className="text-gray-500 dark:text-gray-400 text-xs">Employee Signature</p><p className="font-medium dark:text-white">{selectedRequest.employee_signature || "—"}</p></div>
               </div>
-              {selectedRequest.reviewed_by && (<>
+              {(selectedRequest.stage1_reviewed_by || selectedRequest.stage2_reviewed_by) && (<>
                 <Separator />
                 <div className="grid grid-cols-2 gap-3">
-                  <div><p className="text-gray-500 dark:text-gray-400 text-xs">Reviewed By</p><p className="font-medium dark:text-white">{selectedRequest.reviewed_by}</p></div>
-                  <div><p className="text-gray-500 dark:text-gray-400 text-xs">HR Signature</p><p className="font-medium dark:text-white">{selectedRequest.hr_signature || "—"}</p></div>
-                  {selectedRequest.deferred_date && <div><p className="text-gray-500 dark:text-gray-400 text-xs">Deferred To</p><p className="font-medium dark:text-white">{new Date(selectedRequest.deferred_date).toLocaleDateString("en-GB")}</p></div>}
+                  <div>
+                    <p className="text-gray-500 dark:text-gray-400 text-xs font-semibold uppercase mb-1">Stage 1 — Esther</p>
+                    {selectedRequest.stage1_reviewed_by ? (<>
+                      <p className="font-medium dark:text-white text-sm">{selectedRequest.stage1_status} by {selectedRequest.stage1_reviewed_by}</p>
+                      {selectedRequest.stage1_reviewed_on && <p className="text-[11px] text-gray-500">{new Date(selectedRequest.stage1_reviewed_on).toLocaleDateString("en-GB")}</p>}
+                      {selectedRequest.stage1_remarks && <p className="text-xs italic dark:text-gray-300 mt-1">"{selectedRequest.stage1_remarks}"</p>}
+                    </>) : <p className="text-gray-400 text-sm">Awaiting review</p>}
+                  </div>
+                  <div>
+                    <p className="text-gray-500 dark:text-gray-400 text-xs font-semibold uppercase mb-1">Stage 2 — Rose (Final)</p>
+                    {selectedRequest.stage2_reviewed_by ? (<>
+                      <p className="font-medium dark:text-white text-sm">{selectedRequest.stage2_status} by {selectedRequest.stage2_reviewed_by}</p>
+                      {selectedRequest.stage2_reviewed_on && <p className="text-[11px] text-gray-500">{new Date(selectedRequest.stage2_reviewed_on).toLocaleDateString("en-GB")}</p>}
+                      {selectedRequest.stage2_remarks && <p className="text-xs italic dark:text-gray-300 mt-1">"{selectedRequest.stage2_remarks}"</p>}
+                    </>) : <p className="text-gray-400 text-sm">Awaiting review</p>}
+                  </div>
                 </div>
-                {selectedRequest.hr_remarks && <div><p className="text-gray-500 dark:text-gray-400 text-xs">HR Remarks</p><p className="font-medium dark:text-white">{selectedRequest.hr_remarks}</p></div>}
+                {selectedRequest.deferred_date && <div className="mt-1"><p className="text-gray-500 dark:text-gray-400 text-xs">Deferred To</p><p className="font-medium dark:text-white">{new Date(selectedRequest.deferred_date).toLocaleDateString("en-GB")}</p></div>}
               </>)}
             </div>
           )}
@@ -303,14 +362,30 @@ export function LeaveRequests() {
             <DialogDescription className="sr-only">Form to approve, defer or reject a leave request</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg px-3 py-2 text-xs text-blue-700 dark:text-blue-300">
+              {reviewStage === 1
+                ? "You are reviewing this as Esther (Stage 1 of 2). Rose still needs to give the final approval after you."
+                : "You are giving the final approval as Rose (Stage 2 of 2)."}
+            </div>
+            {reviewStage === 2 && selectedRequest?.stage1_reviewed_by && (
+              <div className="bg-gray-50 dark:bg-gray-700/50 border dark:border-gray-600 rounded-lg px-3 py-2 text-xs">
+                <p className="text-gray-500 dark:text-gray-400 uppercase font-semibold mb-1">Stage 1 — Esther's decision</p>
+                <p className="dark:text-gray-200">{selectedRequest.stage1_status} by {selectedRequest.stage1_reviewed_by}</p>
+                {selectedRequest.stage1_remarks && <p className="italic mt-1 dark:text-gray-300">"{selectedRequest.stage1_remarks}"</p>}
+              </div>
+            )}
             {reviewAction === "Deferred" && (
               <div className="grid gap-2"><Label>Deferred Date *</Label><Input type="date" value={reviewData.deferred_date} onChange={e => setReviewData(p => ({ ...p, deferred_date: e.target.value }))} className="dark:bg-gray-700 dark:border-gray-600" /></div>
             )}
             <div className="grid gap-2">
-              <Label>HR Remarks {reviewAction === "Rejected" ? "*" : "(Optional)"}</Label>
+              <Label>Remarks {reviewAction === "Rejected" ? "*" : "(Optional)"}</Label>
               <Textarea value={reviewData.hr_remarks} onChange={e => setReviewData(p => ({ ...p, hr_remarks: e.target.value }))} placeholder={reviewAction === "Rejected" ? "Reason for rejection..." : reviewAction === "Deferred" ? "Reason for deferral..." : "Any notes..."} className="dark:bg-gray-700 dark:border-gray-600" rows={3} />
             </div>
-            <div className="grid gap-2"><Label>HR Signature</Label><Input value={reviewData.hr_signature} onChange={e => setReviewData(p => ({ ...p, hr_signature: e.target.value }))} placeholder="Type full name as signature" className="dark:bg-gray-700 dark:border-gray-600" /></div>
+            <div className="grid gap-2">
+              <Label>Signature</Label>
+              <Input readOnly value={currentUser.name || ""} className="dark:bg-gray-600 dark:border-gray-700 bg-gray-100 dark:text-gray-300 text-gray-500 cursor-not-allowed" />
+              <p className="text-[11px] text-gray-400">Auto-filled from your account — matches who is authorized to review at this stage.</p>
+            </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setReviewDialogOpen(false)} disabled={submitting}>Cancel</Button>

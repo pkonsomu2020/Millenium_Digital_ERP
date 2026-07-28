@@ -1,5 +1,12 @@
 import { supabase } from '../config/supabase.js';
-import { sendLeaveNotification, sendLeaveDecisionNotification } from '../services/email.service.js';
+import { sendLeaveNotification, sendLeaveDecisionNotification, sendStageHandoffNotification } from '../services/email.service.js';
+
+// Two-stage leave approval chain: stage 1 must review before stage 2 can act.
+// Stage 2's decision is what finalizes the request's overall status.
+const LEAVE_APPROVAL_CHAIN = [
+  { stage: 1, label: 'Esther', email: 'ekiilu@afosi.org' },
+  { stage: 2, label: 'Rose', email: 'rosekirwa@millenium.co.ke' },
+];
 
 export const getAllLeaveRequests = async (req, res) => {
   try {
@@ -70,10 +77,10 @@ export const createLeaveRequest = async (req, res) => {
 export const updateLeaveRequestStatus = async (req, res) => {
   try {
     const { id } = req.params;
-    const { status, reviewed_by, hr_remarks, hr_signature, deferred_date } = req.body;
+    const { status, reviewer_email, reviewer_name, hr_remarks, deferred_date } = req.body;
 
-    if (!status || !reviewed_by) {
-      return res.status(400).json({ error: 'Status and reviewer are required' });
+    if (!status || !reviewer_email || !reviewer_name) {
+      return res.status(400).json({ error: 'Status, reviewer_email and reviewer_name are required' });
     }
     if (!['Approved', 'Rejected', 'Deferred'].includes(status)) {
       return res.status(400).json({ error: 'Invalid status' });
@@ -85,27 +92,83 @@ export const updateLeaveRequestStatus = async (req, res) => {
       return res.status(400).json({ error: 'Deferred date is required' });
     }
 
+    const approver = LEAVE_APPROVAL_CHAIN.find(
+      (a) => a.email.toLowerCase() === String(reviewer_email).toLowerCase()
+    );
+    if (!approver) {
+      return res.status(403).json({ error: 'You are not authorized to review leave requests.' });
+    }
+
+    const { data: existing, error: fetchError } = await supabase
+      .from('leave_requests')
+      .select('*')
+      .eq('id', id)
+      .single();
+    if (fetchError || !existing) {
+      return res.status(404).json({ error: 'Leave request not found' });
+    }
+    if (existing.status !== 'Pending') {
+      return res.status(400).json({ error: 'This request has already been finalized.' });
+    }
+
+    const now = new Date().toISOString();
+    let updates;
+
+    if (approver.stage === 1) {
+      if (existing.stage1_status && existing.stage1_status !== 'Pending') {
+        return res.status(400).json({ error: `This request has already been reviewed by ${approver.label}.` });
+      }
+      updates = {
+        stage1_status: status,
+        stage1_reviewed_by: reviewer_name,
+        stage1_reviewed_on: now,
+        stage1_remarks: hr_remarks || null,
+        stage1_signature: reviewer_name,
+      };
+    } else {
+      if (!existing.stage1_status || existing.stage1_status === 'Pending') {
+        return res.status(400).json({ error: 'Esther must review this request before Rose can give final approval.' });
+      }
+      if (existing.stage2_status && existing.stage2_status !== 'Pending') {
+        return res.status(400).json({ error: `This request has already been finalized by ${approver.label}.` });
+      }
+      updates = {
+        stage2_status: status,
+        stage2_reviewed_by: reviewer_name,
+        stage2_reviewed_on: now,
+        stage2_remarks: hr_remarks || null,
+        stage2_signature: reviewer_name,
+        // Stage 2 is the final decision — mirror it onto the overall/legacy columns.
+        status,
+        reviewed_by: reviewer_name,
+        reviewed_on: now,
+        hr_remarks: hr_remarks || null,
+        hr_signature: reviewer_name,
+        deferred_date: deferred_date || null,
+        updated_at: now,
+      };
+    }
+
     const { data, error } = await supabase
       .from('leave_requests')
-      .update({
-        status,
-        reviewed_by,
-        reviewed_on: new Date().toISOString(),
-        hr_remarks: hr_remarks || null,
-        hr_signature: hr_signature || null,
-        deferred_date: deferred_date || null,
-        updated_at: new Date().toISOString()
-      })
+      .update(updates)
       .eq('id', id)
       .select()
       .single();
 
     if (error) throw error;
 
-    // Send decision email to the employee (non-blocking)
-    sendLeaveDecisionNotification(data).catch(err =>
-      console.error('Leave decision email failed:', err.message)
-    );
+    if (approver.stage === 2) {
+      // Final decision — notify the employee (non-blocking)
+      sendLeaveDecisionNotification(data).catch(err =>
+        console.error('Leave decision email failed:', err.message)
+      );
+    } else {
+      // Stage 1 done — notify Rose it's her turn (non-blocking)
+      sendStageHandoffNotification(data).catch(err =>
+        console.error('Stage handoff email failed:', err.message)
+      );
+    }
 
     res.json(data);
   } catch (error) {

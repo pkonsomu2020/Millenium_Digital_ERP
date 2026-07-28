@@ -550,6 +550,126 @@ const leaveDecisionHtml = (leave) => {
 </html>`;
 };
 
+// ─────────────────────────────────────────────────────────────
+// LEAVE STAGE HANDOFF EMAIL — sent to Rose once Esther completes stage 1
+// ─────────────────────────────────────────────────────────────
+
+const ROSE_EMAIL = 'rosekirwa@millenium.co.ke';
+
+const stageHandoffHtml = (leave) => {
+  const leaveType = leave.leave_type === 'Others' && leave.custom_leave_type
+    ? leave.custom_leave_type
+    : leave.leave_type;
+
+  return `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f4f4f5;font-family:Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f5;padding:32px 0;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+        <tr>
+          <td style="background:#2563eb;padding:28px 32px;">
+            <h1 style="margin:0;color:#ffffff;font-size:22px;font-weight:700;">Millenium Solutions</h1>
+            <p style="margin:4px 0 0;color:rgba(255,255,255,0.85);font-size:13px;">Leave Request — Awaiting Your Final Approval</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:32px;">
+            <p style="margin:0 0 20px;color:#374151;font-size:15px;">Esther has completed the first review on this leave application. It now needs your final approval.</p>
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;margin-bottom:20px;">
+              <tr>
+                <td style="padding:20px 24px;border-bottom:1px solid #e5e7eb;">
+                  <p style="margin:0 0 4px;color:#6b7280;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;">Employee</p>
+                  <p style="margin:0;color:#111827;font-size:18px;font-weight:700;">${leave.employee_name}</p>
+                  <p style="margin:4px 0 0;color:#6b7280;font-size:13px;">${leave.employee_email}</p>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:0;">
+                  <table width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td width="50%" style="padding:16px 24px;border-bottom:1px solid #e5e7eb;border-right:1px solid #e5e7eb;">
+                        <p style="margin:0 0 4px;color:#6b7280;font-size:11px;text-transform:uppercase;">Leave Type</p>
+                        <p style="margin:0;color:#374151;font-size:14px;font-weight:600;">${leaveType}</p>
+                      </td>
+                      <td width="50%" style="padding:16px 24px;border-bottom:1px solid #e5e7eb;">
+                        <p style="margin:0 0 4px;color:#6b7280;font-size:11px;text-transform:uppercase;">Days Applied</p>
+                        <p style="margin:0;color:#374151;font-size:14px;font-weight:600;">${leave.days_applied} day(s)</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="50%" style="padding:16px 24px;border-right:1px solid #e5e7eb;">
+                        <p style="margin:0 0 4px;color:#6b7280;font-size:11px;text-transform:uppercase;">📅 Start Date</p>
+                        <p style="margin:0;color:#374151;font-size:14px;font-weight:600;">${formatDate(leave.start_date)}</p>
+                      </td>
+                      <td width="50%" style="padding:16px 24px;">
+                        <p style="margin:0 0 4px;color:#6b7280;font-size:11px;text-transform:uppercase;">📅 End Date</p>
+                        <p style="margin:0;color:#374151;font-size:14px;font-weight:600;">${formatDate(leave.end_date)}</p>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+
+            <!-- Esther's stage 1 decision -->
+            <div style="background:#eff6ff;border:1px solid #93c5fd;border-radius:6px;padding:14px 18px;margin-bottom:24px;">
+              <p style="margin:0 0 4px;color:#1e40af;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;">Esther's Decision (Stage 1)</p>
+              <p style="margin:0;color:#1e3a8a;font-size:14px;font-weight:600;">${leave.stage1_status} by ${leave.stage1_reviewed_by || 'Esther'}</p>
+              ${leave.stage1_remarks ? `<p style="margin:6px 0 0;color:#374151;font-size:13px;font-style:italic;">"${leave.stage1_remarks}"</p>` : ''}
+            </div>
+
+            <!-- CTA Button -->
+            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;">
+              <tr>
+                <td align="center">
+                  <a href="${HR_LEAVE_URL}" target="_blank"
+                    style="display:inline-block;background:#2563eb;color:#ffffff;font-size:15px;font-weight:700;text-decoration:none;padding:14px 36px;border-radius:6px;letter-spacing:0.2px;">
+                    Give Final Approval →
+                  </a>
+                </td>
+              </tr>
+            </table>
+
+            <p style="margin:0 0 6px;color:#6b7280;font-size:13px;text-align:center;">Or copy this link into your browser:</p>
+            <p style="margin:0;font-size:12px;text-align:center;">
+              <a href="${HR_LEAVE_URL}" style="color:#2563eb;word-break:break-all;">${HR_LEAVE_URL}</a>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td style="background:#f9fafb;padding:20px 32px;border-top:1px solid #e5e7eb;">
+            <p style="margin:0;color:#9ca3af;font-size:12px;text-align:center;">© ${new Date().getFullYear()} Millenium Solutions &nbsp;·&nbsp; This is an automated notification</p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+};
+
+/**
+ * Notify Rose that Esther has completed stage 1 and it's her turn to give final approval.
+ */
+export const sendStageHandoffNotification = async (leave) => {
+  try {
+    await resend.emails.send({
+      from: `Millenium Solutions <${FROM}>`,
+      to: ROSE_EMAIL,
+      subject: `Awaiting Your Final Approval — ${leave.employee_name} (${leave.leave_type === 'Others' && leave.custom_leave_type ? leave.custom_leave_type : leave.leave_type})`,
+      html: stageHandoffHtml(leave),
+    });
+    console.log(`[leave-stage-handoff] Email sent to ${ROSE_EMAIL}`);
+    return { sent: 1, errors: [] };
+  } catch (err) {
+    console.error(`[leave-stage-handoff] Failed to send to ${ROSE_EMAIL}:`, err.message);
+    return { sent: 0, errors: [{ email: ROSE_EMAIL, error: err.message }] };
+  }
+};
+
 /**
  * Send leave decision notification to the employee
  * Called when HR approves, rejects, or defers a leave request
