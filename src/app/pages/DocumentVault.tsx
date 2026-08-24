@@ -175,7 +175,7 @@ export function DocumentVault() {
       {/* Categories */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-4 mb-6 sm:mb-8">
         {categories.map((category) => (
-          <Card key={category.name} className={`cursor-pointer shadow-md hover:shadow-lg transition-all dark:bg-gray-800 dark:border-gray-700 ${selectedType === category.name ? "border-2 border-[#D1131B]" : ""}`} onClick={() => setSelectedType(category.name)}>
+          <Card key={category.name} className={`cursor-pointer shadow-md hover:shadow-lg transition-all dark:bg-gray-800 dark:border-gray-700 ${selectedType === category.name ? "border-2 border-[#E76F51]" : ""}`} onClick={() => setSelectedType(category.name)}>
             <CardContent className="p-3 sm:p-4 text-center">
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">{category.name}</p>
               <p className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">{category.count}</p>
@@ -190,7 +190,7 @@ export function DocumentVault() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
           <Input placeholder="Search documents..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="pl-9 sm:pl-10 text-sm sm:text-base dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
         </div>
-        <Button className="bg-[#D1131B] hover:bg-[#B01018] text-white text-sm sm:text-base whitespace-nowrap" onClick={() => setUploadDialogOpen(true)}>
+        <Button className="bg-[#E76F51] hover:bg-[#D0593B] text-white text-sm sm:text-base whitespace-nowrap" onClick={() => setUploadDialogOpen(true)}>
           <Upload className="w-4 h-4 mr-2" />Upload Document
         </Button>
       </div>
@@ -277,7 +277,7 @@ export function DocumentVault() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setUploadDialogOpen(false)} disabled={uploading}>Cancel</Button>
-            <Button className="bg-[#D1131B] hover:bg-[#B01018] text-white" onClick={handleUpload} disabled={uploading || !selectedFile}>{uploading ? "Uploading..." : "Upload"}</Button>
+            <Button className="bg-[#E76F51] hover:bg-[#D0593B] text-white" onClick={handleUpload} disabled={uploading || !selectedFile}>{uploading ? "Uploading..." : "Upload"}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -315,7 +315,7 @@ export function DocumentVault() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => { setEditDialogOpen(false); setReplaceFile(null); }} disabled={saving}>Cancel</Button>
-            <Button className="bg-[#D1131B] hover:bg-[#B01018] text-white" onClick={handleSaveEdit} disabled={saving}>{saving ? "Saving..." : "Save Changes"}</Button>
+            <Button className="bg-[#E76F51] hover:bg-[#D0593B] text-white" onClick={handleSaveEdit} disabled={saving}>{saving ? "Saving..." : "Save Changes"}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

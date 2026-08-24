@@ -39,9 +39,9 @@ export function Login() {
       <div className="w-full max-w-md">
         <div className="flex flex-col items-center mb-8">
           <img src="/Millenium_logo_white-removebg-preview.png" alt="Millenium" className="h-14 mb-4 object-contain" />
-          <div className="flex items-center gap-2 bg-[#D1131B]/10 border border-[#D1131B]/30 rounded-full px-4 py-1.5">
-            <ShieldCheck className="w-4 h-4 text-[#D1131B]" />
-            <span className="text-sm font-medium text-[#D1131B]">Admin Portal</span>
+          <div className="flex items-center gap-2 bg-[#E76F51]/10 border border-[#E76F51]/30 rounded-full px-4 py-1.5">
+            <ShieldCheck className="w-4 h-4 text-[#E76F51]" />
+            <span className="text-sm font-medium text-[#E76F51]">Admin Portal</span>
           </div>
         </div>
 
@@ -59,7 +59,7 @@ export function Login() {
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                 <Input type="email" value={email} onChange={e => setEmail(e.target.value)}
                   placeholder="admin@millenium.co.ke"
-                  className="pl-10 bg-gray-800 border-gray-700 text-white placeholder:text-gray-600 focus:border-[#D1131B]"
+                  className="pl-10 bg-gray-800 border-gray-700 text-white placeholder:text-gray-600 focus:border-[#E76F51]"
                   required />
               </div>
             </div>
@@ -69,14 +69,14 @@ export function Login() {
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                 <Input type={showPw ? "text" : "password"} value={password} onChange={e => setPassword(e.target.value)}
                   placeholder="••••••••••••"
-                  className="pl-10 pr-10 bg-gray-800 border-gray-700 text-white placeholder:text-gray-600 focus:border-[#D1131B]"
+                  className="pl-10 pr-10 bg-gray-800 border-gray-700 text-white placeholder:text-gray-600 focus:border-[#E76F51]"
                   required />
                 <button type="button" onClick={() => setShowPw(p => !p)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300">
                   {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
             </div>
-            <Button type="submit" disabled={loading} className="w-full bg-[#D1131B] hover:bg-[#B01018] text-white font-semibold h-11 mt-2">
+            <Button type="submit" disabled={loading} className="w-full bg-[#E76F51] hover:bg-[#D0593B] text-white font-semibold h-11 mt-2">
               {loading ? "Signing in..." : "Sign In"}
             </Button>
           </form>

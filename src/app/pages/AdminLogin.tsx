@@ -52,12 +52,14 @@ export function AdminLogin() {
 
       <div className="w-full max-w-md">
         <div className="flex flex-col items-center mb-8">
-          <Link to="/">
-            <img src="/Millenium_logo_white-removebg-preview.png" alt="Millenium" className="h-12 mb-5 object-contain" />
+          <Link to="/" className="flex items-center justify-center gap-3 mb-5">
+            <img src="/Millenium_logo_white-removebg-preview.png" alt="Millenium" className="h-10 object-contain" />
+            <div className="w-px h-7 bg-white/20" />
+            <img src="/afosi_logo_white.png" alt="AFOSI" className="h-9 object-contain" />
           </Link>
-          <div className="flex items-center gap-2 bg-[#D1131B]/10 border border-[#D1131B]/30 rounded-full px-4 py-1.5">
-            <ShieldCheck className="w-4 h-4 text-[#D1131B]" />
-            <span className="text-sm font-medium text-[#D1131B]">Admin Portal</span>
+          <div className="flex items-center gap-2 bg-[#E76F51]/10 border border-[#E76F51]/30 rounded-full px-4 py-1.5">
+            <ShieldCheck className="w-4 h-4 text-[#E76F51]" />
+            <span className="text-sm font-medium text-[#E76F51]">Admin Portal</span>
           </div>
         </div>
 
@@ -75,7 +77,7 @@ export function AdminLogin() {
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                 <Input type="email" value={email} onChange={e => setEmail(e.target.value)}
                   placeholder="admin@millenium.co.ke"
-                  className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-600 focus:border-[#D1131B] focus:ring-0"
+                  className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-600 focus:border-[#E76F51] focus:ring-0"
                   required />
               </div>
             </div>
@@ -85,7 +87,7 @@ export function AdminLogin() {
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                 <Input type={showPw ? "text" : "password"} value={password} onChange={e => setPassword(e.target.value)}
                   placeholder="••••••••••••"
-                  className="pl-10 pr-10 bg-white/5 border-white/10 text-white placeholder:text-gray-600 focus:border-[#D1131B] focus:ring-0"
+                  className="pl-10 pr-10 bg-white/5 border-white/10 text-white placeholder:text-gray-600 focus:border-[#E76F51] focus:ring-0"
                   required />
                 <button type="button" onClick={() => setShowPw(p => !p)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300">
                   {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -93,7 +95,7 @@ export function AdminLogin() {
               </div>
             </div>
             <Button type="submit" disabled={loading}
-              className="w-full bg-[#D1131B] hover:bg-[#B01018] text-white font-semibold h-11 mt-2">
+              className="w-full bg-[#E76F51] hover:bg-[#D0593B] text-white font-semibold h-11 mt-2">
               {loading ? "Signing in..." : "Sign In"}
             </Button>
             {warming && (

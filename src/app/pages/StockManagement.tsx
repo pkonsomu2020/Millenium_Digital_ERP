@@ -87,14 +87,14 @@ function AddCategoryModal({ onClose, onSave }: { onClose: () => void; onSave: ()
             />
           </div>
         ))}
-        <button type="button" onClick={() => setItems((p) => [...p, { name: "", unit: "" }])} className="text-xs text-[#D1131B] font-medium">
+        <button type="button" onClick={() => setItems((p) => [...p, { name: "", unit: "" }])} className="text-xs text-[#E76F51] font-medium">
           + Add item row
         </button>
         <div className="flex justify-end gap-2 pt-2">
           <button type="button" onClick={onClose} className="px-3 py-1.5 text-xs rounded-lg border dark:border-white/15">
             Cancel
           </button>
-          <button type="button" onClick={save} disabled={saving} className="px-3 py-1.5 text-xs rounded-lg bg-[#D1131B] text-white font-medium">
+          <button type="button" onClick={save} disabled={saving} className="px-3 py-1.5 text-xs rounded-lg bg-[#E76F51] text-white font-medium">
             {saving ? "Creating..." : "Create"}
           </button>
         </div>
@@ -161,7 +161,7 @@ export function StockManagement({ hrMode = false }: { hrMode?: boolean }) {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
           <h1 className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white">
-            Stock <span className="text-[#D1131B]">Overview</span>
+            Stock <span className="text-[#E76F51]">Overview</span>
           </h1>
           <p className="text-[11px] sm:text-xs text-gray-500 dark:text-gray-400 mt-1 uppercase tracking-wide">
             Stock Management Register · 2025 – 2026
@@ -170,7 +170,7 @@ export function StockManagement({ hrMode = false }: { hrMode?: boolean }) {
         <button
           type="button"
           onClick={() => setShowAddCat(true)}
-          className="w-full sm:w-auto flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg bg-[#D1131B] hover:bg-[#b01016] text-white text-xs font-semibold uppercase tracking-wide"
+          className="w-full sm:w-auto flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg bg-[#E76F51] hover:bg-[#D0593B] text-white text-xs font-semibold uppercase tracking-wide"
         >
           <Plus className="w-3.5 h-3.5" /> Add Category
         </button>
@@ -191,7 +191,7 @@ export function StockManagement({ hrMode = false }: { hrMode?: boolean }) {
           placeholder="Search items or categories…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#D1131B]/40 focus:border-[#D1131B]"
+          className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#E76F51]/40 focus:border-[#E76F51]"
         />
       </div>
 

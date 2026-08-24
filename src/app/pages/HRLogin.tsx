@@ -56,8 +56,10 @@ export function HRLogin() {
 
       <div className="w-full max-w-md">
         <div className="flex flex-col items-center mb-8">
-          <Link to="/">
-            <img src="/Millenium_logo_white-removebg-preview.png" alt="Millenium" className="h-12 mb-5 object-contain" />
+          <Link to="/" className="flex items-center justify-center gap-3 mb-5">
+            <img src="/Millenium_logo_white-removebg-preview.png" alt="Millenium" className="h-10 object-contain" />
+            <div className="w-px h-7 bg-white/20" />
+            <img src="/afosi_logo_white.png" alt="AFOSI" className="h-9 object-contain" />
           </Link>
           <div className="flex items-center gap-2 bg-blue-500/10 border border-blue-500/30 rounded-full px-4 py-1.5">
             <Users className="w-4 h-4 text-blue-400" />
@@ -109,7 +111,7 @@ export function HRLogin() {
 
           <p className="text-center text-gray-600 text-xs mt-5">
             Admin?{" "}
-            <Link to="/login/admin" className="text-[#D1131B] hover:text-red-400 transition-colors">
+            <Link to="/login/admin" className="text-[#E76F51] hover:text-red-400 transition-colors">
               Sign in to Admin portal
             </Link>
           </p>

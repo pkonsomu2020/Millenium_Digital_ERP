@@ -38,7 +38,11 @@ export function Login() {
     <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-[#0a0a1a] flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="flex flex-col items-center mb-8">
-          <img src="/Millenium_logo_white-removebg-preview.png" alt="Millenium" className="h-14 mb-4 object-contain" />
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <img src="/Millenium_logo_white-removebg-preview.png" alt="Millenium" className="h-10 object-contain" />
+            <div className="w-px h-7 bg-white/20" />
+            <img src="/afosi_logo_white.png" alt="AFOSI" className="h-9 object-contain" />
+          </div>
           <div className="flex items-center gap-2 bg-blue-900/20 border border-blue-700/30 rounded-full px-4 py-1.5">
             <Users className="w-4 h-4 text-blue-400" />
             <span className="text-sm font-medium text-blue-400">HR Portal</span>

@@ -55,7 +55,19 @@ export function HRDashboardLayout() {
           <X className="w-6 h-6" />
         </button>
         <div className="p-6 border-b border-gray-600 flex flex-col items-center">
-          <img src="/Millenium_logo_white-removebg-preview.png" alt="Millennium HR Logo" className="w-48 h-auto object-contain mb-2" />
+          <div className="flex items-center justify-center gap-3 mb-3">
+            <img 
+              src="/Millenium_logo_white-removebg-preview.png" 
+              alt="Millennium HR Logo" 
+              className="h-9 w-auto object-contain"
+            />
+            <div className="w-px h-7 bg-gray-500" />
+            <img 
+              src="/afosi_logo_white.png" 
+              alt="AFOSI Logo" 
+              className="h-8 w-auto object-contain"
+            />
+          </div>
           <p className="text-xs text-gray-300 font-medium text-center uppercase tracking-wider">HR Management System</p>
         </div>
         <nav className="flex-1 p-4 overflow-y-auto">
@@ -67,7 +79,7 @@ export function HRDashboardLayout() {
               const Icon = item.icon;
               return (
                 <li key={item.path}>
-                  <Link to={item.path} onClick={closeSidebar} className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive ? "bg-[#D1131B] text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white"}`}>
+                  <Link to={item.path} onClick={closeSidebar} className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive ? "bg-[#E76F51] text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white"}`}>
                     <Icon className="w-5 h-5 flex-shrink-0" />
                     <span>{item.label}</span>
                   </Link>
@@ -94,10 +106,10 @@ export function HRDashboardLayout() {
             <ThemeToggle />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button type="button" className="relative h-9 w-9 rounded-full border-2 border-gray-400 hover:border-white overflow-hidden focus:outline-none focus:ring-2 focus:ring-[#D1131B]" aria-label="Account menu">
+                <button type="button" className="relative h-9 w-9 rounded-full border-2 border-gray-400 hover:border-white overflow-hidden focus:outline-none focus:ring-2 focus:ring-[#E76F51]" aria-label="Account menu">
                   <Avatar className="h-full w-full">
-                    <AvatarImage src={`https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=D1131B&color=fff`} alt={userName} />
-                    <AvatarFallback className="bg-[#D1131B] text-white text-xs font-bold">{initials}</AvatarFallback>
+                    <AvatarImage src={`https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=E76F51&color=fff`} alt={userName} />
+                    <AvatarFallback className="bg-[#E76F51] text-white text-xs font-bold">{initials}</AvatarFallback>
                   </Avatar>
                 </button>
               </DropdownMenuTrigger>
@@ -144,10 +156,10 @@ export function HRDashboardLayout() {
                 <ThemeToggle />
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className="relative h-10 w-10 rounded-full border-2 border-gray-400 hover:border-white transition-colors overflow-hidden focus:outline-none focus:ring-2 focus:ring-[#D1131B]">
+                    <button className="relative h-10 w-10 rounded-full border-2 border-gray-400 hover:border-white transition-colors overflow-hidden focus:outline-none focus:ring-2 focus:ring-[#E76F51]">
                       <Avatar className="h-full w-full">
-                        <AvatarImage src={`https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=D1131B&color=fff`} alt={userName} />
-                        <AvatarFallback className="bg-[#D1131B] text-white font-bold">{initials}</AvatarFallback>
+                        <AvatarImage src={`https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=E76F51&color=fff`} alt={userName} />
+                        <AvatarFallback className="bg-[#E76F51] text-white font-bold">{initials}</AvatarFallback>
                       </Avatar>
                     </button>
                   </DropdownMenuTrigger>

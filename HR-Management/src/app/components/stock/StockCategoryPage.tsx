@@ -29,7 +29,7 @@ function WaterCountTable({ readOnly, onBack }: { readOnly: boolean; onBack: () =
     loadData();
   }, []);
 
-  if (loading) return <div className="flex justify-center p-16"><div className="animate-spin h-8 w-8 border-b-2 border-[#D1131B]" /></div>;
+  if (loading) return <div className="flex justify-center p-16"><div className="animate-spin h-8 w-8 border-b-2 border-[#E76F51]" /></div>;
 
   const { months = [], stats = {} } = data || {};
 
@@ -174,9 +174,9 @@ function WaterCountTable({ readOnly, onBack }: { readOnly: boolean; onBack: () =
                 );
               })}
               <tr className="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
-                <td colSpan={2} className="py-3 px-4 border border-gray-300 dark:border-gray-700 font-extrabold text-left tracking-wider text-base pl-6 uppercase text-[#D1131B] dark:text-red-400">GRAND TOTAL</td>
+                <td colSpan={2} className="py-3 px-4 border border-gray-300 dark:border-gray-700 font-extrabold text-left tracking-wider text-base pl-6 uppercase text-[#E76F51] dark:text-red-400">GRAND TOTAL</td>
                 <td className="py-3 px-4 border border-gray-300 dark:border-gray-700"></td>
-                <td className="py-3 px-4 border border-gray-300 dark:border-gray-700 font-extrabold text-xl text-[#D1131B] dark:text-red-400">{stats.grand_total}</td>
+                <td className="py-3 px-4 border border-gray-300 dark:border-gray-700 font-extrabold text-xl text-[#E76F51] dark:text-red-400">{stats.grand_total}</td>
               </tr>
             </tbody>
           </table>
@@ -316,7 +316,7 @@ export function StockCategoryPage({ readOnly = false, listPath }: { readOnly?: b
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#D1131B]" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#E76F51]" />
       </div>
     );
   }

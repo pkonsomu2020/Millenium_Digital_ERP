@@ -48,7 +48,7 @@ export function StockManagement() {
     <div className="p-4 sm:p-6 lg:p-8 space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-          Stock <span className="text-[#D1131B]">Overview</span>
+          Stock <span className="text-[#E76F51]">Overview</span>
         </h1>
         <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 uppercase tracking-wide">
           Stock Management Register · Read-only
@@ -69,7 +69,7 @@ export function StockManagement() {
         placeholder="Search items or categories…"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2.5 text-sm dark:text-white focus:outline-none focus:ring-2 focus:ring-[#D1131B]/40 focus:border-[#D1131B]"
+        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2.5 text-sm dark:text-white focus:outline-none focus:ring-2 focus:ring-[#E76F51]/40 focus:border-[#E76F51]"
       />
 
       {loading ? (

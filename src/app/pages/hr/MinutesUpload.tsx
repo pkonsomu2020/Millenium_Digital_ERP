@@ -85,7 +85,7 @@ export function HRMinutesUpload() {
         <p className="text-gray-600 dark:text-gray-400">View meeting minutes for Millenium Solutions</p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <Card className="shadow-md dark:bg-gray-800 dark:border-gray-700"><CardContent className="p-4 text-center"><p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Minutes</p><p className="text-3xl font-bold text-[#D1131B]">{minutes.length}</p></CardContent></Card>
+        <Card className="shadow-md dark:bg-gray-800 dark:border-gray-700"><CardContent className="p-4 text-center"><p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Minutes</p><p className="text-3xl font-bold text-[#E76F51]">{minutes.length}</p></CardContent></Card>
         <Card className="shadow-md dark:bg-gray-800 dark:border-gray-700"><CardContent className="p-4 text-center"><p className="text-sm text-gray-600 dark:text-gray-400 mb-1">This Year</p><p className="text-3xl font-bold text-gray-800 dark:text-white">{minutes.filter(m => new Date(m.meeting_date).getFullYear() === new Date().getFullYear()).length}</p></CardContent></Card>
         <Card className="shadow-md dark:bg-gray-800 dark:border-gray-700"><CardContent className="p-4 text-center"><p className="text-sm text-gray-600 dark:text-gray-400 mb-1">This Month</p><p className="text-3xl font-bold text-gray-800 dark:text-white">{minutes.filter(m => { const d = new Date(m.meeting_date); const n = new Date(); return d.getMonth() === n.getMonth() && d.getFullYear() === n.getFullYear(); }).length}</p></CardContent></Card>
       </div>
@@ -121,7 +121,7 @@ export function HRMinutesUpload() {
                       <TableBody>
                         {groupedMinutes[yearMonth].map((minute) => (
                           <TableRow key={minute.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                            <TableCell className="text-xs sm:text-sm"><div className="flex items-center gap-2"><FileText className="w-3 h-3 sm:w-4 sm:h-4 text-[#D1131B] flex-shrink-0" /><span className="text-gray-900 dark:text-white font-medium">{minute.meeting_title}</span></div></TableCell>
+                            <TableCell className="text-xs sm:text-sm"><div className="flex items-center gap-2"><FileText className="w-3 h-3 sm:w-4 sm:h-4 text-[#E76F51] flex-shrink-0" /><span className="text-gray-900 dark:text-white font-medium">{minute.meeting_title}</span></div></TableCell>
                             <TableCell className="text-gray-700 dark:text-gray-300 text-xs sm:text-sm whitespace-nowrap">{new Date(minute.meeting_date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</TableCell>
                             <TableCell className="text-gray-700 dark:text-gray-300 text-xs sm:text-sm hidden md:table-cell"><span className="truncate max-w-[200px] block">{minute.original_name}</span><span className="text-xs text-gray-500">{formatFileSize(minute.file_size)}</span></TableCell>
                             <TableCell className="text-gray-700 dark:text-gray-300 text-xs sm:text-sm whitespace-nowrap hidden lg:table-cell">{minute.uploaded_by}</TableCell>

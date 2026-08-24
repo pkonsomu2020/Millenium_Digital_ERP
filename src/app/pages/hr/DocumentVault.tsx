@@ -75,7 +75,7 @@ export function HRDocumentVault() {
     <div className="p-4 sm:p-6 lg:p-8 pt-4 sm:pt-6">
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-4 mb-6 sm:mb-8">
         {categories.map((category) => (
-          <Card key={category.name} className={`cursor-pointer shadow-md hover:shadow-lg transition-all dark:bg-gray-800 dark:border-gray-700 ${selectedType === category.name ? "border-2 border-[#D1131B]" : ""}`} onClick={() => setSelectedType(category.name)}>
+          <Card key={category.name} className={`cursor-pointer shadow-md hover:shadow-lg transition-all dark:bg-gray-800 dark:border-gray-700 ${selectedType === category.name ? "border-2 border-[#E76F51]" : ""}`} onClick={() => setSelectedType(category.name)}>
             <CardContent className="p-3 sm:p-4 text-center">
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">{category.name}</p>
               <p className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">{category.count}</p>

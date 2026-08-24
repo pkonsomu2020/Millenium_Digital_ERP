@@ -246,7 +246,7 @@ export function Meetings() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <Input placeholder="Search meetings..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="pl-10 dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
         </div>
-        <Button className="bg-[#D1131B] hover:bg-[#B01018] text-white whitespace-nowrap" onClick={() => { setForm(emptyForm); setCreateOpen(true); }}>
+        <Button className="bg-[#E76F51] hover:bg-[#D0593B] text-white whitespace-nowrap" onClick={() => { setForm(emptyForm); setCreateOpen(true); }}>
           <Plus className="w-4 h-4 mr-2" /> Schedule Meeting
         </Button>
       </div>
@@ -365,7 +365,7 @@ export function Meetings() {
           )}
           <DialogFooter>
             <Button variant="outline" onClick={() => setCreateOpen(false)} disabled={submitting}>Cancel</Button>
-            <Button className="bg-[#D1131B] hover:bg-[#B01018] text-white" onClick={handleCreate} disabled={submitting}>{submitting ? "Scheduling..." : "Schedule"}</Button>
+            <Button className="bg-[#E76F51] hover:bg-[#D0593B] text-white" onClick={handleCreate} disabled={submitting}>{submitting ? "Scheduling..." : "Schedule"}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -384,7 +384,7 @@ export function Meetings() {
           )}
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditOpen(false)} disabled={submitting}>Cancel</Button>
-            <Button className="bg-[#D1131B] hover:bg-[#B01018] text-white" onClick={handleEdit} disabled={submitting}>{submitting ? "Saving..." : "Save Changes"}</Button>
+            <Button className="bg-[#E76F51] hover:bg-[#D0593B] text-white" onClick={handleEdit} disabled={submitting}>{submitting ? "Saving..." : "Save Changes"}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

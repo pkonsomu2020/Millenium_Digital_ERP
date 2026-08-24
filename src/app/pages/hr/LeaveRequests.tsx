@@ -187,7 +187,7 @@ export function LeaveRequests() {
             onClick={() => setActiveEmployee(emp)}
             className={`py-3 px-4 rounded-lg text-left transition-all duration-200 border ${
               activeEmployee.email === emp.email
-                ? "bg-[#D1131B] text-white border-[#D1131B] shadow-md transform scale-[1.01]"
+                ? "bg-[#E76F51] text-white border-[#E76F51] shadow-md transform scale-[1.01]"
                 : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800"
             }`}
           >
@@ -199,7 +199,7 @@ export function LeaveRequests() {
 
       {/* Selected Employee Leave Balance Summary */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <Card className="shadow-md border-t-4 border-t-[#D1131B] dark:bg-gray-800 dark:border-gray-700 md:col-span-2">
+        <Card className="shadow-md border-t-4 border-t-[#E76F51] dark:bg-gray-800 dark:border-gray-700 md:col-span-2">
           <CardHeader className="pb-2"><CardTitle className="text-sm font-semibold text-gray-500 uppercase">Annual Leave Summary</CardTitle></CardHeader>
           <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
             <div className="space-y-1.5 flex flex-col justify-center">
@@ -226,8 +226,8 @@ export function LeaveRequests() {
           <CardContent><p className="text-3xl font-bold text-green-600 dark:text-green-400">{counts.approved}</p></CardContent>
         </Card>
         <Card className="shadow-md dark:bg-gray-800 dark:border-gray-700">
-          <CardHeader className="pb-3"><div className="flex items-center gap-2"><XCircle className="w-5 h-5 text-[#D1131B]" /><CardTitle className="text-[#D1131B]">Rejected Requests</CardTitle></div></CardHeader>
-          <CardContent><p className="text-3xl font-bold text-[#D1131B]">{counts.rejected}</p></CardContent>
+          <CardHeader className="pb-3"><div className="flex items-center gap-2"><XCircle className="w-5 h-5 text-[#E76F51]" /><CardTitle className="text-[#E76F51]">Rejected Requests</CardTitle></div></CardHeader>
+          <CardContent><p className="text-3xl font-bold text-[#E76F51]">{counts.rejected}</p></CardContent>
         </Card>
       </div>
 
@@ -277,7 +277,7 @@ export function LeaveRequests() {
                           {canAct(r) && (<>
                             <Button size="sm" className="bg-green-500 hover:bg-green-600 text-white text-xs h-8 px-2" onClick={() => openReview(r, "Approved")}><CheckCircle className="w-3 h-3 sm:mr-1" /><span className="hidden sm:inline">Approve</span></Button>
                             <Button size="sm" className="bg-blue-500 hover:bg-blue-600 text-white text-xs h-8 px-2" onClick={() => openReview(r, "Deferred")}><span className="hidden sm:inline">Defer</span><span className="sm:hidden">D</span></Button>
-                            <Button size="sm" className="bg-[#D1131B] hover:bg-[#B01018] text-white text-xs h-8 px-2" onClick={() => openReview(r, "Rejected")}><XCircle className="w-3 h-3 sm:mr-1" /><span className="hidden sm:inline">Reject</span></Button>
+                            <Button size="sm" className="bg-[#E76F51] hover:bg-[#D0593B] text-white text-xs h-8 px-2" onClick={() => openReview(r, "Rejected")}><XCircle className="w-3 h-3 sm:mr-1" /><span className="hidden sm:inline">Reject</span></Button>
                           </>)}
                           {r.status === "Pending" && !canAct(r) && isRose && (!r.stage1_status || r.stage1_status === "Pending") && (
                             <span className="text-[10px] text-gray-400 italic whitespace-nowrap">Awaiting Esther</span>
@@ -389,7 +389,7 @@ export function LeaveRequests() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setReviewDialogOpen(false)} disabled={submitting}>Cancel</Button>
-            <Button className={reviewAction === "Approved" ? "bg-green-500 hover:bg-green-600" : reviewAction === "Deferred" ? "bg-blue-500 hover:bg-blue-600" : "bg-[#D1131B] hover:bg-[#B01018]"} onClick={handleReviewSubmit} disabled={submitting}>
+            <Button className={reviewAction === "Approved" ? "bg-green-500 hover:bg-green-600" : reviewAction === "Deferred" ? "bg-blue-500 hover:bg-blue-600" : "bg-[#E76F51] hover:bg-[#D0593B]"} onClick={handleReviewSubmit} disabled={submitting}>
               {submitting ? "Processing..." : reviewAction}
             </Button>
           </DialogFooter>

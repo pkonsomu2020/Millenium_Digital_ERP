@@ -14,20 +14,20 @@ export const REG = {
   stickySubLeft:
     "border border-gray-200 dark:border-gray-700 px-2.5 py-2 text-[11px] font-bold text-left bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 sticky left-0 z-10 min-w-[120px] sm:min-w-[160px] shadow-[2px_0_4px_-2px_rgba(0,0,0,0.12)]",
   stickyGrandLeft:
-    "border border-gray-200 dark:border-gray-700 px-2.5 py-2 text-xs font-extrabold uppercase text-left bg-red-50 dark:bg-red-900/20 text-[#D1131B] dark:text-red-400 sticky left-0 z-10 min-w-[120px] sm:min-w-[160px] shadow-[2px_0_4px_-2px_rgba(0,0,0,0.12)]",
+    "border border-gray-200 dark:border-gray-700 px-2.5 py-2 text-xs font-extrabold uppercase text-left bg-red-50 dark:bg-red-900/20 text-[#E76F51] dark:text-red-400 sticky left-0 z-10 min-w-[120px] sm:min-w-[160px] shadow-[2px_0_4px_-2px_rgba(0,0,0,0.12)]",
   subHdr: "border border-gray-200 dark:border-gray-700 px-2.5 py-1.5 text-[10px] text-center whitespace-nowrap bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400",
   subHdrLeft: "border border-gray-200 dark:border-gray-700 px-2.5 py-1.5 text-[11px] text-left font-semibold bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200",
   grpItem: "border border-gray-200 dark:border-gray-700 px-2.5 py-2 text-[10px] font-bold uppercase tracking-wider text-left bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400",
   grpP1: "border border-gray-200 dark:border-gray-700 px-2.5 py-2 text-[10px] font-bold uppercase tracking-wider text-center bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-l-2 border-l-blue-500",
   grpP2: "border border-gray-200 dark:border-gray-700 px-2.5 py-2 text-[10px] font-bold uppercase tracking-wider text-center bg-emerald-50 dark:bg-emerald-900/25 text-emerald-700 dark:text-emerald-300 border-l-2 border-l-emerald-500",
   grpSum: "border border-gray-200 dark:border-gray-700 px-2.5 py-2 text-[10px] font-bold uppercase tracking-wider text-center bg-amber-50 dark:bg-amber-900/25 text-amber-800 dark:text-amber-300 border-l-2 border-l-amber-500",
-  catRow: "border border-gray-200 dark:border-gray-700 px-2.5 py-2 text-[11px] font-bold uppercase tracking-wider bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 border-l-[3px] border-l-[#D1131B]",
+  catRow: "border border-gray-200 dark:border-gray-700 px-2.5 py-2 text-[11px] font-bold uppercase tracking-wider bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 border-l-[3px] border-l-[#E76F51]",
   subtotal: "border border-gray-200 dark:border-gray-700 px-2.5 py-2 text-[11px] font-medium text-center bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300",
   subtotalLeft: "border border-gray-200 dark:border-gray-700 px-2.5 py-2 text-[11px] font-bold text-left bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300",
   trend: "border border-gray-200 dark:border-gray-700 px-2.5 py-2 text-[11px] font-medium text-center bg-red-50 dark:bg-red-900/20",
   trendLeft: "border border-gray-200 dark:border-gray-700 px-2.5 py-2 text-[10px] font-bold uppercase text-left bg-red-50 dark:bg-red-900/20 text-gray-700 dark:text-gray-200",
-  grand: "border border-gray-200 dark:border-gray-700 px-2.5 py-2 text-xs font-semibold text-center bg-red-50 dark:bg-red-900/20 text-[#D1131B] dark:text-red-400",
-  grandLeft: "border border-gray-200 dark:border-gray-700 px-2.5 py-2 text-xs font-extrabold uppercase text-left bg-red-50 dark:bg-red-900/20 text-[#D1131B] dark:text-red-400",
+  grand: "border border-gray-200 dark:border-gray-700 px-2.5 py-2 text-xs font-semibold text-center bg-red-50 dark:bg-red-900/20 text-[#E76F51] dark:text-red-400",
+  grandLeft: "border border-gray-200 dark:border-gray-700 px-2.5 py-2 text-xs font-extrabold uppercase text-left bg-red-50 dark:bg-red-900/20 text-[#E76F51] dark:text-red-400",
   p1Start: "border-l-2 border-l-blue-500/50",
   p2Start: "border-l-2 border-l-emerald-500/50",
   smStart: "border-l-2 border-l-amber-500/50",
@@ -156,7 +156,7 @@ export function sortOverviewItemsDataFirst<T extends { item_name: string; curren
 
 export function trendCellClass(v: number): string {
   if (v > 0) return "text-emerald-600 dark:text-emerald-400";
-  if (v < 0) return "text-[#D1131B]";
+  if (v < 0) return "text-[#E76F51]";
   return "text-gray-400 dark:text-gray-500";
 }
 
@@ -436,7 +436,7 @@ export function DetailHeader({
           <button
             type="button"
             onClick={onBack}
-            className="shrink-0 px-2.5 py-2 text-xs font-semibold rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:border-[#D1131B] hover:text-[#D1131B] transition-colors"
+            className="shrink-0 px-2.5 py-2 text-xs font-semibold rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:border-[#E76F51] hover:text-[#E76F51] transition-colors"
           >
             ← Back
           </button>
@@ -446,7 +446,7 @@ export function DetailHeader({
           </div>
         </div>
         {onAdd && (
-          <Button onClick={onAdd} size="sm" className="w-full sm:w-auto shrink-0 bg-[#D1131B] hover:bg-[#b01016] text-white font-semibold text-xs uppercase tracking-wide h-10">
+          <Button onClick={onAdd} size="sm" className="w-full sm:w-auto shrink-0 bg-[#E76F51] hover:bg-[#D0593B] text-white font-semibold text-xs uppercase tracking-wide h-10">
             <Plus className="w-4 h-4 mr-1.5 shrink-0" /> {addText}
           </Button>
         )}
@@ -487,7 +487,7 @@ export function MonthTabs({
                 onClick={() => onChange(m.id)}
                 className={`shrink-0 px-3 py-2 rounded-lg text-[11px] font-semibold uppercase tracking-wide border transition-colors whitespace-nowrap ${
                   isActive
-                    ? "bg-red-50 dark:bg-red-900/30 border-red-300 dark:border-red-700 text-[#D1131B] shadow-sm"
+                    ? "bg-red-50 dark:bg-red-900/30 border-red-300 dark:border-red-700 text-[#E76F51] shadow-sm"
                     : "bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
                 }`}
               >
@@ -500,7 +500,7 @@ export function MonthTabs({
       {onAddMonth && (
         <button
           onClick={onAddMonth}
-          className="shrink-0 px-3 py-2 rounded-lg text-[11px] font-bold uppercase tracking-wide border border-[#D1131B] text-[#D1131B] bg-red-50 hover:bg-[#D1131B] hover:text-white transition-colors flex items-center mb-2 sm:mb-0"
+          className="shrink-0 px-3 py-2 rounded-lg text-[11px] font-bold uppercase tracking-wide border border-[#E76F51] text-[#E76F51] bg-red-50 hover:bg-[#E76F51] hover:text-white transition-colors flex items-center mb-2 sm:mb-0"
           title="Add Future Month Template"
         >
           <Plus className="w-3 h-3 mr-1" /> Add Month
@@ -677,7 +677,7 @@ export function KitchenStockRegisterTable({
     if (!itemHasKitchenData(item)) {
       return { label: "", className: "" };
     }
-    if (closing <= 1) return { label: "CRITICAL", className: "text-[#D1131B] font-semibold text-[11px]" };
+    if (closing <= 1) return { label: "CRITICAL", className: "text-[#E76F51] font-semibold text-[11px]" };
     if (closing <= 3) return { label: "LOW", className: "text-amber-600 dark:text-amber-400 font-semibold text-[11px]" };
     return { label: "OK", className: "text-emerald-600 dark:text-emerald-400 font-semibold text-[11px]" };
   };
@@ -717,7 +717,7 @@ export function KitchenStockRegisterTable({
             <th className={`${REG.subHdr} ${REG.pBought} bg-emerald-50 dark:bg-emerald-900/25 text-emerald-700 dark:text-emerald-300`}>Bought / Added</th>
             <th className={`${REG.subHdr} ${REG.pUsed} bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300`}>Broken / Lost</th>
             <th className={`${REG.subHdr} ${REG.pClose} bg-amber-50 dark:bg-amber-900/25 text-amber-800 dark:text-amber-300`}>Total</th>
-            <th className={`${REG.subHdr} bg-red-50 dark:bg-red-900/20 text-[#D1131B]`}>Status</th>
+            <th className={`${REG.subHdr} bg-red-50 dark:bg-red-900/20 text-[#E76F51]`}>Status</th>
           </tr>
         </thead>
         <tbody>
@@ -758,13 +758,13 @@ export function StatCards({
   cards: { label: string; value: string | number; sub: string; variant: "red" | "amber" | "green" | "blue" }[];
 }) {
   const top: Record<string, string> = {
-    red: "bg-[#D1131B]",
+    red: "bg-[#E76F51]",
     amber: "bg-amber-500",
     green: "bg-emerald-500",
     blue: "bg-blue-500",
   };
   const val: Record<string, string> = {
-    red: "text-[#D1131B]",
+    red: "text-[#E76F51]",
     amber: "text-amber-600 dark:text-amber-400",
     green: "text-emerald-600 dark:text-emerald-400",
     blue: "text-blue-600 dark:text-blue-400",
@@ -810,7 +810,7 @@ export function CategoryOverviewBlock({
         <div className="flex items-center gap-2">
           <span className="text-base">{emoji}</span>
           <span className="text-sm font-bold text-gray-900 dark:text-white">{title}</span>
-          <span className="min-w-[22px] text-center text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-[#D1131B] text-white">{count}</span>
+          <span className="min-w-[22px] text-center text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-[#E76F51] text-white">{count}</span>
         </div>
         <div className="flex items-center gap-4">
           <span className="text-xs text-gray-500 dark:text-gray-400">
@@ -820,7 +820,7 @@ export function CategoryOverviewBlock({
             <button
               type="button"
               onClick={onViewDetails}
-              className="text-[11px] font-semibold uppercase tracking-wide text-[#D1131B] bg-red-50 dark:bg-red-900/25 border border-red-200 dark:border-red-800 px-3 py-1.5 rounded-md hover:bg-[#D1131B] hover:text-white transition-colors"
+              className="text-[11px] font-semibold uppercase tracking-wide text-[#E76F51] bg-red-50 dark:bg-red-900/25 border border-red-200 dark:border-red-800 px-3 py-1.5 rounded-md hover:bg-[#E76F51] hover:text-white transition-colors"
             >
               View Details →
             </button>
@@ -834,10 +834,10 @@ export function CategoryOverviewBlock({
           return (
             <div
               key={item.id}
-              className={`p-3 bg-white dark:bg-gray-800 ${low ? "border-l-2 border-l-[#D1131B] bg-red-50 dark:bg-red-900/15" : ""}`}
+              className={`p-3 bg-white dark:bg-gray-800 ${low ? "border-l-2 border-l-[#E76F51] bg-red-50 dark:bg-red-900/15" : ""}`}
             >
               <p className="text-xs text-gray-500 dark:text-gray-400 mb-1 truncate">{item.item_name}</p>
-              <p className={`text-sm font-semibold tabular-nums ${low ? "text-[#D1131B]" : q === 0 ? "text-gray-400 dark:text-gray-500" : "text-gray-900 dark:text-white"}`}>
+              <p className={`text-sm font-semibold tabular-nums ${low ? "text-[#E76F51]" : q === 0 ? "text-gray-400 dark:text-gray-500" : "text-gray-900 dark:text-white"}`}>
                 {q === 0 ? "" : q}
                 {q !== 0 && (
                   <span className="text-[10px] font-normal text-gray-400 dark:text-gray-500 ml-1">{item.unit}</span>
@@ -857,7 +857,7 @@ export function CategoryOverviewBlock({
 export function SavingOverlay({ show }: { show: boolean }) {
   if (!show) return null;
   return (
-    <div className="fixed bottom-4 right-4 bg-[#D1131B] text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 text-sm z-50">
+    <div className="fixed bottom-4 right-4 bg-[#E76F51] text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 text-sm z-50">
       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
       Saving...
     </div>

@@ -9,7 +9,7 @@ import { Badge } from "../components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table";
 import { api } from "../../services/api";
 
-const CATEGORY_COLORS = ["#D1131B", "#3B82F6", "#10B981", "#F59E0B", "#8B5CF6", "#EC4899", "#06B6D4"];
+const CATEGORY_COLORS = ["#E76F51", "#3B82F6", "#10B981", "#F59E0B", "#8B5CF6", "#EC4899", "#06B6D4"];
 const LEAVE_COLORS = ["#3B82F6", "#10B981", "#F59E0B", "#8B5CF6", "#EC4899", "#06B6D4"];
 
 const CustomTooltip = ({ active, payload, label }: any) => {
@@ -63,7 +63,7 @@ export function Home() {
     return (
       <div className="p-8 flex items-center justify-center min-h-[60vh]">
         <div className="text-center space-y-3">
-          <div className="w-10 h-10 border-4 border-[#D1131B] border-t-transparent rounded-full animate-spin mx-auto" />
+          <div className="w-10 h-10 border-4 border-[#E76F51] border-t-transparent rounded-full animate-spin mx-auto" />
           <p className="text-gray-500 dark:text-gray-400 text-sm">Loading dashboard...</p>
         </div>
       </div>
@@ -73,10 +73,10 @@ export function Home() {
   if (error && !stats) {
     return (
       <div className="p-8 flex flex-col items-center justify-center min-h-[50vh] gap-4">
-        <XCircle className="w-12 h-12 text-[#D1131B]" />
+        <XCircle className="w-12 h-12 text-[#E76F51]" />
         <p className="text-gray-700 dark:text-gray-200 font-medium">Could not load dashboard</p>
         <p className="text-sm text-gray-500 dark:text-gray-400 text-center max-w-md">{error}</p>
-        <button type="button" onClick={() => fetchStats()} className="px-4 py-2 rounded-lg bg-[#D1131B] text-white text-sm font-semibold hover:bg-[#b01016]">
+        <button type="button" onClick={() => fetchStats()} className="px-4 py-2 rounded-lg bg-[#E76F51] text-white text-sm font-semibold hover:bg-[#D0593B]">
           Try again
         </button>
       </div>
@@ -95,7 +95,7 @@ export function Home() {
       value: stock.total ?? 0,
       sub: `${stock.lowStock ?? 0} low stock alerts`,
       icon: Package,
-      gradient: "from-[#D1131B] to-[#ff4d4d]",
+      gradient: "from-[#E76F51] to-[#ff4d4d]",
       alert: (stock.lowStock ?? 0) > 0,
     },
     {
@@ -137,7 +137,7 @@ export function Home() {
         <button
           onClick={() => fetchStats(true)}
           disabled={refreshing}
-          className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 hover:text-[#D1131B] dark:hover:text-[#D1131B] transition-colors px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-[#D1131B]/40 bg-white dark:bg-gray-800"
+          className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 hover:text-[#E76F51] dark:hover:text-[#E76F51] transition-colors px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-[#E76F51]/40 bg-white dark:bg-gray-800"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? "animate-spin" : ""}`} />
           {refreshing ? "Refreshing..." : "Refresh"}
@@ -260,15 +260,15 @@ export function Home() {
                 <AreaChart data={purchases.monthly || []} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <defs>
                     <linearGradient id="hrPurchaseGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#D1131B" stopOpacity={0.25} />
-                      <stop offset="95%" stopColor="#D1131B" stopOpacity={0} />
+                      <stop offset="5%" stopColor="#E76F51" stopOpacity={0.25} />
+                      <stop offset="95%" stopColor="#E76F51" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
                   <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#6B7280', fontSize: 11 }} dy={8} />
                   <YAxis axisLine={false} tickLine={false} tick={{ fill: '#6B7280', fontSize: 11 }} allowDecimals={false} />
                   <Tooltip content={<CustomTooltip />} />
-                  <Area type="monotone" dataKey="quantity" name="Units" stroke="#D1131B" strokeWidth={2.5} fill="url(#hrPurchaseGrad)" dot={{ fill: '#D1131B', r: 4 }} activeDot={{ r: 6 }} />
+                  <Area type="monotone" dataKey="quantity" name="Units" stroke="#E76F51" strokeWidth={2.5} fill="url(#hrPurchaseGrad)" dot={{ fill: '#E76F51', r: 4 }} activeDot={{ r: 6 }} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>

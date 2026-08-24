@@ -360,7 +360,7 @@ export function LeaveRequests() {
             onClick={() => setActiveEmployee(emp)}
             className={`py-3 px-4 rounded-lg text-left transition-all duration-200 border ${
               activeEmployee.email === emp.email
-                ? "bg-[#D1131B] text-white border-[#D1131B] shadow-md transform scale-[1.01]"
+                ? "bg-[#E76F51] text-white border-[#E76F51] shadow-md transform scale-[1.01]"
                 : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800"
             }`}
           >
@@ -401,8 +401,8 @@ export function LeaveRequests() {
           <CardContent><p className="text-3xl font-bold text-green-600 dark:text-green-400">{counts.approved}</p></CardContent>
         </Card>
         <Card className="shadow-md dark:bg-gray-800 dark:border-gray-700">
-          <CardHeader className="pb-3"><div className="flex items-center gap-2"><XCircle className="w-5 h-5 text-[#D1131B]" /><CardTitle className="text-[#D1131B]">Rejected</CardTitle></div></CardHeader>
-          <CardContent><p className="text-3xl font-bold text-[#D1131B]">{counts.rejected}</p></CardContent>
+          <CardHeader className="pb-3"><div className="flex items-center gap-2"><XCircle className="w-5 h-5 text-[#E76F51]" /><CardTitle className="text-[#E76F51]">Rejected</CardTitle></div></CardHeader>
+          <CardContent><p className="text-3xl font-bold text-[#E76F51]">{counts.rejected}</p></CardContent>
         </Card>
       </div>
 
@@ -412,7 +412,7 @@ export function LeaveRequests() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <Input placeholder="Search by employee name or leave type..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="pl-10 dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
         </div>
-        <Button className="bg-[#D1131B] hover:bg-[#B01018] text-white whitespace-nowrap" onClick={() => {
+        <Button className="bg-[#E76F51] hover:bg-[#D0593B] text-white whitespace-nowrap" onClick={() => {
           setForm({
             ...emptyForm,
             employee_name: activeEmployee.name,
@@ -529,7 +529,7 @@ export function LeaveRequests() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setCreateDialogOpen(false)} disabled={submitting}>Cancel</Button>
-            <Button className="bg-[#D1131B] hover:bg-[#B01018] text-white" onClick={handleCreate} disabled={submitting}>{submitting ? "Submitting..." : "Submit Application"}</Button>
+            <Button className="bg-[#E76F51] hover:bg-[#D0593B] text-white" onClick={handleCreate} disabled={submitting}>{submitting ? "Submitting..." : "Submit Application"}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -625,7 +625,7 @@ export function LeaveRequests() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => { setEditDialogOpen(false); setForm(emptyForm); }} disabled={submitting}>Cancel</Button>
-            <Button className="bg-[#D1131B] hover:bg-[#B01018] text-white" onClick={handleEdit} disabled={submitting}>{submitting ? "Saving..." : "Save Changes"}</Button>
+            <Button className="bg-[#E76F51] hover:bg-[#D0593B] text-white" onClick={handleEdit} disabled={submitting}>{submitting ? "Saving..." : "Save Changes"}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -130,7 +130,7 @@ export function DocumentVault() {
           <Card
             key={category.name}
             className={`cursor-pointer shadow-md hover:shadow-lg transition-all dark:bg-gray-800 dark:border-gray-700 ${
-              selectedType === category.name ? "border-2 border-[#D1131B]" : ""
+              selectedType === category.name ? "border-2 border-[#E76F51]" : ""
             }`}
             onClick={() => setSelectedType(category.name)}
           >
