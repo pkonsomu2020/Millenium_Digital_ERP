@@ -154,7 +154,7 @@ export const sendMeetingInvites = async (meeting, participantEmails) => {
       await resend.emails.send({
         from: `Millenium Solutions <${FROM}>`,
         to: email,
-        subject: `Meeting Invitation: ${meeting.title} — ${formatDate(meeting.meeting_date)}`,
+        subject: `Meeting Invitation: ${meeting.title} (${formatDate(meeting.meeting_date)})`,
         html: meetingInviteHtml(meeting),
       });
       sent++;
@@ -181,7 +181,7 @@ export const sendMeetingUpdates = async (meeting, participantEmails) => {
       await resend.emails.send({
         from: `Millenium Solutions <${FROM}>`,
         to: email,
-        subject: `Meeting Updated: ${meeting.title} — ${formatDate(meeting.meeting_date)}`,
+        subject: `Meeting Updated: ${meeting.title} (${formatDate(meeting.meeting_date)})`,
         html: meetingUpdateHtml(meeting),
       });
       sent++;
@@ -266,7 +266,7 @@ export const sendMeetingReminders = async (meeting, participantEmails, customMes
       await resend.emails.send({
         from: `Millenium Solutions <${FROM}>`,
         to: email,
-        subject: `Reminder: ${meeting.title} — ${formatDate(meeting.meeting_date)}`,
+        subject: `Reminder: ${meeting.title} (${formatDate(meeting.meeting_date)})`,
         html: meetingReminderHtml(meeting, customMessage),
       });
       sent++;
@@ -290,7 +290,7 @@ const leaveNotificationHtml = (leave) => `
         <tr>
           <td style="background:#D1131B;padding:28px 32px;">
             <h1 style="margin:0;color:#ffffff;font-size:22px;font-weight:700;">Millenium Solutions</h1>
-            <p style="margin:4px 0 0;color:rgba(255,255,255,0.85);font-size:13px;">New Leave Request — Action Required</p>
+            <p style="margin:4px 0 0;color:rgba(255,255,255,0.85);font-size:13px;">New Leave Request: Action Required</p>
           </td>
         </tr>
         <tr>
@@ -333,7 +333,7 @@ const leaveNotificationHtml = (leave) => `
                         <p style="margin:0;color:#374151;font-size:14px;font-weight:600;">${(() => {
                           const dateVal = leave.submitted_on || leave.created_at || new Date();
                           const d = new Date(dateVal);
-                          if (isNaN(d.getTime())) return '—';
+                          if (isNaN(d.getTime())) return 'N/A';
                           return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) + ' ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: true });
                         })()}</p>
                       </td>
@@ -397,9 +397,9 @@ export const sendLeaveNotification = async (leave) => {
   for (const email of HR_EMAILS) {
     try {
       await resend.emails.send({
-        from: `Millenium Solutions <${FROM}>`,
+        from: `${leave.employee_name} - ERP Admin System <${FROM}>`,
         to: email,
-        subject: `New Leave Request: ${leave.employee_name} — ${leave.leave_type === 'Others' && leave.custom_leave_type ? leave.custom_leave_type : leave.leave_type}`,
+        subject: `New Leave Request: ${leave.employee_name} (${leave.leave_type === 'Others' && leave.custom_leave_type ? leave.custom_leave_type : leave.leave_type})`,
         html: leaveNotificationHtml(leave),
       });
       sent++;
@@ -572,7 +572,7 @@ const stageHandoffHtml = (leave) => {
         <tr>
           <td style="background:#2563eb;padding:28px 32px;">
             <h1 style="margin:0;color:#ffffff;font-size:22px;font-weight:700;">Millenium Solutions</h1>
-            <p style="margin:4px 0 0;color:rgba(255,255,255,0.85);font-size:13px;">Leave Request — Awaiting Your Final Approval</p>
+            <p style="margin:4px 0 0;color:rgba(255,255,255,0.85);font-size:13px;">Leave Request: Awaiting Your Final Approval</p>
           </td>
         </tr>
         <tr>
@@ -659,7 +659,7 @@ export const sendStageHandoffNotification = async (leave) => {
     await resend.emails.send({
       from: `Millenium Solutions <${FROM}>`,
       to: ROSE_EMAIL,
-      subject: `Awaiting Your Final Approval — ${leave.employee_name} (${leave.leave_type === 'Others' && leave.custom_leave_type ? leave.custom_leave_type : leave.leave_type})`,
+      subject: `Awaiting Your Final Approval: ${leave.employee_name} (${leave.leave_type === 'Others' && leave.custom_leave_type ? leave.custom_leave_type : leave.leave_type})`,
       html: stageHandoffHtml(leave),
     });
     console.log(`[leave-stage-handoff] Email sent to ${ROSE_EMAIL}`);
@@ -681,16 +681,16 @@ export const sendLeaveDecisionNotification = async (leave) => {
     : leave.leave_type;
 
   const subjectMap = {
-    Approved: `✅ Leave Approved — ${leaveType} (${leave.days_applied} day(s))`,
-    Rejected: `❌ Leave Rejected — ${leaveType}`,
-    Deferred: `🔄 Leave Deferred — ${leaveType}`,
+    Approved: `✅ Leave Approved: ${leaveType} (${leave.days_applied} day(s))`,
+    Rejected: `❌ Leave Rejected: ${leaveType}`,
+    Deferred: `🔄 Leave Deferred: ${leaveType}`,
   };
 
   try {
     await resend.emails.send({
       from: `Millenium Solutions <${FROM}>`,
       to: leave.employee_email,
-      subject: subjectMap[status] || `Leave Request Update — ${leaveType}`,
+      subject: subjectMap[status] || `Leave Request Update: ${leaveType}`,
       html: leaveDecisionHtml(leave),
     });
     console.log(`[leave-decision] Email sent to ${leave.employee_email} — ${status}`);
